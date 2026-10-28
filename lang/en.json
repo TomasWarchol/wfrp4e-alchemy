@@ -1,0 +1,1068 @@
+{
+  "GOLD_ALCHEMY": {
+    "Title": "Alchemy Workshop",
+    "Button": {
+      "Alchemy": "Alchemy",
+      "OpenIngredients": "Ingredients",
+      "OpenIngredientsTooltip": "Open compendium repository with all alchemical ingredients",
+      "OpenPotions": "Potions",
+      "OpenPotionsTooltip": "Open compendium repository with ready potions and draughts",
+      "OpenRecipes": "Recipe Grimoires",
+      "OpenRecipesTooltip": "Open compendium of recipe scrolls and alchemical grimoires",
+      "ToggleWorldRecipesTooltip": "Toggle view: show all world recipes or only known by character",
+      "WorldRecipesMode": "World Mode"
+    },
+    "Action": {
+      "DrinkPotion": "Drink potion",
+      "ThrowPotion": "Throw Potion"
+    },
+    "Calendar": "Calendar",
+    "Day": "Day",
+    "Days": "days",
+    "Pieces": "pcs",
+    "Currency": {
+      "GC": "GC",
+      "SS": "s"
+    },
+    "Depleted": "(Depleted)",
+    "RecipeBook": "Recipe Book",
+    "Capacity": {
+      "Title": "Tether Points",
+      "Locked": "locked",
+      "Free": "free",
+      "Points": "Tether Pts",
+      "PointsFull": "Tether Points"
+    },
+    "Category": {
+      "All": "All",
+      "Chamon": "Chamon Magick",
+      "Mundane": "Mundane Alchemy",
+      "Herbal": "Herbalism",
+      "Colleges": "Colleges of Magic",
+      "Magical": "Colleges of Magic",
+      "Apothecary": "Apothecary",
+      "Forbidden": "Forbidden Alchemy"
+    },
+    "Status": {
+      "Ready": "Ready",
+      "MissingIngredients": "Missing ingredients"
+    },
+    "Details": {
+      "Effect": "Effect",
+      "IngredientsTitle": "Required Ingredients (Strict Inventory)",
+      "Owned": "Owned",
+      "Required": "Required",
+      "Laboratory": "Laboratory",
+      "TimeAndShelfLife": "Time & Shelf Life",
+      "CreationTime": "Creation Time",
+      "MinimumTending": "at least 3 hours of work each day",
+      "ShelfBase": "Base",
+      "StartBrewing": "Start Brewing",
+      "CompleteBrewing": "Complete Brewing",
+      "CancelBrewing": "Cancel Brewing",
+      "PendingBrew": "Brewing: {recipe} · ready {date}.",
+      "WorldTimeMustPass": "World time must pass before completion.",
+      "NoRecipeSelected": "Select a recipe from the list on the left.",
+      "IngredientsMissingTooltip": "Missing required ingredients or attunement points",
+      "CannotBrewTooltip": "Cannot brew this potion (missing ingredients, lacking tether points, or unknown recipe).",
+      "Doses": "Doses",
+      "DosesBatch": "1d10 (batch)",
+      "PricePerDose": "Price per dose"
+    },
+    "Lab": {
+      "Poor": "Poor Laboratory (200 GC, -1 SL)",
+      "Standard": "Standard Laboratory (400 GC, +0 SL)",
+      "Fine": "Fine Laboratory (800 GC, +1 SL)"
+    },
+    "Tethers": {
+      "Title": "Active Tethers in Party",
+      "Sever": "Sever Tether",
+      "SeverTooltip": "Sever tether and neutralize potion"
+    },
+    "Errors": {
+      "NotEnoughCapacity": "Not enough attunement capacity! Required: {required}, available: {available}.",
+      "MissingIngredients": "Missing required ingredients in inventory!",
+      "NoDoses": "No doses of this potion left!",
+      "InvalidPotion": "This potion has no active alchemical tether.",
+      "NotYourPotion": "Only the potion's creator can sever its tether.",
+      "RecipeNotKnown": "This character does not have access to this recipe.",
+      "BrewAlreadyInProgress": "This character already has a brewing process in progress. Complete it or ask the GM to cancel it.",
+      "BrewNotReady": "Brewing will be ready: {date}.",
+      "WorkshopUnavailable": "The GM has not enabled the Alchemy Workshop for this character.",
+      "ThrowNotDrink": "This potion is not for drinking – throw it at a target (right click → Throw Potion).",
+      "NoThrowTarget": "Target a token with the T key before throwing the potion."
+    },
+    "Notifications": {
+      "SelectCharacter": "Select a character to open the Alchemy Workshop.",
+      "BrewSuccess": "Successfully brewed {qty} of potion: {potion}",
+      "BrewStarted": "Brewing started. Ready: {date}. Requires at least 3 hours of work each day.",
+      "BrewFailure": "Brewing failed! Ingredients have been lost.",
+      "TetherRefundNotify": "Gold Weave: {drinker} drank {potion}. You regain {points} focus points!",
+      "PanaceaRestored": "Panacea restored {wounds} wounds and cleansed the body!",
+      "PanaceaUniversalisRestored": "Panacea Universalis restored {wounds} wounds, cleansed blood, removed Fatigue and cured all diseases!",
+      "HealingDraughtRestored": "Healing draught immediately recovered {wounds} wounds!",
+      "VitalityDraughtRestored": "Vitality draught immediately cleared all Fatigued conditions!",
+      "DigestiveTonicRestored": "Digestive tonic soothed stomach ailments and removed Poisoned condition!",
+      "FortuneRestored": "You regain 1 Fortune point!",
+      "FortuneFull": "Your Fortune is already at maximum.",
+      "AlkahestApplied": "Al-kahest inflicted severe chemical burns (5 Ablaze conditions)!",
+      "SmellingSalts": "Smelling salts restored consciousness!",
+      "MorrSalve": "Salve of Morr healed {wounds} wounds!",
+      "Antitoxin": "The antidote neutralized toxins in your bloodstream.",
+      "SpringDewHealed": "Jade spring dew restored {wounds} wounds and stabilized injuries!",
+      "Purified": "Blood has been cleansed of toxins and poisons.",
+      "CorruptionPurified": "Cleansed 1 point of Chaos Corruption!",
+      "SoulPurified": "Mind and soul are filled with radiant calm.",
+      "AcidDamaged": "Caustic acid inflicted {damage} wounds!",
+      "Blinded": "A blinding flash blinded the target!",
+      "AblazeApplied": "Incendiary fluid set the target ablaze!",
+      "FellAsleep": "Mandrake extract caused the target to fall into deep sleep.",
+      "WarpstoneCorruption": "Warpstone brew contaminated the body with {corruption} Corruption points!",
+      "AlreadyMemorized": "Recipe is already memorized by this character!",
+      "NoMemorySlotsAvailable": "No free memory slots available! Forget another recipe or increase Intelligence / Craft.",
+      "RecipeMemorized": "Memorized recipe: {name}!",
+      "RecipeForgotten": "Forgotten recipe: {name}.",
+      "RecipeAddedToBook": "Added recipe {recipe} to book {book}.",
+      "BookEditGMOnly": "Only the GM can change the contents of recipe books.",
+      "MemorizeFromBookOnly": "Recipes can be memorized from an owned book. Adding directly from the list is restricted to the GM.",
+      "RecipeNameRequired": "Recipe name is required!",
+      "IngredientRequired": "Recipe must contain at least one ingredient!",
+      "RecipeSaved": "Saved recipe: {name}.",
+      "RecipeDeleted": "Custom recipe deleted.",
+      "GMOnlyAction": "This action is only available to the Game Master.",
+      "StunnedApplied": "Gained Stunned condition!",
+      "SoothingDraught": "The soothing draught removed 1 Fatigued Condition.",
+      "MandrakeResisted": "The body fights off the drowsiness – the mandrake has no effect.",
+      "FellAsleepHours": "The mandrake extract puts the drinker to sleep for {hours} hours (Unconscious).",
+      "ForgetResisted": "The mind resists the draught – memories remain.",
+      "ForgetFailed": "Memories of the last day dissolve into fog.",
+      "TrollrootRegen": "For the next days wounds heal twice as fast and broken bones knit in half the time (tracked by the GM).",
+      "HealingLimit": "The body will not take more potion healing this encounter – no effect.",
+      "HealingDraughtNoEffect": "A Healing Draught does not work on a character at 0 Wounds.",
+      "MarvelousRefused": "Vile taste – the drinker cannot swallow it.",
+      "MarvelousDrunk": "Swallowed: 1 Fatigued Condition. Otherwise… nothing happens.",
+      "MundanePanacea": "Bleeding stopped, poison neutralised.",
+      "PurityCooldown": "The soul will not accept another cleansing before a week has passed.",
+      "SleepComing": "In 2–3 hours the drinker falls into a deep sleep for {hours} hours (the GM applies Unconscious).",
+      "CordeliaSideEffect": "Side effect: {condition} for {minutes} min.",
+      "SettingsSaved": "Alchemy settings saved for {actor}."
+    },
+    "Chat": {
+      "Brewed": "Brewed",
+      "Failed": "Failed",
+      "Brewer": "Brewer",
+      "TestResult": "Test Result",
+      "Success": "Success",
+      "Failure": "Failure",
+      "CreatedQty": "Quantity Created",
+      "ExpiryDate": "Expiration Date",
+      "ChamonTether": "Chamon Tether",
+      "ChamonTetherLocked": "Locked {points} Weave points",
+      "IngredientsDestroyed": "Ingredients were ruined and wasted in the crucible.",
+      "BrewingDisaster": "Brewing Disaster",
+      "Drinks": "{drinker} drinks: {potion}",
+      "PotionCondition": "Potion Condition",
+      "SideEffect": "Side Effect",
+      "TetherExpired": "Chamon Tether expired",
+      "TetherRefundInfo": "{points} Weave points return to the alchemist.",
+      "TetherSevered": "{alchemist} has severed the etheric tether with {potion} held by {holder}. {points} attunement points restored.",
+      "TetherSeveredDesc": "[Chamon tether was severed by the Alchemist. The potion has lost its magical properties.]",
+      "Throws": "{thrower} throws: {potion}",
+      "ThrowTargets": "Targets",
+      "ThrowTest": "Throwing potion: {potion}",
+      "ThrowMissed": "Miss! The flask shatters near the target – the GM decides where it landed and who it caught.",
+      "ThrowFizzled": "The spoiled potion shatters with no effect.",
+      "CloudCreated": "A cloud covers the area for {rounds} rounds, granting full cover within it.",
+      "ThrownAblaze": "{target}: Ablaze ×{value}.",
+      "ThrownAlkahest": "{target}: chemical burns – Ablaze ×{value}.",
+      "ThrownAcid": "{target}: acid burns – Ablaze ×{value}.",
+      "ThrownTrollAcid": "{target}: troll acid deals {damage} Damage (Penetrating: the GM may ignore 1 AP). {details}",
+      "ThrownBlinded": "{target}: Blinded.",
+      "ThrownSunFlash": "{target}: Blinded ×{value}. Daemons and Undead suffer extra Damage at the GM's discretion.",
+      "ThrownStunned": "{target}: Stunned ×{value}.",
+      "ResistMandrake": "Endurance: mandrake extract",
+      "ResistForget": "Cool: draught of forgetfulness",
+      "MagicalReplaced": "The Winds clash – no longer active: {names}.",
+      "DurationRolled": "{effect}: duration {duration}.",
+      "ResistMarvelous": "Cool: Marvelous Medicinal Mixture",
+      "ResistCordelia": "Endurance: Cordelia's Tonic"
+    },
+    "Spoilage": {
+      "Deactivated": "The potion has lost its potency and no longer has an effect.",
+      "Fresh": "Fresh and stable. Operates at full potency.",
+      "Expired": "Expired",
+      "CompletelySpoiled": "Completely spoiled! The draught has lost its power and causes side effects.",
+      "PartiallySpoiled": "Partially spoiled! Works, but produces an unpleasant side effect.",
+      "MiraclePreserved": "Expired, yet miraculously preserved and functional!",
+      "RollDetails": "Spoilage roll: {roll} (Spoil chance: {spoil}% / partial: {partial}%)",
+      "SideEffects": {
+        "FoulBreath": {
+          "name": "Foul Breath",
+          "desc": "A stench of rotten eggs wafts from the drinker's mouth. -1 SL to Fellowship tests for 1 day."
+        },
+        "Cramps": {
+          "name": "Colic and Cramps",
+          "desc": "Painful abdominal cramps. -1 SL to all Willpower tests for 1 day."
+        },
+        "Flatulence": {
+          "name": "Violent Flatulence",
+          "desc": "Distracting affliction. The character may perform either Move OR Action in a round, not both."
+        },
+        "Nausea": {
+          "name": "Nausea and Vomiting",
+          "desc": "Overcome with sickness. On failed movement tests, the character gains the Stunned condition."
+        },
+        "Dizziness": {
+          "name": "Dizziness and Dark Spots",
+          "desc": "Blurred vision and vertigo. -2 SL to Perception and Weapon Skill tests."
+        },
+        "GutBurn": {
+          "name": "Gut Burn",
+          "desc": "Violent acid reflux. The character immediately suffers 1d10 damage ignoring armour!"
+        },
+        "Poisoning": {
+          "name": "Toxic Poisoning",
+          "desc": "Spoiled ingredients have turned to venom. The character gains the Poisoned condition."
+        },
+        "Deadly": {
+          "name": "Deadly Poison!",
+          "desc": "Extremely lethal decoction. The character gains 2 Poisoned conditions and immediately tests Toughness (-20)!"
+        }
+      }
+    },
+    "Disasters": {
+      "Ruined": "Ruined Batch: A contaminated potion smelling of rotting sewage is produced.",
+      "Smoke": "Smoke and Stench: Heavy sulphurous smoke fills the area. For 3 days, the alchemist reeks of brimstone.",
+      "Clumsy": "Clumsy Accident: Apparatus is knocked over and shattered. Repairs cost 5% of laboratory value.",
+      "Fumes": "Acrid Fumes: The alchemist inhales caustic gas and must pass a Toughness (-10) test or gain Poisoned.",
+      "AcidBurn": "Acid Splash: Splashed with burning reagent! Suffers 1d10 damage ignoring armour.",
+      "MinorBlast": "Minor Blast!: Equipment damaged (10% value). The alchemist takes 1d10+2 damage.",
+      "MajorBlast": "Explosion!: Workshop heavily damaged (20% value). The alchemist takes 1d10+4 damage!",
+      "Fire": "Fire!: A raging chemical fire breaks out, destroying 30% of workshop equipment."
+    },
+    "Recipes": {
+      "IronSkin": {
+        "Name": "Iron Skin",
+        "Desc": "A draught hardened with Chamon essence, turning flesh to plate steel.",
+        "Effect": "+2 AP on all locations and −10 Agility for 10 minutes."
+      },
+      "LiquidGold": {
+        "Name": "Liquid Gold",
+        "Desc": "A sacred drink of the Gold Order filling the soul with pure Gold Weave.",
+        "Effect": "+20 Willpower for 1 hour."
+      },
+      "QuicksilverSpeed": {
+        "Name": "Quicksilver Speed",
+        "Desc": "A concoction bestowing swiftness and mercurial reflexes.",
+        "Effect": "+20 I, +10 Ag and +1 Movement for 10 minutes."
+      },
+      "LeadFortitude": {
+        "Name": "Lead Fortitude",
+        "Desc": "A heavy leaden decoction steeling the mind against dread.",
+        "Effect": "+10 WP and −10 I for 1 hour; immune to Fear and Terror (GM adjudicates)."
+      },
+      "ChamonPanacea": {
+        "Name": "Transmutational Panacea of Chamon",
+        "Desc": "A mystical panacea transmuting broken tissue into whole flesh.",
+        "Effect": "Instantly restores 2d10 wounds and removes Poisoned and Bleeding."
+      },
+      "WeaveEssence": {
+        "Name": "Weave Essence",
+        "Desc": "A decoction opening the wizard's mystical channels.",
+        "Effect": "+10 Willpower for 1 hour."
+      },
+      "VitriolAcid": {
+        "Name": "Vitriol Acid",
+        "Desc": "A corrosive mineral acid burning through armor and flesh.",
+        "Effect": "Thrown like an Incendiary: every target hit gains 1 + SL Ablaze Conditions (acid burns)."
+      },
+      "LeonardPowder": {
+        "Name": "Alchemical Flash Powder",
+        "Desc": "A powder causing a blinding flash and bang, disorienting enemies and disrupting spellcasting.",
+        "Effect": "Blinds all within 3 yards (Blind condition for 1d10 rounds on failed Toughness test) and -20 to casting spells.",
+        "PrepTime": "3 hours"
+      },
+      "PhosphorFire": {
+        "Name": "Phosphor Fire",
+        "Desc": "A pyrophoric incendiary liquid bursting into violent flame.",
+        "Effect": "Incendiary: every target hit gains 1 + SL Ablaze Conditions."
+      },
+      "SmellingSalts": {
+        "Name": "Smelling Salts",
+        "Desc": "A sharp ammoniac compound reviving the unconscious.",
+        "Effect": "Instantly revives unconscious actors and removes 1 Stunned condition."
+      },
+      "SmokePellet": {
+        "Name": "Smoke Pellet",
+        "Desc": "A smoke bomb creating a choking cloud of concealment.",
+        "Effect": "A smoke cloud for 1d10 rounds: blocks sight, ranged attacks and magic missiles."
+      },
+      "MorrSalve": {
+        "Name": "Morr's Salve",
+        "Desc": "A numbing analgesic ointment easing wound pain.",
+        "Effect": "Heals TB Wounds and removes 1 Bleeding Condition. One healing potion per encounter."
+      },
+      "MandrakeExtract": {
+        "Name": "Mandrake Extract",
+        "Desc": "A heavy soporific and paralytic fluid.",
+        "Effect": "Challenging (+0) Endurance Test; on failure deep sleep after 2–3 hours, lasting 1d10+4 hours."
+      },
+      "AntitoxinBroad": {
+        "Name": "Broad-Spectrum Antitoxin",
+        "Desc": "An activated charcoal compound binding poisons in the stomach.",
+        "Effect": "For 1 hour immune to Poisoned and poisons; does not cure poison already taken."
+      },
+      "ClarityDrops": {
+        "Name": "Clarity Drops",
+        "Desc": "Herbal drops clearing mental fog and sensory torpor.",
+        "Effect": "+10 to Initiative and Perception for 2 hours. Removes Surprised."
+      },
+      "DraughtOfPower": {
+        "Name": "Draught of Power",
+        "Desc": "A potent draught infused with pure aethyric power.",
+        "Effect": "Halves the CN of spells and rituals (minimum 1) for 2d10 rounds."
+      },
+      "PotionOfInvisibility": {
+        "Name": "Potion of Invisibility",
+        "Desc": "Bends light around the drinker, rendering them completely invisible to mundane sight.",
+        "Effect": "Invisibility for 1d10 minutes. Attacks inflict Surprised condition, enemies without Second Sight suffer -3 SL.",
+        "PrepTime": "2 months"
+      },
+      "PotionOfFlight": {
+        "Name": "Potion of Flight",
+        "Desc": "Invigorating draught infused with the essence of Azyr, lofting the drinker high into the sky.",
+        "Effect": "Grants the Flight (20) Creature Trait for 1d10 minutes.",
+        "PrepTime": "2 months"
+      },
+      "ChannelpathPotion": {
+        "Name": "Channelpath Potion",
+        "Desc": "Cleanses the aethyric conduits within a spellcaster, opening them to the currents of magic.",
+        "Effect": "+2 SL to all Channelling Tests for 1d10 minutes.",
+        "PrepTime": "2 months"
+      },
+      "PotionOfFortune": {
+        "Name": "Potion of Fortune",
+        "Desc": "Divinatory drops enabling the drinker to glimpse the tapestry of destiny and ward off ill fate.",
+        "Effect": "Restores 1 Fortune point or permits an Easy (+40) Augury Test.",
+        "PrepTime": "2 months"
+      },
+      "NectarOfVitality": {
+        "Name": "Nectar of Vitality",
+        "Desc": "Life-giving elixir stimulating supernatural cellular healing and rapid muscle regeneration.",
+        "Effect": "Grants the Regenerate Creature Trait for 1d10 minutes.",
+        "PrepTime": "2 months"
+      },
+      "Alkahest": {
+        "Name": "Alkahest (Universal Solvent)",
+        "Desc": "The ultimate corrosive fluid dissolving stone, iron, and flesh.",
+        "Effect": "Thrown: every target hit gains 2 + SL Ablaze Conditions (chemical burns). Eats through stone or steel."
+      },
+      "CompassMeteoric": {
+        "Name": "Compass of Meteoric Silver",
+        "Desc": "Aethyric instrument that points directly to heavy magical concentrations, leyline nexuses, and artefacts.",
+        "Effect": "+2 SL to Navigation Tests when tracking sources of magic, storms of magic, and fulcrums.",
+        "PrepTime": "3 days"
+      },
+      "LeonardoPowder": {
+        "Name": "Leonardo's Alchemical Powder",
+        "Desc": "An advanced explosive gunpowder igniting upon contact with air.",
+        "Effect": "Increases firearm/bomb Damage by +2 and grants Penetrating quality."
+      },
+      "PotencyDraught": {
+        "Name": "Potency Draught",
+        "Desc": "A concentrated bull root extract granting immense physical power.",
+        "Effect": "+20 Strength and +20 Toughness (Bonuses +2) for 1d10 hours."
+      },
+      "LucidityTonic": {
+        "Name": "Lucidity Tonic",
+        "Desc": "A potent stimulant banishing exhaustion and sluggishness.",
+        "Effect": "+1 SL to Intelligence and Willpower Tests for 3d10 hours; afterwards 3 Fatigued Conditions."
+      },
+      "DebauchFriend": {
+        "Name": "Debauch's Friend",
+        "Desc": "An indispensable companion for tavern frequenters — fends off intoxication and morning hangovers.",
+        "Effect": "Automatically passes all Consume Alcohol Tests for 1d10 hours.",
+        "PrepTime": "1 week"
+      },
+      "NectarOfBeauty": {
+        "Name": "Nectar of Beauty",
+        "Desc": "Fades blemishes, smooths imperfections, and endows the drinker with alluring symmetry.",
+        "Effect": "+10 to Fellowship (+1 SL) on tests with characters susceptible to the drinker's charm for 3d10 hours.",
+        "PrepTime": "2 weeks"
+      },
+      "NectarOfVeracity": {
+        "Name": "Nectar of Veracity",
+        "Desc": "Evokes an irresistible compulsion to utter nothing but the unvarnished truth.",
+        "Effect": "Drinker must pass a Hard (-20) Cool Test to speak a deliberate falsehood for 3d10 hours.",
+        "PrepTime": "2 weeks"
+      },
+      "HairTonic": {
+        "Name": "Hair Tonic",
+        "Desc": "A cosmetic scalp tonic stimulating rapid hair and beard growth.",
+        "Effect": "Causes rapid growth of luxurious hair or beard within 24 hours."
+      },
+      "PanaceaUniversalis": {
+        "Name": "Panacea Universalis",
+        "Desc": "The legendary herbal panacea curing all natural poisons and diseases.",
+        "Effect": "Heals 3×TB Wounds, removes all Bleeding and Fatigued Conditions; Critical Wounds – Winds of Magic table (GM)."
+      },
+      "BoarsMusk": {
+        "Name": "Boar's Musk",
+        "Desc": "A repulsive musk extract sickening opponents in melee.",
+        "Effect": "−2 SL to Fellowship and Dexterity Tests and the Distracting Trait (affects everyone nearby) for 1d10 hours."
+      },
+      "HealingDraughtCore": {
+        "Name": "Healing Draught",
+        "Desc": "Standard medicinal brew concocted by certified apothecaries and battlefield surgeons.",
+        "Effect": "Immediately restores a number of Wounds equal to Toughness Bonus (TB).",
+        "PrepTime": "1 hour"
+      },
+      "VitalityDraughtCore": {
+        "Name": "Vitality Draught",
+        "Desc": "Invigorating draught of restorative herbs and spirits that shakes off weariness and toil.",
+        "Effect": "Instantly eliminates all Fatigued conditions.",
+        "PrepTime": "1 hour"
+      },
+      "DigestiveTonicCore": {
+        "Name": "Digestive Tonic",
+        "Desc": "Bitter herbal tonic soothing gut rot, bellyache, and toxic indigestion.",
+        "Effect": "Clears Poisoned condition and grants +20 against gastrointestinal ailments.",
+        "PrepTime": "30 minutes"
+      },
+      "Channelpath": {
+        "Name": "Channelpath Potion",
+        "Desc": "A decoction easing the safe and focused flow of the Winds of Magic.",
+        "Effect": "+2 SL to all successful Channelling tests for 10 minutes."
+      },
+      "Flight": {
+        "Name": "Potion of Flight",
+        "Desc": "A mystical nectar granting aerial levitation through force of will.",
+        "Effect": "Flight (20) Creature Trait for 1d10 minutes."
+      },
+      "Fortune": {
+        "Name": "Potion of Fortune",
+        "Desc": "An extract of rare herbs bending the strands of fate.",
+        "Effect": "Immediately +1 Fortune point (not above Fate)."
+      },
+      "Invisibility": {
+        "Name": "Potion of Invisibility",
+        "Desc": "An extraordinary draft bending light and masking the drinker's presence.",
+        "Effect": "Invisible for 1d10 minutes: mundane senses cannot see you (you can still be heard), Second Sight at −2 SL; targets you attack become Surprised."
+      },
+      "NectarVitality": {
+        "Name": "Nectar of Vitality",
+        "Desc": "A rich golden draught stimulating rapid cell repair.",
+        "Effect": "Regeneration for 1d10 minutes: in combat 1 Wound at the start of each round, out of combat Wounds return over the whole duration."
+      },
+      "AqshyLiquidFire": {
+        "Name": "Liquid Flame of Aqshy",
+        "Desc": "A thrown phial containing the condensed heat of the Red Wind.",
+        "Effect": "Thrown like an Incendiary, but magical: every target hit gains 2 + SL Ablaze Conditions."
+      },
+      "AqshyBlazingHeart": {
+        "Name": "Draught of the Blazing Heart",
+        "Desc": "A fiery potion boiling the drinker's blood with battle fury.",
+        "Effect": "+10 WS, +10 S and the Frenzy Trait for 10 minutes."
+      },
+      "AqshyWeaponOil": {
+        "Name": "Flaming Weapon Oil",
+        "Desc": "An ointment infused with Aqshy sulfur, igniting blades on impact.",
+        "Effect": "The weapon burns for 1 hour: a hit inflicts 1 Ablaze Condition (GM adjudicates)."
+      },
+      "AqshyWarBlood": {
+        "Name": "Aqshy War Blood",
+        "Desc": "A searing draught eradicating fear and hesitation.",
+        "Effect": "+20 I and +10 WP for 10 minutes; immune to Fear (GM adjudicates)."
+      },
+      "AzyrStarlight": {
+        "Name": "Starlight Phial",
+        "Desc": "A crystalline fluid illuminating sight with celestial blue light.",
+        "Effect": "Night Vision and Second Sight Talents for 1 hour."
+      },
+      "AzyrAstromancerSight": {
+        "Name": "Astromancer's Draught",
+        "Desc": "An astromancer brew giving glimpses of incoming blows.",
+        "Effect": "+20 I, +10 Ag and cannot be Surprised for 10 minutes."
+      },
+      "AzyrLightningReflex": {
+        "Name": "Lightning Reflex Draught",
+        "Desc": "A lightning-infused draught accelerating muscle response.",
+        "Effect": "+20 Agility and +1 Movement for 10 minutes."
+      },
+      "AzyrStormTonic": {
+        "Name": "Azyr Storm Tonic",
+        "Desc": "A refreshing tonic shielding nerves against electrical shock.",
+        "Effect": "+10 Toughness for 2 hours."
+      },
+      "MeteoricCompass": {
+        "Name": "Compass of Meteoric Silver",
+        "Desc": "A navigational tool pointing toward the nearest magical concentration.",
+        "Effect": "Detects magic within 8 km. Grants +2 SL to magical tracking tests."
+      },
+      "PowerPrism": {
+        "Name": "Power Prism",
+        "Desc": "A faceted aethyric prism isolating and refracting the Winds of Magic.",
+        "Effect": "Allows filtering aethyr or altering wind availability (WoM p. 160)."
+      },
+      "GhyranSpringDew": {
+        "Name": "Dew of the Spring Bough",
+        "Desc": "Sacred dew mending the most devastating trauma and amputation.",
+        "Effect": "Heals 3×TB Wounds and removes all Bleeding Conditions. One healing potion per encounter."
+      },
+      "GhyranVitalSap": {
+        "Name": "Vital Sap Draught",
+        "Desc": "Ancient oak sap infusing the body with natural vigor.",
+        "Effect": "+10 Toughness for 1 hour; in combat 1 Wound at the start of each round."
+      },
+      "GhyranBloodPurifier": {
+        "Name": "Ghyran Cleansing Draught",
+        "Desc": "An herbal infusion purging toxins and plagues from the bloodstream.",
+        "Effect": "Removes all Poisoned Conditions."
+      },
+      "GhyranIronbarkSalve": {
+        "Name": "Balsam of Ironbark",
+        "Desc": "A salve endowing skin with the durability of iron oak bark.",
+        "Effect": "+1 AP on all locations (stacks with armour) for 1 hour."
+      },
+      "GhurPredatorSight": {
+        "Name": "Predator's Draught",
+        "Desc": "A concoction bestowing the heightened senses of a timber wolf.",
+        "Effect": "Night Vision and Acute Sense (Smell) Talents for 1 hour."
+      },
+      "GhurUrsineVigor": {
+        "Name": "Ursine Vigor",
+        "Desc": "A surge of primeval strength from a cave bear claw.",
+        "Effect": "+20 Strength and +10 Toughness for 10 minutes."
+      },
+      "GhurPrimalRoar": {
+        "Name": "Primal Roar Tonic",
+        "Desc": "A tonic awakening savage instincts and predatory attacks.",
+        "Effect": "+10 WS and the Fear (1) Trait for 10 minutes."
+      },
+      "GhurSavageSalve": {
+        "Name": "Savage Pheromone Salve",
+        "Desc": "A pheromone grease pacifying wild beasts.",
+        "Effect": "+10 to animal-related Tests (care, training, riding, charming) for 4 hours."
+      },
+      "HyshRadiantPurity": {
+        "Name": "Elixir of Radiant Purity",
+        "Desc": "A sacred fluid cleansing corruption and dark blight from the soul.",
+        "Effect": "Removes 1 Corruption point – at most once per week per character."
+      },
+      "HyshSunsWrath": {
+        "Name": "Phial of Sun's Wrath",
+        "Desc": "A thrown phial bursting into radiant sunlight.",
+        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions; Daemons and Undead suffer extra Damage at the GM's discretion."
+      },
+      "HyshLucidityDraught": {
+        "Name": "Hysh Lucidity Draught",
+        "Desc": "A crystalline draught rendering the mind immune to shadows and deceit.",
+        "Effect": "+20 Willpower for 1 hour."
+      },
+      "HyshTruthDrops": {
+        "Name": "Drops of Absolute Truth",
+        "Desc": "Essence of truth discerning all deceit and falsehood.",
+        "Effect": "+20 to Intuition Tests for 1 hour."
+      },
+      "ShyishPaleMask": {
+        "Name": "Draught of the Pale Mask",
+        "Desc": "A draft halting pulse and breath into a state of suspended animation.",
+        "Effect": "Feigned death for 1d10 hours: immune to poisons, diseases and mind magic (GM adjudicates)."
+      },
+      "ShyishSpiritBane": {
+        "Name": "Grave Oil / Spirit Bane",
+        "Desc": "A weapon coating slaying incorporeal spirits and wraiths.",
+        "Effect": "Weapon strikes as magical and deals +3 damage against undead for 1 hour."
+      },
+      "ShyishHourglass": {
+        "Name": "Hourglass Decoction",
+        "Desc": "A mystical fluid staying the final sand in the glass of death.",
+        "Effect": "For 1 hour: when Wounds drop to 0, the character survives once with 1 Wound (GM adjudicates)."
+      },
+      "ShyishShroud": {
+        "Name": "Shyish Shroud",
+        "Desc": "A brew wreathing the drinker in the dreadful chill of the grave.",
+        "Effect": "+10 Willpower and the Fear (1) Trait for 1 hour."
+      },
+      "UlguShadowMist": {
+        "Name": "Shadow Mist Draught",
+        "Desc": "A phial shattered on the ground creating a cloud of impenetrable shadow.",
+        "Effect": "Creates 6 m radius shadow fog for 1d10 rounds (total concealment)."
+      },
+      "UlguPhantasmagoria": {
+        "Name": "Phantasmagoria Elixir",
+        "Desc": "An illusory draught shifting facial features, voice, and aura.",
+        "Effect": "+20 to Charm and Entertain Tests (disguise, deceit) for 1d10 hours."
+      },
+      "UlguStalkerOil": {
+        "Name": "Stalker's Oil",
+        "Desc": "A silence grease muffling footsteps and armor clatter.",
+        "Effect": "+10 to Stealth Tests for 2 hours."
+      },
+      "UlguWraithstep": {
+        "Name": "Wraithstep Draught",
+        "Desc": "A shadowy draught rendering the physical body semi-incorporeal.",
+        "Effect": "Allows passing through grates, doors, and bars for 1d10 rounds."
+      },
+      "FlashPowder": {
+        "Name": "Alchemical Flash Powder",
+        "Desc": "An explosive pyrotechnic blend producing a brilliant flash of light.",
+        "Effect": "Blinds all creatures within 3 meters for 1 round."
+      },
+      "QuickGlue": {
+        "Name": "Quick-Drying Glue",
+        "Desc": "A viscous resin adhesive curing in seconds.",
+        "Effect": "Instantly bonds stone, wood, and metal; can immobilize enemy boots."
+      },
+      "DebauchsFriend": {
+        "Name": "Debauch's Friend",
+        "Desc": "An herbal decoction shielding liver and head from inebriation.",
+        "Effect": "Automatically pass Consume Alcohol Tests for 1d10 hours."
+      },
+      "NectarBeauty": {
+        "Name": "Nectar of Beauty",
+        "Desc": "A tonic smoothing the skin and bestowing captivating radiance.",
+        "Effect": "+1 SL to Fellowship Tests against those attracted to the drinker, for 3d10 hours (toggle in the test dialog)."
+      },
+      "NectarVeracity": {
+        "Name": "Nectar of Veracity",
+        "Desc": "A root extract preventing conscious falsehoods.",
+        "Effect": "To lie, the drinker must pass a Hard (−20) Cool Test – for 3d10 hours (GM adjudicates)."
+      },
+      "Forgetfulness": {
+        "Name": "Draught of Forgetfulness",
+        "Desc": "A concoction wiping recent memories from the drinker's mind.",
+        "Effect": "Erases memories of the last 24 hours (WP -10 to resist)."
+      },
+      "SoothingDraught": {
+        "Name": "Soothing Draught",
+        "Desc": "A calming draught soothing agitated nerves and anger.",
+        "Effect": "+10 Willpower, but −10 Agility, Initiative and Intelligence for 1d10×10 minutes."
+      },
+      "HealingDraught": {
+        "Name": "Healing Draught",
+        "Desc": "A standard comfrey extract healing lacerations and wounds.",
+        "Effect": "Heals TB Wounds if the character has more than 0 Wounds. One dose per encounter."
+      },
+      "MasterworkHealing": {
+        "Name": "Masterwork Healing Draught",
+        "Desc": "An expertly distilled restorative of exceptional mending power.",
+        "Effect": "Average (+20) Cool Test to swallow it; then 1 Fatigued Condition. Otherwise it does nothing – a placebo."
+      },
+      "VitalityDraught": {
+        "Name": "Vitality Draught",
+        "Desc": "A fresh sage draught expelling physical fatigue.",
+        "Effect": "Instantly removes all Fatigued conditions."
+      },
+      "DigestiveTonic": {
+        "Name": "Digestive Tonic",
+        "Desc": "A peppermint distillate calming indigestion and sour stomach.",
+        "Effect": "+20 to recovery Tests against stomach ailments (e.g. the Bloody Flux) for 1 day."
+      },
+      "MundanePanacea": {
+        "Name": "Mundane Panacea",
+        "Desc": "A comprehensive herbal compound fighting wound infections.",
+        "Effect": "Removes all Bleeding and Poisoned Conditions (does not heal Wounds)."
+      },
+      "SoulBalm": {
+        "Name": "Soul Balm",
+        "Desc": "An extraordinary salve calming traumatized spirits.",
+        "Effect": "+20 to Willpower Tests against Fear, Terror and Intimidation for 6 hours (toggle in the test dialog)."
+      },
+      "TrollrootTincture": {
+        "Name": "Trollroot Tincture",
+        "Desc": "A vigorous tincture drastically accelerating bone knitting.",
+        "Effect": "Doubles natural healing rate and halves fracture recovery time."
+      },
+      "SkavenBrew": {
+        "Name": "Warpstone Draught",
+        "Desc": "A vile Clan Moulder draught infused with raw warpstone.",
+        "Effect": "+30 Strength and +30 Toughness for 2d10 − TB rounds; then a Challenging (+0) Endurance Test – on failure Poisoned and Bleeding (−6 SL: also Ablaze)."
+      },
+      "ReactionaryRestorative": {
+        "Name": "Reactionary Restorative",
+        "Desc": "A pungent, ginger draught stimulating the nervous system for swift defensive reactions and counterattacks.",
+        "Effect": "Cannot be Surprised for 1d10 hours; afterwards 1 Fatigued Condition."
+      },
+      "FocusingPhiltre": {
+        "Name": "Focusing Philtre",
+        "Desc": "A clear brew of Silver Lotus and crystalline water sharpening perception and analytical faculties.",
+        "Effect": "+20 to Intelligence and Endurance Tests for 1d10 hours; afterwards 1 Fatigued Condition."
+      },
+      "TonicSight": {
+        "Name": "Tonic of Sight Beyond Sight",
+        "Desc": "A luminous elixir allowing one to perceive that which is concealed from mortal eyes.",
+        "Effect": "A random Talent for 1d10 minutes (1d10): 1–2 Acute Sense (Sight), 3–4 Holy Visions, 5–6 Detect Magic, 7–8 Second Sight, 9–10 all of them."
+      },
+      "CordeliaRestorative": {
+        "Name": "Cordelia's Enhanced Restorative Tonic",
+        "Desc": "An exceptional alchemical tonic created by the brilliant physician Cordelia Welscher of Ubersreik.",
+        "Effect": "Heals 2×TB Wounds; Difficult (−10) Endurance Test – on failure a side effect (Blinded, Broken, Stunned or Unconscious) for as many minutes as the SL of failure."
+      },
+      "TrollAcid": {
+        "Name": "Troll Acid",
+        "Desc": "A corrosive secretion harvested from a troll stomach, dissolving metal and organic armour alike.",
+        "Effect": "Thrown: Damage +9 + SL (Penetrating, Dangerous); eats through up to 8 Enc of equipment."
+      },
+      "VeinPowder": {
+        "Name": "Veinpowder",
+        "Desc": "Powdered toxic reagents from the Imperial Zoo causing limb numbness and paralysis.",
+        "Effect": "For 1 hour removes 1 Bleeding Condition at the end of each round."
+      },
+      "QuicksilverMind": {
+        "Effect": "+1 SL to Intelligence-based Tests for 1 hour.",
+        "Name": "Quicksilver Mind Elixir",
+        "Desc": "A drop of purified quicksilver dissolved in a sage distillate. Gold Magisters drink it over tomes and crucibles – thought becomes swift and cool as liquid metal."
+      }
+    },
+    "Ingredients": {
+      "GoldIronFilings": "Iron & Gold Filings",
+      "PurifiedQuicksilver": "Purified Quicksilver",
+      "GoldDust": "Gold Dust",
+      "DragonAcid": "Aqua Regia",
+      "QuicksilverCondensate": "Quicksilver condensate",
+      "AlchemicalSalts": "Alchemical salts",
+      "LeadOxide": "Lead Sediment",
+      "NulnWineSpirits": "Wine spirits from Nuln",
+      "WhiteAlchemicalGold": "Aqua Vitae",
+      "SunDistilledWater": "Sun-distilled water",
+      "AmberGoldPowder": "Powdered amber and gold",
+      "EthericEssence": "Etheric essence",
+      "GreenVitriol": "Green vitriol",
+      "SulphuricAcid": "Sulphuric acid",
+      "SaltpetreSulphur": "Saltpetre and sulphur powder",
+      "MagnesiumShavings": "Magnesium shavings",
+      "KeroseneRockOil": "Kerosene and rock oil",
+      "WhitePhosphorus": "White Phosphorus",
+      "AmmoniumCarbonate": "Ammonium carbonate",
+      "LavenderOil": "Lavender Oil",
+      "YellowSulphur": "Yellow sulphur powder",
+      "CharcoalDust": "Charcoal dust",
+      "FreshMorrLeaves": "Fresh leaves of Morr",
+      "OintmentBase": "Ointment base (fat)",
+      "MandrakeExtractIng": "Mandrake root extract",
+      "Mead": "Mead",
+      "SnakeweedCharcoal": "Snakeweed and charcoal",
+      "ApothecarySpirits": "Apothecary spirits",
+      "StJohnsWortMelissa": "St. John's wort and melissa",
+      "MintDistillate": "Mint distillate",
+      "GriffinDown": "Young Griffin Down",
+      "BoarGland": "Boar Musk Gland",
+      "MeteoricSilver": "Meteoric Silver",
+      "AethyrCrystal": "Aethyr Crystal",
+      "WindStone": "Wind Stone",
+      "FourLeafClover": "Aethyric Clover",
+      "MagneticNeedle": "Meteoric Magnetic Needle",
+      "CrystalPrism": "Faceted Crystal Prism",
+      "CinnabarDust": "Cinnabar Dust",
+      "SalamanderEssence": "Salamander Heart Essence",
+      "SpringDew": "Jade Spring Dew",
+      "OakSap": "Ancient Oak Sap",
+      "Ironbark": "Ironbark",
+      "WolfEye": "Timber Wolf Eye",
+      "BearClaw": "Cave Bear Claw",
+      "BeastFangs": "Predator Fangs",
+      "BadgerFat": "Badger Fat",
+      "GraveDust": "Morr's Garden Grave Dust",
+      "HourglassSand": "Priest's Hourglass Sand",
+      "Sulfur": "Alchemical Sulfur",
+      "Saltpeter": "Purified Saltpeter",
+      "RockOil": "Rock Oil",
+      "PureAlcohol": "Pure Rectified Alcohol",
+      "PureWater": "Pure Spring Water",
+      "AmmoniaSalts": "Smelling Salts Base",
+      "WillowCharcoal": "Purified Willow Charcoal",
+      "ActivatedCharcoal": "Activated Charcoal",
+      "PineResin": "Pine Resin",
+      "Beeswax": "Beeswax",
+      "Comfrey": "Comfrey Root",
+      "MandrakeRoot": "Mandrake Root",
+      "BlackLotusPetals": "Black Lotus Petals",
+      "BullRoot": "Bull Root",
+      "SageLeaves": "Sage Leaves",
+      "MintOil": "Peppermint Oil",
+      "DaturaOil": "Datura Oil",
+      "RosePetals": "Imperial Rose Petals",
+      "RoseWater": "Distilled Rose Water",
+      "VeracityRoot": "Veracity Root",
+      "AntidoteHerb": "Forest Antidote Herb",
+      "KavehBeans": "Arabyan Kaveh Beans",
+      "TrollRoot": "Troll Root",
+      "ManticoreSaliva": "Manticore Saliva",
+      "LemonBalm": "Lemon Balm",
+      "HopCones": "Hop Cones",
+      "NettleOil": "Nettle Oil",
+      "ArtichokeLeaf": "Artichoke Leaf",
+      "WarpstoneDust": "Pure Warpstone Dust",
+      "SkavenBlood": "Skaven Blood",
+      "GingersnapRoot": "Gingersnap Root",
+      "SilverLotus": "Silver Lotus",
+      "EaglesEye": "Eagle's Eye Herb",
+      "Valerian": "Valerian Root",
+      "Nightshade": "Deadly Nightshade Berries"
+    },
+    "IngredientsDesc": {
+      "GoldIronFilings": "Finely ground iron filings mixed with real gold flakes, used in Chamon transmutations.",
+      "PurifiedQuicksilver": "Multiple times distilled liquid quicksilver, the primary conduit for alchemical energy.",
+      "GoldDust": "Purest sifted yellow gold dust of highest grade from dwarven mountain holds.",
+      "DragonAcid": "Extremely corrosive, hissing fluid harvested from the digestive glands of a young dragon.",
+      "QuicksilverCondensate": "Concentrated quicksilver distillate suffused with sulphur vapours, rich in magical density.",
+      "AlchemicalSalts": "Purified alchemical salt crystals used to stabilize violent reactions in the crucible.",
+      "LeadOxide": "Heavy lead oxide powder, essential for binding and precipitating volatile essences.",
+      "NulnWineSpirits": "High-proof wine spirits from the distilleries of Nuln, a premier alchemical solvent.",
+      "WhiteAlchemicalGold": "Rare alchemical gold alloyed with silver, cornerstone of the Gold Order's master elixirs.",
+      "SunDistilledWater": "Pure dew collected at dawn and triple-distilled under focused sunlight.",
+      "AmberGoldPowder": "Crushed ancient amber from the Norscan coast blended with microscopic gold granules.",
+      "EthericEssence": "Volatile essence of the Aethyr trapped in a sealed phial, glowing with a golden aura.",
+      "GreenVitriol": "Greenish crystals of iron sulphate, indispensable for producing corrosive acids.",
+      "SulphuricAcid": "Dense, fuming sulphuric acid capable of dissolving most metals and organic fabrics.",
+      "SaltpetreSulphur": "Combustible blend of purified saltpetre and sulphur, foundation of alchemical fire.",
+      "MagnesiumShavings": "Shavings of metallic magnesium producing a blinding white flash when ignited.",
+      "KeroseneRockOil": "Refined kerosene and rock petroleum from Kislevite wells, highly flammable liquid.",
+      "WhitePhosphorus": "Dangerously pyrophoric substance that bursts into flames on contact with air.",
+      "AmmoniumCarbonate": "Smelling salts releasing pungent ammonia vapors to shock the senses awake.",
+      "LavenderOil": "Soothing, concentrated essential oil distilled from field lavender blossoms.",
+      "YellowSulphur": "Bright yellow brimstone powder from volcanic vents, vital for pyrotechnic concoctions.",
+      "CharcoalDust": "Fine oak charcoal dust, acting as a potent filter and binder.",
+      "FreshMorrLeaves": "Young leaves of Morr gathered at dusk in the shade of cemetery cypresses.",
+      "OintmentBase": "Purified animal fat blended with beeswax, creating an ideal vehicle for healing salves.",
+      "MandrakeExtractIng": "Potent narcotic and numbing tincture extracted from tuberous mandrake root.",
+      "Mead": "Traditional aged honey mead from the forest apiaries of Talabecland.",
+      "SnakeweedCharcoal": "Synergistic mix of snakeweed and activated charcoal that neutralizes toxins.",
+      "ApothecarySpirits": "Rectified medical alcohol utilized by certified apothecaries and herbalists.",
+      "StJohnsWortMelissa": "Dried blossoms of St. John's wort and lemon balm to ease nervous strain.",
+      "MintDistillate": "Cooling, invigorating essence of peppermint that sharpens mental focus.",
+      "GriffinDown": "Exceptionally buoyant, Azyr-charged down feather from a young juvenile griffin.",
+      "BoarGland": "Pungent gland harvested from a prime Imperial forest boar, emitting a fierce wild musk.",
+      "MeteoricSilver": "Exotic silver harvested from fallen stars, exhibiting remarkable aethyric resonance.",
+      "AethyrCrystal": "High quality alchemical reagent: Aethyr Crystal.",
+      "WindStone": "High quality alchemical reagent: Wind Stone.",
+      "FourLeafClover": "High quality alchemical reagent: Aethyric Clover.",
+      "MagneticNeedle": "High quality alchemical reagent: Meteoric Magnetic Needle.",
+      "CrystalPrism": "High quality alchemical reagent: Faceted Crystal Prism.",
+      "CinnabarDust": "High quality alchemical reagent: Cinnabar Dust.",
+      "SalamanderEssence": "High quality alchemical reagent: Salamander Heart Essence.",
+      "SpringDew": "High quality alchemical reagent: Jade Spring Dew.",
+      "OakSap": "High quality alchemical reagent: Ancient Oak Sap.",
+      "Ironbark": "High quality alchemical reagent: Ironbark.",
+      "WolfEye": "High quality alchemical reagent: Timber Wolf Eye.",
+      "BearClaw": "High quality alchemical reagent: Cave Bear Claw.",
+      "BeastFangs": "High quality alchemical reagent: Predator Fangs.",
+      "BadgerFat": "High quality alchemical reagent: Badger Fat.",
+      "GraveDust": "High quality alchemical reagent: Morr's Garden Grave Dust.",
+      "HourglassSand": "High quality alchemical reagent: Priest's Hourglass Sand.",
+      "Sulfur": "High quality alchemical reagent: Alchemical Sulfur.",
+      "Saltpeter": "High quality alchemical reagent: Purified Saltpeter.",
+      "RockOil": "High quality alchemical reagent: Rock Oil.",
+      "PureAlcohol": "High quality alchemical reagent: Pure Rectified Alcohol.",
+      "PureWater": "High quality alchemical reagent: Pure Spring Water.",
+      "AmmoniaSalts": "High quality alchemical reagent: Smelling Salts Base.",
+      "WillowCharcoal": "High quality alchemical reagent: Purified Willow Charcoal.",
+      "ActivatedCharcoal": "High quality alchemical reagent: Activated Charcoal.",
+      "PineResin": "High quality alchemical reagent: Pine Resin.",
+      "Beeswax": "High quality alchemical reagent: Beeswax.",
+      "Comfrey": "High quality alchemical reagent: Comfrey Root.",
+      "MandrakeRoot": "High quality alchemical reagent: Mandrake Root.",
+      "BlackLotusPetals": "High quality alchemical reagent: Black Lotus Petals.",
+      "BullRoot": "High quality alchemical reagent: Bull Root.",
+      "SageLeaves": "High quality alchemical reagent: Sage Leaves.",
+      "MintOil": "High quality alchemical reagent: Peppermint Oil.",
+      "DaturaOil": "High quality alchemical reagent: Datura Oil.",
+      "RosePetals": "High quality alchemical reagent: Imperial Rose Petals.",
+      "RoseWater": "High quality alchemical reagent: Distilled Rose Water.",
+      "VeracityRoot": "High quality alchemical reagent: Veracity Root.",
+      "AntidoteHerb": "High quality alchemical reagent: Forest Antidote Herb.",
+      "KavehBeans": "High quality alchemical reagent: Arabyan Kaveh Beans.",
+      "TrollRoot": "High quality alchemical reagent: Troll Root.",
+      "ManticoreSaliva": "High quality alchemical reagent: Manticore Saliva.",
+      "LemonBalm": "High quality alchemical reagent: Lemon Balm.",
+      "HopCones": "High quality alchemical reagent: Hop Cones.",
+      "NettleOil": "High quality alchemical reagent: Nettle Oil.",
+      "ArtichokeLeaf": "High quality alchemical reagent: Artichoke Leaf.",
+      "WarpstoneDust": "High quality alchemical reagent: Pure Warpstone Dust.",
+      "SkavenBlood": "High quality alchemical reagent: Skaven Blood.",
+      "GingersnapRoot": "Fiery root strongly stimulating circulation and bodily reflexes.",
+      "SilverLotus": "A rare flower with silvery petals, clarifying and focusing the senses.",
+      "EaglesEye": "Forest herb with yellow blooms expanding visual perception.",
+      "Valerian": "A calming root gathered and dried by herbalists.",
+      "Nightshade": "Poisonous berries used in small quantities for potent preparations."
+    },
+    "Colleges": {
+      "AllColleges": "All Colleges",
+      "Aqshy": "Bright Order (Aqshy)",
+      "Azyr": "Celestial Order (Azyr)",
+      "Chamon": "Gold Order (Chamon)",
+      "Ghyran": "Jade Order (Ghyran)",
+      "Ghur": "Amber Order (Ghur)",
+      "Hysh": "Light Order (Hysh)",
+      "Shyish": "Amethyst Order (Shyish)",
+      "Ulgu": "Grey Order (Ulgu)"
+    },
+    "PrepTime": {
+      "30Min": "30 minutes",
+      "1Hour": "1 hour",
+      "2Hours": "2 hours",
+      "3Hours": "3 hours",
+      "4Hours": "4 hours",
+      "5Hours": "5 hours",
+      "6Hours": "6 hours",
+      "8Hours": "8 hours"
+    },
+    "Memory": {
+      "Title": "Recipe Memory",
+      "Used": "memorized",
+      "ChamonBonusTooltip": "Gold College Bonus: +5 memory slots and free slots for Chamon recipes",
+      "FreeChamonTooltip": "Innate Gold College knowledge (0 memory slots)",
+      "ZeroSlots": "0 slots"
+    },
+    "Knowledge": {
+      "Memorized": "From Memory",
+      "MemorizedTooltip": "You know this recipe from memory and can brew it at any time.",
+      "Unknown": "Unknown",
+      "FilterAll": "All Known",
+      "FilterMemorized": "From Memory",
+      "FilterGrimoires": "From Grimoires",
+      "FilterUnknown": "Unknown (GM)",
+      "Books": "books",
+      "KnownFromMemory": "You know this recipe from memory.",
+      "KnownFromBook": "Available from held grimoire",
+      "AlsoInBooks": "Also available from books",
+      "NotKnown": "Character does not know this recipe yet. Find a grimoire or learn the formula!",
+      "Memorize": "Memorize Recipe",
+      "MemorizeTooltip": "Memorize recipe into mind to brew without book (costs 1 memory slot).",
+      "Forget": "Forget",
+      "ForgetTooltip": "Remove recipe from memory to free a slot for another formula.",
+      "GMAward": "Award to Actor (GM)",
+      "GMAwardTooltip": "As GM, immediately memorize this recipe in character mind.",
+      "ManageBooks": "Manage Books",
+      "CarriedBooks": "Character's Books",
+      "DropRecipeIntoBook": "Drag a recipe onto a book to add it to that book.",
+      "BookAccessible": "Accessible",
+      "BookNeedsEquipped": "Must be equipped",
+      "BookNeedsLanguage": "Required language not known",
+      "RequiredLanguage": "Required language (leave blank for none)",
+      "NoLanguageRequirement": "No requirement",
+      "SaveBookRequirements": "Save book requirements",
+      "RemoveFromBook": "Remove recipe from book",
+      "EmptyBook": "This book has no recipes yet. Drop one here.",
+      "NoBooks": "This character has no recipe books in their inventory.",
+      "UnregisteredBooks": "Recognized books to register:",
+      "RegisterBook": "Register as a recipe book"
+    },
+    "Editor": {
+      "Title": "Alchemy Recipe Creator",
+      "AddRecipe": "Add Recipe",
+      "CreateTooltip": "Open creator to craft a new custom recipe (GM only)",
+      "PlaceholderName": "Recipe name (e.g. Fireherb Balm)",
+      "Category": "Category",
+      "TestAndCraft": "Test & Brewing Parameters",
+      "Skill": "Test Skill",
+      "Difficulty": "Difficulty",
+      "Volatility": "Brewing Difficulty",
+      "VolatilityMinor": "Minor",
+      "VolatilityModerate": "Moderate",
+      "VolatilityMajor": "Major",
+      "VolatilityExtreme": "Extreme",
+      "ExpiryMode": "After shelf life",
+      "ExpirySpoilage": "Use WFRP spoilage rules",
+      "ExpiryDeactivate": "Potion stops working",
+      "CreationDifficultySL": "Creation difficulty modifier (SL)",
+      "CreationTimeDays": "Creation Time (days)",
+      "ShelfLifeHint": "Sets when the potion loses freshness. Choose what happens after that below.",
+      "PrepTime": "Prep Time",
+      "BonusDaysPerSL": "Bonus days per SL",
+      "AddIngredient": "Add ingredient",
+      "Quantity": "Quantity",
+      "RemoveIngredient": "Remove ingredient",
+      "Descriptions": "Descriptions & Effects",
+      "FlavorDesc": "Lore description",
+      "PlaceholderDesc": "Brief description of appearance, smell and origin...",
+      "PlaceholderEffect": "Detailed mechanical effect description (conditions, characteristics, wounds)...",
+      "SaveRecipe": "Save Recipe",
+      "Edit": "Edit recipe",
+      "Delete": "Delete recipe",
+      "DeleteConfirmTitle": "Delete Recipe",
+      "DeleteConfirmContent": "Are you sure you want to permanently delete this custom recipe?",
+      "DefaultSkill": "Trade (Alchemist)",
+      "Categories": {
+        "apothecary": "Apothecary / Medicine",
+        "mundane": "Mundane Alchemy / Chemistry",
+        "herbal": "Herbalism",
+        "college-chamon": "Gold College (Chamon)",
+        "college-aqshy": "Bright College (Aqshy)",
+        "college-azyr": "Celestial College (Azyr)",
+        "college-ghyran": "Jade College (Ghyran)",
+        "college-ghur": "Amber College (Ghur)",
+        "college-hysh": "Light College (Hysh)",
+        "college-shyish": "Amethyst College (Shyish)",
+        "college-ulgu": "Grey College (Ulgu)",
+        "forbidden": "Forbidden Alchemy"
+      },
+      "IconAlt": "Recipe icon",
+      "PickIcon": "Choose an icon file"
+    },
+    "DragDropHint": "Drag scroll to memorize",
+    "DragDropHintTooltip": "You can drag a recipe from Compendium directly here or onto the character sheet!",
+    "CustomRecipe": "Custom GM recipe",
+    "NoRecipesInView": "No recipes in selected view.",
+    "NoRecipesPlayerHint": "Your character does not know any recipes from this category yet. Acquire a grimoire or learn the formula!",
+    "RecipeScrollTitle": "Recipe: {name}",
+    "Settings": {
+      "StrictModuleFilter": "Strict Source Module Filtering",
+      "StrictModuleFilterHint": "Hides recipes from official books whose modules are not active in the world.",
+      "RequireDiscovery": "Recipe Discovery & Grimoire System",
+      "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it.",
+      "RequireEquippedBooks": "Require equipped recipe books",
+      "RequireEquippedBooksHint": "Books grant recipe access only while equipped or worn by the character."
+    },
+    "Time": {
+      "Hours": "{count} h",
+      "HoursShort": "{count} h",
+      "Days": "{count} days",
+      "Weeks": "{count} weeks",
+      "Rounds": "{count} rounds",
+      "Minutes": "{count} min"
+    },
+    "Effects": {
+      "HealingLimit": "Potion healing (encounter limit)"
+    },
+    "Conditions": {
+      "Blinded": "Blinded (3)",
+      "Broken": "Broken",
+      "Stunned": "Stunned",
+      "Unconscious": "Unconscious"
+    },
+    "Compendium": {
+      "RequiredIngredients": "Required ingredients:",
+      "ScrollHint": "Drag this scroll onto a character sheet or the Workshop window to memorise the recipe!",
+      "BookHint": "Carrying this book unlocks its recipes in the Alchemical Workshop (from book).",
+      "Books": {
+        "Chamon": {
+          "Name": "Gold College Treatise on Transmutation",
+          "Desc": "The official treatise of the Gold College alchemists in Altdorf on infusing alloys and draughts with the yellow Wind of Chamon."
+        },
+        "Apothecary": {
+          "Name": "Master Apothecary's Herbal and Formulary",
+          "Desc": "A finely bound collection of healing recipes, fever balms and herbal extracts used by the apothecary guilds of Nuln and Altdorf."
+        },
+        "Field": {
+          "Name": "Manual of Field Alchemy and Pyrotechnics",
+          "Desc": "Chemical formulas for the Empire's engineers and military alchemists: etching acids, incendiaries and smoke mixtures."
+        }
+      }
+    },
+    "GMSettings": {
+      "Title": "GM settings for {actor}",
+      "PlayerAccess": "Share the Workshop with the player who owns this character",
+      "CapacityMod": "Tether points: modifier",
+      "MemoryMod": "Recipe memory: limit modifier",
+      "Schools": "Schools of magic visible to the player",
+      "Save": "Save settings"
+    },
+    "Packs": {
+      "Ingredients": "Alchemy – Ingredients",
+      "Potions": "Alchemy – Potions",
+      "Recipes": "Alchemy – Recipes and Grimoires"
+    }
+  }
+}

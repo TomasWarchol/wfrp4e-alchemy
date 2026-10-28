@@ -1,0 +1,1068 @@
+{
+  "GOLD_ALCHEMY": {
+    "Title": "Warsztat Alchemiczny",
+    "Button": {
+      "Alchemy": "Alchemia",
+      "OpenIngredients": "Składniki",
+      "OpenIngredientsTooltip": "Otwórz repozytorium (kompendium) wszystkich składników alchemicznych",
+      "OpenPotions": "Mikstury",
+      "OpenPotionsTooltip": "Otwórz repozytorium (kompendium) gotowych mikstur i eliksirów",
+      "OpenRecipes": "Księga Receptur",
+      "OpenRecipesTooltip": "Otwórz kompendium zwojów z recepturami i ksiąg alchemicznych",
+      "ToggleWorldRecipesTooltip": "Przełącz widok: pokazuj wszystkie receptury świata lub tylko znane postaci",
+      "WorldRecipesMode": "Tryb Świata"
+    },
+    "Action": {
+      "DrinkPotion": "Wypij miksturę",
+      "ThrowPotion": "Rzuć miksturę"
+    },
+    "Calendar": "Kalendarz",
+    "Day": "Dzień",
+    "Days": "dni",
+    "Pieces": "szt.",
+    "Currency": {
+      "GC": "zk",
+      "SS": "s"
+    },
+    "Depleted": "(Wypalony)",
+    "RecipeBook": "Księga Receptur",
+    "Capacity": {
+      "Title": "Punkty Podtrzymania",
+      "Locked": "zablokowanych",
+      "Free": "wolne",
+      "Points": "pkt Podtrzymania",
+      "PointsFull": "Punkty Podtrzymania"
+    },
+    "Category": {
+      "All": "Wszystkie",
+      "Chamon": "Magia Chamonu",
+      "Mundane": "Świecka Alchemia",
+      "Herbal": "Zielarstwo",
+      "Colleges": "Magia Kolegiów",
+      "Magical": "Magia Kolegiów",
+      "Apothecary": "Aptekarstwo",
+      "Forbidden": "Zakazana Alchemia"
+    },
+    "Status": {
+      "Ready": "Gotowe",
+      "MissingIngredients": "Brak składników"
+    },
+    "Details": {
+      "Effect": "Działanie",
+      "IngredientsTitle": "Wymagane Składniki (Ścisły Ekwipunek)",
+      "Owned": "Posiadasz",
+      "Required": "Wymagane",
+      "Laboratory": "Laboratorium",
+      "TimeAndShelfLife": "Czas i Ważność",
+      "CreationTime": "Czas tworzenia",
+      "MinimumTending": "co najmniej 3 godziny pracy dziennie",
+      "ShelfBase": "Baza",
+      "StartBrewing": "Rozpocznij Warzenie",
+      "CompleteBrewing": "Dokończ warzenie",
+      "CancelBrewing": "Anuluj warzenie",
+      "PendingBrew": "Warzenie: {recipe} · gotowe {date}.",
+      "WorldTimeMustPass": "Czas w świecie musi upłynąć.",
+      "NoRecipeSelected": "Wybierz recepturę z listy po lewej stronie.",
+      "IngredientsMissingTooltip": "Brak wymaganych składników lub punktów podtrzymania",
+      "CannotBrewTooltip": "Nie możesz uwarzyć tej mikstury (brak składników, brak punktów podtrzymania lub nieznana receptura).",
+      "Doses": "Dawki",
+      "DosesBatch": "1k10 (partia)",
+      "PricePerDose": "Cena dawki"
+    },
+    "Lab": {
+      "Poor": "Kiepskie Laboratorium (200 zk, -1 PS)",
+      "Standard": "Standardowe Laboratorium (400 zk, +0 PS)",
+      "Fine": "Wyśmienite Laboratorium (800 zk, +1 PS)"
+    },
+    "Tethers": {
+      "Title": "Aktywne Więzi w Drużynie",
+      "Sever": "Zerwij Więź",
+      "SeverTooltip": "Zerwij więź i zneutralizuj miksturę"
+    },
+    "Errors": {
+      "NotEnoughCapacity": "Niewystarczająca liczba wolnych punktów podtrzymania! Wymagane: {required}, wolne: {available}.",
+      "MissingIngredients": "Brak wymaganych składników w ekwipunku!",
+      "NoDoses": "Brak dawek tej mikstury!",
+      "InvalidPotion": "Ta mikstura nie ma aktywnej więzi alchemicznej.",
+      "NotYourPotion": "Tylko twórca mikstury może zerwać jej więź.",
+      "RecipeNotKnown": "Postać nie ma dostępu do tej receptury.",
+      "BrewAlreadyInProgress": "Ta postać ma już rozpoczęte warzenie. Dokończ je albo poproś MG o anulowanie.",
+      "BrewNotReady": "Warzenie będzie gotowe: {date}.",
+      "WorkshopUnavailable": "Warsztat Alchemiczny nie jest udostępniony tej postaci przez MG.",
+      "ThrowNotDrink": "Tej mikstury się nie pije – rzuć ją w cel (prawy przycisk → Rzuć miksturę).",
+      "NoThrowTarget": "Wskaż cel klawiszem T na tokenie, zanim rzucisz miksturę."
+    },
+    "Notifications": {
+      "SelectCharacter": "Wybierz postać, aby otworzyć Warsztat Alchemiczny.",
+      "BrewSuccess": "Pomyślnie uwarzono {qty} szt. mikstury: {potion}",
+      "BrewStarted": "Rozpoczęto warzenie. Gotowe: {date}. Wymaga co najmniej 3 godzin pracy dziennie.",
+      "BrewFailure": "Warzenie nie powiodło się! Składniki przepadły.",
+      "TetherRefundNotify": "Złota Osnowa: {drinker} wypił {potion}. Odzyskujesz {points} pkt skupienia!",
+      "PanaceaRestored": "Panaceum przywróciło {wounds} ran i oczyściło organizm!",
+      "PanaceaUniversalisRestored": "Panaceum Universalis uleczyło {wounds} ran, oczyściło krew, usunęło Zmęczenie oraz zneutralizowało wszelkie trucizny i choroby!",
+      "HealingDraughtRestored": "Wywar leczniczy przywrócił natychmiast {wounds} ran!",
+      "VitalityDraughtRestored": "Wywar witalności natychmiast usunął wszelkie stany Zmęczenie!",
+      "DigestiveTonicRestored": "Tonik trawienny ukoił dolegliwości żołądkowe i usunął stan Zatrucie!",
+      "FortuneRestored": "Odnawiasz 1 Punkt Szczęścia!",
+      "FortuneFull": "Twoje Szczęście jest już pełne.",
+      "AlkahestApplied": "Al-kahest wywołał gwałtowne oparzenia chemiczne (5 poziomów Podpalenia)!",
+      "SmellingSalts": "Sole trzeźwiące przywróciły przytomność!",
+      "MorrSalve": "Balsam z Morzyca uleczył {wounds} ran!",
+      "Antitoxin": "Odtrutka zneutralizowała truciznę w krwiobiegu.",
+      "SpringDewHealed": "Rosa z dębu nefrytowego uleczyła {wounds} ran i ustabilizowała rany!",
+      "Purified": "Krew została oczyszczona z trucizn i toksyn.",
+      "CorruptionPurified": "Oczyszczono duszę z 1 punktu Zepsucia Chaosu!",
+      "SoulPurified": "Umysł i dusza zostały napełnione promienistym spokojem.",
+      "AcidDamaged": "Żrący kwas zadał {damage} ran!",
+      "Blinded": "Oślepiający błysk oślepił cel!",
+      "AblazeApplied": "Substancja zapalająca podpaliła cel!",
+      "FellAsleep": "Ekstrakt z mandragory pogrążył cel w głębokim śnie.",
+      "WarpstoneCorruption": "Spaczeniowy wywar zanieczyścił ciało {corruption} punktami Zepsucia!",
+      "AlreadyMemorized": "Receptura jest już zapamiętana w pamięci postaci!",
+      "NoMemorySlotsAvailable": "Brak wolnych slotów pamięci! Zapomnij inną recepturę lub rozwiń Intelekt / Rzemiosło.",
+      "RecipeMemorized": "Zapamiętano recepturę: {name}!",
+      "RecipeForgotten": "Zapomniano recepturę: {name}.",
+      "RecipeAddedToBook": "Dopisano recepturę {recipe} do księgi {book}.",
+      "BookEditGMOnly": "Tylko MG może zmieniać zawartość ksiąg receptur.",
+      "MemorizeFromBookOnly": "Recepturę można zapamiętać z posiadanej księgi. Dodawanie bezpośrednio z listy jest dostępne dla MG.",
+      "RecipeNameRequired": "Wymagane jest podanie nazwy receptury!",
+      "IngredientRequired": "Receptura musi zawierać co najmniej jeden składnik!",
+      "RecipeSaved": "Zapisano recepturę: {name}.",
+      "RecipeDeleted": "Usunięto autorską recepturę.",
+      "GMOnlyAction": "Ta akcja jest dostępna wyłącznie dla Mistrza Gry.",
+      "StunnedApplied": "Otrzymano stan Ogłuszenie!",
+      "SoothingDraught": "Eliksir udobruchający usunął 1 poziom Zmęczenia.",
+      "MandrakeResisted": "Organizm zwalcza senność – mandragora nie działa.",
+      "FellAsleepHours": "Ekstrakt z mandragory pogrąża pijącego w śnie na {hours} godz. (stan Nieprzytomny).",
+      "ForgetResisted": "Umysł opiera się eliksirowi – wspomnienia zostają.",
+      "ForgetFailed": "Wspomnienia z ostatniej doby rozpływają się we mgle.",
+      "TrollrootRegen": "Przez najbliższe dni rany goją się dwa razy szybciej, a złamania zrastają w połowie czasu (pilnuje MG).",
+      "HealingLimit": "Organizm nie przyjmie w tym spotkaniu więcej leczenia z mikstur – brak efektu.",
+      "HealingDraughtNoEffect": "Mikstura lecznicza nie działa na postać bez Ran (0 Ran).",
+      "MarvelousRefused": "Ohydny smak – nie udaje się przełknąć mikstury.",
+      "MarvelousDrunk": "Mikstura przełknięta: 1 Stan Zmęczenie. Poza tym… nic się nie dzieje.",
+      "MundanePanacea": "Krwawienie zatamowane, trucizna zneutralizowana.",
+      "PurityCooldown": "Dusza nie przyjmie kolejnego oczyszczenia przed upływem tygodnia.",
+      "SleepComing": "Za 2–3 godziny pijący zapadnie w głęboki sen na {hours} godz. (MG nałoży stan Nieprzytomny).",
+      "CordeliaSideEffect": "Skutek uboczny: {condition} na {minutes} min.",
+      "SettingsSaved": "Zapisano ustawienia alchemii dla {actor}."
+    },
+    "Chat": {
+      "Brewed": "Uwarzono",
+      "Failed": "Niepowodzenie",
+      "Brewer": "Warzelnik",
+      "TestResult": "Wynik testu",
+      "Success": "Sukces",
+      "Failure": "Porażka",
+      "CreatedQty": "Wytworzona ilość",
+      "ExpiryDate": "Data ważności",
+      "ChamonTether": "Więź Chamonu",
+      "ChamonTetherLocked": "Zablokowano {points} pkt Osnowy",
+      "IngredientsDestroyed": "Składniki uległy zniszczeniu i zepsuciu w tyglu.",
+      "BrewingDisaster": "Uwarzona Katastrofa",
+      "Drinks": "{drinker} wypija: {potion}",
+      "PotionCondition": "Stan mikstury",
+      "SideEffect": "Efekt Uboczny",
+      "TetherExpired": "Więź Chamonu wygasła",
+      "TetherRefundInfo": "{points} pkt Osnowy wraca do alchemika.",
+      "TetherSevered": "Alchemik {alchemist} zerwał więź z miksturą {potion} u postaci {holder}. Zwrócono {points} pkt Osnowy.",
+      "TetherSeveredDesc": "[Więź Chamonu została zerwana przez Alchemika. Mikstura straciła swoje magiczne właściwości.]",
+      "Throws": "{thrower} rzuca: {potion}",
+      "ThrowTargets": "Cele",
+      "ThrowTest": "Rzut miksturą: {potion}",
+      "ThrowMissed": "Chybienie! Flakon roztrzaskuje się obok celu – MG decyduje, gdzie upadł i kogo zahaczył.",
+      "ThrowFizzled": "Zepsuta mikstura rozbija się bez żadnego efektu.",
+      "CloudCreated": "Chmura spowija obszar na {rounds} rund i daje całkowitą osłonę w swoim zasięgu.",
+      "ThrownAblaze": "{target}: Podpalenie ×{value}.",
+      "ThrownAlkahest": "{target}: chemiczne oparzenia – Podpalenie ×{value}.",
+      "ThrownAcid": "{target}: oparzenia kwasem – Podpalenie ×{value}.",
+      "ThrownTrollAcid": "{target}: kwas trolla zadaje {damage} obrażeń (Przebijający: MG może pominąć 1 PP). {details}",
+      "ThrownBlinded": "{target}: Oślepienie.",
+      "ThrownSunFlash": "{target}: Oślepienie ×{value}. Demony i nieumarli otrzymują dodatkowe obrażenia według MG.",
+      "ThrownStunned": "{target}: Ogłuszenie ×{value}.",
+      "ResistMandrake": "Odporność: ekstrakt z mandragory",
+      "ResistForget": "Opanowanie: eliksir zapomnienia",
+      "MagicalReplaced": "Wiatry się ścierają – przestaje działać: {names}.",
+      "DurationRolled": "{effect}: czas działania {duration}.",
+      "ResistMarvelous": "Opanowanie: Mistrzowska Mikstura Medyczna",
+      "ResistCordelia": "Odporność: Tonik Cordelii"
+    },
+    "Spoilage": {
+      "Deactivated": "Mikstura utraciła moc i nie wywołuje już efektu.",
+      "Fresh": "Świeża i stabilna. Działa z pełną mocą.",
+      "Expired": "Przeterminowany",
+      "CompletelySpoiled": "Całkowicie zepsuta! Mikstura straciła swoje właściwości i wywołuje dolegliwości.",
+      "PartiallySpoiled": "Częściowo zepsuta! Działa, lecz powoduje nieprzyjemny efekt uboczny.",
+      "MiraclePreserved": "Przeterminowana, lecz cudownym zrządzeniem losu zachowała swoje działanie!",
+      "RollDetails": "Rzut na zepsucie: {roll} (Szansa zepsucia: {spoil}% / częściowego: {partial}%)",
+      "SideEffects": {
+        "FoulBreath": {
+          "name": "Cuchnący oddech",
+          "desc": "Z ust pijącego wydobywa się odór zgniłych jaj. Kara -1 PS do testów Ogłady na 1 dzień."
+        },
+        "Cramps": {
+          "name": "Kolka i skurcze żołądka",
+          "desc": "Bolesne skurcze jelit. Kara -1 PS do wszystkich testów Siły Woli na 1 dzień."
+        },
+        "Flatulence": {
+          "name": "Gwałtowne wiatry",
+          "desc": "Uciążliwa i dekoncentrująca dolegliwość. Postać może w rundzie wykonać Ruch ALBO Akcję, nie oba."
+        },
+        "Nausea": {
+          "name": "Mdłości i wymioty",
+          "desc": "Postać zmaga się z nudnościami. Przy nieudanym teście ruchu otrzymuje stan Oszołomienie."
+        },
+        "Dizziness": {
+          "name": "Odurzenie i mroczki",
+          "desc": "Ciemne plamy przed oczami i zawroty głowy. Kara -2 PS do testów Percepcji i Walki."
+        },
+        "GutBurn": {
+          "name": "Poparzenie kiszek",
+          "desc": "Gwałtowny refluks kwasu. Postać natychmiast otrzymuje 1k10 obrażeń ignorujących pancerz!"
+        },
+        "Poisoning": {
+          "name": "Toksyczne zatrucie",
+          "desc": "Zepsute składniki zamieniły się w jad. Postać otrzymuje stan Zatrucie."
+        },
+        "Deadly": {
+          "name": "Śmiertelna trucizna!",
+          "desc": "Skrajnie niebezpieczny dekokt. Postać otrzymuje 2 poziomy stanu Zatrucie i natychmiast wykonuje Test Odporności (-20)!"
+        }
+      }
+    },
+    "Disasters": {
+      "Ruined": "Zepsuta partia: Wytworzono skażoną miksturę, która pachnie zgnilizną.",
+      "Smoke": "Dym i smród: Ciężki siarkowy dym wypełnia pomieszczenie. Przez 3 dni alchemik roztacza woń siarki.",
+      "Clumsy": "Niezdara: Część przyrządów ulega stłuczeniu. Naprawa kosztuje 5% wartości laboratorium.",
+      "Fumes": "Gryzący gaz: Alchemik wdycha opary kwasu i musi zdać Test Odporności (-10) lub otrzymać stan Zatrucie.",
+      "AcidBurn": "Oparzenie kwasem: Alchemik oblewa się żrącym odczynnikiem! Otrzymuje 1k10 ran ignorujących pancerz.",
+      "MinorBlast": "Niewielki wybuch!: Wyposażenie uszkodzone (10% wartości). Alchemik otrzymuje 1k10+2 obrażeń.",
+      "MajorBlast": "Wybuch w laboratorium!: Wyposażenie zniszczone w 20%. Alchemik otrzymuje 1k10+4 obrażeń!",
+      "Fire": "Pożar!: W laboratorium wybucha gwałtowny ogień niszczący 30% wyposażenia."
+    },
+    "Recipes": {
+      "IronSkin": {
+        "Name": "Eliksir Żelaznej Skóry",
+        "Desc": "Eliksir nasycony esencją Chamonu, utwardzający ciało do gęstości stali.",
+        "Effect": "+2 PP na wszystkich lokacjach i −10 Zw na 10 minut."
+      },
+      "LiquidGold": {
+        "Name": "Destylat Płynnego Złota",
+        "Desc": "Święty napój Złotego Zakonu nasycający duszę czystą Złotą Osnową.",
+        "Effect": "+20 SW na 1 godzinę."
+      },
+      "QuicksilverSpeed": {
+        "Name": "Mikstura Żywego Srebra",
+        "Desc": "Substancja nadająca ciału płynną, nienaturalną chyżość i refleks.",
+        "Effect": "+20 I, +10 Zw i +1 Szybkości na 10 minut."
+      },
+      "LeadFortitude": {
+        "Name": "Wywar Ołowianej Niewzruszoności",
+        "Desc": "Ołowiany dekokt czyniący umysł ciężkim i niewrażliwym na terror.",
+        "Effect": "+10 SW i −10 I na 1 godzinę; odporność na Strach i Grozę (rozstrzyga MG)."
+      },
+      "ChamonPanacea": {
+        "Name": "Transmutacyjne Panaceum Chamonu",
+        "Desc": "Mistyczne panaceum transmutujące zranienia w nienaruszoną tkankę.",
+        "Effect": "Natychmiast przywraca 2k10 ran oraz usuwa stany Zatrucie i Krwawienie."
+      },
+      "WeaveEssence": {
+        "Name": "Esencja Osnowy",
+        "Desc": "Dekokt otwierający umysł i kanały mistyczne czarodzieja.",
+        "Effect": "+10 SW na 1 godzinę."
+      },
+      "VitriolAcid": {
+        "Name": "Kwas Witriolowy",
+        "Desc": "Żrący kwas mineralny wypalający zbroje i ciała.",
+        "Effect": "Rzucany jak Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie (oparzenia kwasem)."
+      },
+      "LeonardPowder": {
+        "Name": "Oślepiający Proszek Błyskowy",
+        "Desc": "Proszek wywołujący oślepiający rozbłysk i huk, dezorientujący wrogów i zakłócający splatanie magii.",
+        "Effect": "Oślepia wszystkich w promieniu 3 metrów (stan Oślepienie na 1k10 rund przy nieudanym teście Odporności) i nakłada karę -20 do rzucania zaklęć.",
+        "PrepTime": "3 godziny"
+      },
+      "PhosphorFire": {
+        "Name": "Ogień Fosforowy",
+        "Desc": "Samozapalna mieszanina chemiczna rozlewająca się płomieniem.",
+        "Effect": "Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie."
+      },
+      "SmellingSalts": {
+        "Name": "Sole Trzeźwiące",
+        "Desc": "Ostry preparat amoniakalny przywracający przytomność.",
+        "Effect": "Natychmiast budzi nieprzytomną postać i usuwa 1 poziom stanu Ogłuszenie."
+      },
+      "SmokePellet": {
+        "Name": "Bomba Dymna",
+        "Desc": "Granat dymny tworzący gryzącą chmurę zasłony.",
+        "Effect": "Chmura dymu na 1k10 rund: całkowicie przesłania widok, uniemożliwia strzały i magiczne pociski."
+      },
+      "MorrSalve": {
+        "Name": "Balsam z Morzyca",
+        "Desc": "Kojąca maść znieczulająca uśmierzająca ból rannych.",
+        "Effect": "Leczy BWt Ran i usuwa 1 Stan Krwawienie. Jedna mikstura lecznicza na spotkanie."
+      },
+      "MandrakeExtract": {
+        "Name": "Ekstrakt z Mandragory",
+        "Desc": "Silny środek nasenny i paralityczny.",
+        "Effect": "Wymagający (+0) Test Odporności; porażka – za 2–3 godziny głęboki sen na 1k10+4 godziny."
+      },
+      "AntitoxinBroad": {
+        "Name": "Uniwersalna Odtrutka",
+        "Desc": "Preparat węglowy neutralizujący toksyny w żołądku.",
+        "Effect": "Przez 1 godzinę odporność na Zatrucie i trucizny; nie leczy trucizny już przyjętej."
+      },
+      "ClarityDrops": {
+        "Name": "Krople Jasności",
+        "Desc": "Krople ziołowe rozjaśniające zmysły i usuwające otępienie.",
+        "Effect": "+10 do Inicjatywy i Spostrzegawczości na 2 godziny. Usuwa Zaskoczenie."
+      },
+      "DraughtOfPower": {
+        "Name": "Mikstura Magicznej Mocy",
+        "Desc": "Potężny wywar czarodziejów nasycający duszę czystą mocą aethyru.",
+        "Effect": "Wartość Rzucenia zaklęć i rytuałów spada o połowę (min. 1) na 2k10 rund."
+      },
+      "PotionOfInvisibility": {
+        "Name": "Mikstura Niewidzialności",
+        "Desc": "Ugina promienie światła wokół pijącego, czyniąc go całkowicie niewidocznym dla zwykłych zmysłów.",
+        "Effect": "Niewidzialność na 1k10 minut. Ataki wywołują stan Zaskoczenie, wrogowie bez Zmysłu Magii mają -3 PS.",
+        "PrepTime": "2 miesiące"
+      },
+      "PotionOfFlight": {
+        "Name": "Mikstura Lotu",
+        "Desc": "Drażniący wywar nasycony esencją Azyru, unoszący ciało pijącego ponad ziemię.",
+        "Effect": "Zapewnia cechę istoty Latanie (20) na 1k10 minut.",
+        "PrepTime": "2 miesiące"
+      },
+      "ChannelpathPotion": {
+        "Name": "Mikstura Splatania",
+        "Desc": "Oczyszcza wewnętrzne aethyryczne kanały czarodzieja, ułatwiając przyciąganie Wiatrów Magii.",
+        "Effect": "+2 PS do wszystkich testów Splatania Magii (Channelling) na 1k10 minut.",
+        "PrepTime": "2 miesiące"
+      },
+      "PotionOfFortune": {
+        "Name": "Mikstura Losu",
+        "Desc": "Krople wróżbiarskie pozwalające zajrzeć w sploty przeznaczenia i odwrócić zły los.",
+        "Effect": "Przywraca 1 Punkt Szczęścia lub pozwala wykonać test Wróżbiarstwa Łatwy (+40).",
+        "PrepTime": "2 miesiące"
+      },
+      "NectarOfVitality": {
+        "Name": "Nektar Witalności",
+        "Desc": "Życiodajna mikstura stymulująca błyskawiczne zasklepianie się tkanek i regenerację mięśni.",
+        "Effect": "Zapewnia cechę istoty Regeneracja na 1k10 minut.",
+        "PrepTime": "2 miesiące"
+      },
+      "Alkahest": {
+        "Name": "Al-kahest (Uniwersalny Rozpuszczalnik)",
+        "Desc": "Najpotężniejsza substancja trawiąca, rozpuszczająca kamień, stal i ciało.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie (oparzenia chemiczne). Wypala dziurę w kamieniu lub stali."
+      },
+      "CompassMeteoric": {
+        "Name": "Kompas z Meteorytowego Srebra",
+        "Desc": "Aethyryczny instrument wskazujący kierunek najpotężniejszych skupisk magii i artefaktów.",
+        "Effect": "+2 PS do testów Nawigacji w poszukiwaniu skupisk magii, wirów, leylines i artefaktów.",
+        "PrepTime": "3 dni"
+      },
+      "LeonardoPowder": {
+        "Name": "Alchemiczny Proszek Leonarda",
+        "Desc": "Zaawansowany proch wybuchowy reagujący natychmiast z powietrzem.",
+        "Effect": "Zwiększa Obrażenia broni palnej lub bomby o +2 oraz nadaje cechę Przebijający."
+      },
+      "PotencyDraught": {
+        "Name": "Mikstura Wzmocnienia",
+        "Desc": "Mocny wyciąg z korzenia byka dający nieludzką krzepę fizyczną.",
+        "Effect": "+20 S i +20 Wt (Bonusy +2) na 1k10 godzin."
+      },
+      "LucidityTonic": {
+        "Name": "Eliksir Bezsenności",
+        "Desc": "Mocny tonik pobudzający usuwający senność i zmęczenie.",
+        "Effect": "+1 PS do testów Inteligencji i Siły Woli na 3k10 godzin; potem 3 Stany Zmęczenie."
+      },
+      "DebauchFriend": {
+        "Name": "Przyjaciel Opoja",
+        "Desc": "Niezbędnik każdego bywalca karczm w Reiklandzie – zapobiega upojeniu i porannemu kacowi.",
+        "Effect": "Automatycznie zdaje testy Mocnej Głowy (Consume Alcohol) przez 1k10 godzin.",
+        "PrepTime": "1 tydzień"
+      },
+      "NectarOfBeauty": {
+        "Name": "Eliksir Urody",
+        "Desc": "Wygładza rysy twarzy, usuwa blizny i nadaje skórze kuszący, promienny blask.",
+        "Effect": "+10 do Ogłady (+1 PS) w testach z postaciami podatnymi na wdzięk pijącego na 3k10 godzin.",
+        "PrepTime": "2 tygodnie"
+      },
+      "NectarOfVeracity": {
+        "Name": "Nektar Prawdomówności",
+        "Desc": "Wywołuje nieodparte pragnienie mówienia czystej prawdy.",
+        "Effect": "Aby skłamać, pijący musi zdać Bardzo Trudny (-20) test Opanowania. Czas trwania: 3k10 godzin.",
+        "PrepTime": "2 tygodnie"
+      },
+      "HairTonic": {
+        "Name": "Płyn na Porost Włosów",
+        "Desc": "Kosmetyczny płyn stymulujący porost bujnych włosów.",
+        "Effect": "Powoduje gwałtowny porost bujnych włosów lub brody w ciągu 24 godzin."
+      },
+      "PanaceaUniversalis": {
+        "Name": "Panacea Universalis",
+        "Desc": "Legendarne panaceum leczące wszelkie znane dolegliwości i trucizny.",
+        "Effect": "Leczy 3×BWt Ran, usuwa wszystkie Stany Krwawienie i Zmęczenie; Rany Krytyczne – tabela z Wiatrów Magii (MG)."
+      },
+      "BoarsMusk": {
+        "Name": "Woń Knura",
+        "Desc": "Wstrętny ekstrakt feromonowy odrzucający wrogów w walce.",
+        "Effect": "−2 PS do testów Ogłady i Zręczności oraz Cecha Dekoncentrujący (działa na wszystkich wokół) na 1k10 godzin."
+      },
+      "HealingDraughtCore": {
+        "Name": "Mikstura lecznicza",
+        "Desc": "Podstawowy, uniwersalny napój uzdrawiający przygotowywany przez aptekarzy i cyrulików.",
+        "Effect": "Przywraca natychmiast liczbę ran równą Bonusowi Wytrzymałości (BWt).",
+        "PrepTime": "1 godzina"
+      },
+      "VitalityDraughtCore": {
+        "Name": "Eliksir żywotności",
+        "Desc": "Ożywczy eliksir ziół i miodu zdejmujący z ciała wszelkie brzemię znoju i marszu.",
+        "Effect": "Natychmiast usuwa wszystkie posiadane poziomy stanu Zmęczenie.",
+        "PrepTime": "1 godzina"
+      },
+      "DigestiveTonicCore": {
+        "Name": "Tonik na trawienie",
+        "Desc": "Gorzka ziołowa mikstura kojąca zatrucia pokarmowe, zgagę i kolki.",
+        "Effect": "Usuwa stan Zatrucie i daje +20 do testów przeciw chorobom układu pokarmowego.",
+        "PrepTime": "30 minut"
+      },
+      "Channelpath": {
+        "Name": "Mikstura Splatania",
+        "Desc": "Wywar ułatwiający bezpieczne i precyzyjne ściąganie Wiatrów Magii.",
+        "Effect": "+2 PS do wszystkich udanych testów Splatania Magii przez 10 minut."
+      },
+      "Flight": {
+        "Name": "Mikstura Lotu",
+        "Desc": "Mistyczny nektar pozwalający unosić się w powietrzu siłą myśli.",
+        "Effect": "Cecha Stworzenia Latanie (20) na 1k10 minut."
+      },
+      "Fortune": {
+        "Name": "Mikstura Losu",
+        "Desc": "Wyciąg z rzadkich ziół naginający sploty przeznaczenia.",
+        "Effect": "Natychmiast +1 Punkt Szczęścia (nie ponad Przeznaczenie)."
+      },
+      "Invisibility": {
+        "Name": "Mikstura Niewidzialności",
+        "Desc": "Niezwykły wywar załamujący światło i zacierający obecność pijącego.",
+        "Effect": "Niewidzialność na 1k10 minut: zwykłe zmysły jej nie dostrzegą (wciąż ją słychać), Percepcja Magiczna z karą −2 PS; zaatakowany cel otrzymuje Zaskoczenie."
+      },
+      "NectarVitality": {
+        "Name": "Nektar Witalności",
+        "Desc": "Gęsty, złocisty wywar stymulujący komórki ciała do natychmiastowej naprawy.",
+        "Effect": "Regeneracja na 1k10 minut: w walce 1 Rana na początku każdej rundy, poza walką Rany wracają przez cały czas działania."
+      },
+      "AqshyLiquidFire": {
+        "Name": "Płynny Ogień Aqshy",
+        "Desc": "Flakon miotany zawierający skondensowany żar Czerwonego Wiatru.",
+        "Effect": "Rzucany jak Podpalacz, ale magiczny: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie."
+      },
+      "AqshyBlazingHeart": {
+        "Name": "Eliksir Berserkerskiego Żaru",
+        "Desc": "Napój rozgrzewający krew do temperatury wrzenia i budzący furię bojową.",
+        "Effect": "+10 WW, +10 S i Cecha Szał Bojowy na 10 minut."
+      },
+      "AqshyWeaponOil": {
+        "Name": "Olej Płonącego Oręża",
+        "Desc": "Smarowidło nasycone siarką Aqshy, zapalające ostrze przy uderzeniu.",
+        "Effect": "Broń płonie przez 1 godzinę: trafienie nakłada 1 Stan Podpalenie (rozstrzyga MG)."
+      },
+      "AqshyWarBlood": {
+        "Name": "Destylat Gorączki Bojowej",
+        "Desc": "Żarliwy wywar usuwający wahanie i strach przed śmiercią.",
+        "Effect": "+20 I i +10 SW na 10 minut; odporność na Strach (rozstrzyga MG)."
+      },
+      "AzyrStarlight": {
+        "Name": "Destylat Gwiezdnego Pyłu",
+        "Desc": "Krystaliczny płyn rozświetlający wzrok niebiańskim blaskiem Azyr.",
+        "Effect": "Talenty Widzenie w Ciemności i Percepcja Magiczna na 1 godzinę."
+      },
+      "AzyrAstromancerSight": {
+        "Name": "Eliksir Proroczego Wglądu",
+        "Desc": "Napar astromantów dający przebłyski nadchodzących ciosów.",
+        "Effect": "+20 I, +10 Zw i nie można zostać Zaskoczonym przez 10 minut."
+      },
+      "AzyrLightningReflex": {
+        "Name": "Wywar Piorunującego Refleksu",
+        "Desc": "Dekokt nasycony energią błyskawicy, przyśpieszający reakcje mięśni.",
+        "Effect": "+20 Zw i +1 Szybkości na 10 minut."
+      },
+      "AzyrStormTonic": {
+        "Name": "Tinctura Błękitnego Wiatru",
+        "Desc": "Orzeźwiający tonik chroniący układ nerwowy przed wstrząsem.",
+        "Effect": "+10 Wt na 2 godziny."
+      },
+      "MeteoricCompass": {
+        "Name": "Kompas z Meteorytowego Srebra",
+        "Desc": "Przyrząd nawigacyjny wskazujący najbliższą koncentrację magii.",
+        "Effect": "Wskazuje źródła magii w promieniu 8 km. Daje +2 PS do testów tropienia magii."
+      },
+      "PowerPrism": {
+        "Name": "Pryzmat Mocy",
+        "Desc": "Szlifowany pryzmat aethyryczny pozwalający filtrować i rozszczepiać Wiatry Magii.",
+        "Effect": "Umożliwia czarodziejowi oczyszczanie aethyru lub zmianę wiatru (reguły s. 160 WoM)."
+      },
+      "GhyranSpringDew": {
+        "Name": "Krople Wiecznej Wiosny",
+        "Desc": "Święta rosa lecząca nawet najcięższe urazy i amputacje.",
+        "Effect": "Leczy 3×BWt Ran i usuwa wszystkie Stany Krwawienie. Jedna mikstura lecznicza na spotkanie."
+      },
+      "GhyranVitalSap": {
+        "Name": "Eliksir Przebudzenia Ziemi",
+        "Desc": "Sok z prastarego dębu napełniający ciało wigorem natury.",
+        "Effect": "+10 Wt na 1 godzinę; w walce 1 Rana na początku każdej rundy."
+      },
+      "GhyranBloodPurifier": {
+        "Name": "Napar Oczyszczenia Krwi",
+        "Desc": "Ziołowy wywar oczyszczający krwiobieg z zaraz i trucizn.",
+        "Effect": "Usuwa wszystkie Stany Zatrucie."
+      },
+      "GhyranIronbarkSalve": {
+        "Name": "Balsam Życiodajnej Kory",
+        "Desc": "Maść nadająca skórze właściwości kory żelaznego dębu.",
+        "Effect": "+1 PP na wszystkich lokacjach (sumuje się ze zbroją) na 1 godzinę."
+      },
+      "GhurPredatorSight": {
+        "Name": "Wywar Wilczego Zmysłu",
+        "Desc": "Wywar dający zmysły leśnego drapieżcy.",
+        "Effect": "Talenty Widzenie w Ciemności i Wyczulony Zmysł (Węch) na 1 godzinę."
+      },
+      "GhurUrsineVigor": {
+        "Name": "Eliksir Niedźwiedziej Krzepy",
+        "Desc": "Zastrzyk zwierzęcej mocy niedźwiedzia jaskiniowego.",
+        "Effect": "+20 S i +10 Wt na 10 minut."
+      },
+      "GhurPrimalRoar": {
+        "Name": "Destylat Pierwotnego Ryku",
+        "Desc": "Tonik wyzwalający pierwotną agresję i drapieżne ataki.",
+        "Effect": "+10 WW i Cecha Strach (1) na 10 minut."
+      },
+      "GhurSavageSalve": {
+        "Name": "Balsam Dzikości",
+        "Desc": "Feromonowa maść neutralizująca agresję zwierząt.",
+        "Effect": "+10 do testów z udziałem zwierząt (opieka, tresura, jazda, uspokajanie) na 4 godziny."
+      },
+      "HyshRadiantPurity": {
+        "Name": "Świetlisty Eliksir Iluminacji",
+        "Desc": "Święty płyn wypalający ślady Chaosu z duszy i ciała.",
+        "Effect": "Usuwa 1 Punkt Zepsucia – najwyżej raz na tydzień na postać."
+      },
+      "HyshSunsWrath": {
+        "Name": "Flakon Słonecznego Blasku",
+        "Desc": "Flakon miotany eksplodujący oślepiającym blaskiem Białego Wiatru.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie; demony i nieumarli – dodatkowe obrażenia według MG."
+      },
+      "HyshLucidityDraught": {
+        "Name": "Napar Czystego Umysłu",
+        "Desc": "Krystaliczny napar czyniący umysł odpornym na mrok i iluzje.",
+        "Effect": "+20 SW na 1 godzinę."
+      },
+      "HyshTruthDrops": {
+        "Name": "Krople Prawdy Hysh",
+        "Desc": "Esencja prawdy pozwalająca wyczuwać fałsz i kłamstwo.",
+        "Effect": "+20 do testów Intuicji na 1 godzinę."
+      },
+      "ShyishPaleMask": {
+        "Name": "Eliksir Maski Śmierci",
+        "Desc": "Napój wprowadzający ciało w stan pozornej śmierci bez pulsu i oddechu.",
+        "Effect": "Pozorna śmierć na 1k10 godzin: odporność na trucizny, choroby i magię umysłu (rozstrzyga MG)."
+      },
+      "ShyishSpiritBane": {
+        "Name": "Olej Wiecznego Spoczynku",
+        "Desc": "Olej na broń raniący istoty niematerialne i upiory.",
+        "Effect": "Broń zadaje obrażenia magiczne i +3 obrażeń przeciwko nieumarłym na 1 godzinę."
+      },
+      "ShyishHourglass": {
+        "Name": "Destylat Klepsydry Morra",
+        "Desc": "Mistyczny płyn zawieszający śmiertelne przeznaczenie.",
+        "Effect": "Przez 1 godzinę: gdy Rany spadną do 0, postać raz przeżywa z 1 Raną (rozstrzyga MG)."
+      },
+      "ShyishShroud": {
+        "Name": "Esencja Całunu",
+        "Desc": "Wywar otaczający pijącego upiorną aurą chłodu i zgonu.",
+        "Effect": "+10 SW i Cecha Strach (1) na 1 godzinę."
+      },
+      "UlguShadowMist": {
+        "Name": "Wywary Mgły Cienia",
+        "Desc": "Flakon rozbijany o ziemię, tworzący chmurę nieprzeniknionego cienia.",
+        "Effect": "Tworzy mgłę cienia o promieniu 6 m na 1k10 rund (całkowita osłona)."
+      },
+      "UlguPhantasmagoria": {
+        "Name": "Eliksir Zwodniczej Maski",
+        "Desc": "Iluzoryczny dekokt zmieniający rysy twarzy, głos i aurę pijącego.",
+        "Effect": "+20 do testów Charyzmy i Występów (przebranie, zwodzenie) na 1k10 godzin."
+      },
+      "UlguStalkerOil": {
+        "Name": "Olej Cichego Kroku",
+        "Desc": "Smarowidło wyciszające dźwięk kroków i brzęk pancerza.",
+        "Effect": "+10 do testów Skradania na 2 godziny."
+      },
+      "UlguWraithstep": {
+        "Name": "Eliksir Widmowego Przejścia",
+        "Desc": "Niezwykły wywar czyniący ciało półmaterialnym cieniem.",
+        "Effect": "Pozwala przenikać przez kraty, drzwi i szczeliny przez 1k10 rund."
+      },
+      "FlashPowder": {
+        "Name": "Oślepiający Proszek Błyskowy",
+        "Desc": "Mieszanka wybuchowa dająca oślepiający błysk światła.",
+        "Effect": "Oślepia wszystkie istoty w promieniu 3 metrów na 1 rundę."
+      },
+      "QuickGlue": {
+        "Name": "Alchemiczny Klej Szybkoschnący",
+        "Desc": "Gęste spoiwo żywiczne zastygające w kilka sekund.",
+        "Effect": "Błyskawicznie spaja drewno, kamień i metal; może unieruchomić stopy wroga."
+      },
+      "DebauchsFriend": {
+        "Name": "Przyjaciel Opoja",
+        "Desc": "Ziołowy dekokt chroniący wątrobę i głowę przed upojeniem.",
+        "Effect": "Automatyczny sukces testów Mocnej Głowy na 1k10 godzin."
+      },
+      "NectarBeauty": {
+        "Name": "Eliksir Urody",
+        "Desc": "Tonik wygładzający cerę, nadający oczom blask i urokliwy zapach.",
+        "Effect": "+1 PS do testów Ogłady wobec osób, które pociąga postać, na 3k10 godzin (premię włącza gracz w oknie testu)."
+      },
+      "NectarVeracity": {
+        "Name": "Nektar Prawdomówności",
+        "Desc": "Wyciąg z korzenia szczerości uniemożliwiający kłamanie.",
+        "Effect": "By skłamać, trzeba zdać Trudny (−20) Test Opanowania – przez 3k10 godzin (rozstrzyga MG)."
+      },
+      "Forgetfulness": {
+        "Name": "Eliksir Zapomnienia",
+        "Desc": "Wywar usuwający z pamięci ostatnie wspomnienia.",
+        "Effect": "Wymazuje wspomnienia z ostatnich 24 godzin (obrona SW -10)."
+      },
+      "SoothingDraught": {
+        "Name": "Eliksir Udobruchający",
+        "Desc": "Kojący napój uspokajający nerwy i wyciszający gniew.",
+        "Effect": "+10 SW, ale −10 Zw, I i Int na 1k10×10 minut."
+      },
+      "HealingDraught": {
+        "Name": "Mikstura Lecznicza",
+        "Desc": "Podstawowy wyciąg z żywokostu cesarskiego leczący rany.",
+        "Effect": "Leczy BWt Ran, jeśli postać ma więcej niż 0 Ran. Jedna dawka na spotkanie."
+      },
+      "MasterworkHealing": {
+        "Name": "Mistrzowska Mikstura Medyczna",
+        "Desc": "Wyśmienicie przygotowany wywar medyczny o potężnej sile gojenia.",
+        "Effect": "Przeciętny (+20) Test Opanowania, by przełknąć; potem 1 Stan Zmęczenie. Poza tym nie działa – to placebo."
+      },
+      "VitalityDraught": {
+        "Name": "Eliksir Żywotności",
+        "Desc": "Wywar ze świeżej szałwii usuwający wyczerpanie.",
+        "Effect": "Natychmiast usuwa wszelkie poziomy stanu Zmęczenie."
+      },
+      "DigestiveTonic": {
+        "Name": "Tonik na Trawienie",
+        "Desc": "Miętowy destylat łagodzący dolegliwości żołądkowe.",
+        "Effect": "+20 do testów wyzdrowienia z chorób żołądka (np. Czerwonka) przez 1 dobę."
+      },
+      "MundanePanacea": {
+        "Name": "Panaceum Świeckie",
+        "Desc": "Złożony lek ziołowy zwalczający infekcje i rany.",
+        "Effect": "Usuwa wszystkie Stany Krwawienie i Zatrucie (nie leczy Ran)."
+      },
+      "SoulBalm": {
+        "Name": "Balsam na Duszę",
+        "Desc": "Niezwykła maść kojąca wstrząśniętą duszę i umysł.",
+        "Effect": "+20 do testów SW przeciw Strachowi, Grozie i Zastraszeniu przez 6 godzin (premię włącza gracz w oknie testu)."
+      },
+      "TrollrootTincture": {
+        "Name": "Wyciąg z Korzenia Trolla",
+        "Desc": "Potężna nalewka drastycznie przyspieszająca zrastanie kości.",
+        "Effect": "Podwaja tempo leczenia i skraca czas złamań kości o połowę."
+      },
+      "SkavenBrew": {
+        "Name": "Skaveński Wywar Spaczeniowy",
+        "Desc": "Zdeprawowany wywar klanu Moulder nasycony czystym spaczeniem.",
+        "Effect": "+30 S i +30 Wt na 2k10 − BWt rund; potem Wymagający (+0) Test Odporności – porażka: Zatrucie i Krwawienie (−6 PS: także Podpalenie)."
+      },
+      "ReactionaryRestorative": {
+        "Name": "Ripostny Odwar",
+        "Desc": "Ostry, imbirowy napar pobudzający układ nerwowy do błyskawicznych reakcji obronnych i kontrataków.",
+        "Effect": "Nie można zostać Zaskoczonym przez 1k10 godzin; potem 1 Stan Zmęczenie."
+      },
+      "FocusingPhiltre": {
+        "Name": "Ekstrakt Skupienia",
+        "Desc": "Czysty wywar ze Srebrzystego Lotosu i krystalicznej wody wyostrzający percepcję i zdolności analityczne.",
+        "Effect": "+20 do testów Inteligencji i Odporności na 1k10 godzin; potem 1 Stan Zmęczenie."
+      },
+      "TonicSight": {
+        "Name": "Tonik Niewidywanych Widoków",
+        "Desc": "Świetlisty eliksir pozwalający dostrzec to, co ukryte przed wzrokiem śmiertelników.",
+        "Effect": "Losowy talent na 1k10 minut (1k10): 1–2 Wyczulony Zmysł (Wzrok), 3–4 Święte Wizje, 5–6 Wykrywanie Magii, 7–8 Percepcja Magiczna, 9–10 wszystkie."
+      },
+      "CordeliaRestorative": {
+        "Name": "Cudowny Regeneracyjny Tonik Cordelii",
+        "Desc": "Wyjątkowy tonik alchemiczny stworzony przez genialną lekarkę Cordelię Welscher z Ubersreiku.",
+        "Effect": "Leczy 2×BWt Ran; Trudny (−10) Test Odporności – porażka: skutek uboczny (Oślepienie, Panika, Oszołomienie lub Utrata Przytomności) na tyle minut, ile PS porażki."
+      },
+      "TrollAcid": {
+        "Name": "Kwas Trolla",
+        "Desc": "Żrąca wydzielina pozyskana z żołądka trolla, rozpuszczająca metal i organiczne pancerze.",
+        "Effect": "Rzucany: Obrażenia +9 + PS (Przebijający, Niebezpieczny); przeżera do 8 Obc. ekwipunku."
+      },
+      "VeinPowder": {
+        "Name": "Proszek Żylny",
+        "Desc": "Sproszkowane toksyczne odczynniki z Imperialnego Zoo powodujące drętwienie kończyn i paraliż.",
+        "Effect": "Przez 1 godzinę na koniec każdej rundy usuwa 1 Stan Krwawienie."
+      },
+      "QuicksilverMind": {
+        "Effect": "+1 PS do testów opartych na Inteligencji przez 1 godzinę.",
+        "Name": "Eliksir Rtęciowego Umysłu",
+        "Desc": "Kropla oczyszczonej rtęci rozpuszczona w szałwiowym destylacie. Złoci Magistrowie piją go nad księgami i tyglami – myśl staje się szybka i chłodna jak płynny metal."
+      }
+    },
+    "Ingredients": {
+      "GoldIronFilings": "Opiłki żelaza i złota",
+      "PurifiedQuicksilver": "Czysta rtęć aethyryczna",
+      "GoldDust": "Złoty pył kruszcowy",
+      "DragonAcid": "Aqua Regia (Woda Królewska)",
+      "QuicksilverCondensate": "Kondensat żywego srebra (rtęci)",
+      "AlchemicalSalts": "Sole alchemiczne",
+      "LeadOxide": "Ołowiany osad alchemiczny",
+      "NulnWineSpirits": "Spirytus winny z Nuln",
+      "WhiteAlchemicalGold": "Aqua Vitae (Woda Życia)",
+      "SunDistilledWater": "Woda destylowana w świetle słońca",
+      "AmberGoldPowder": "Sproszkowany bursztyn i złoto",
+      "EthericEssence": "Eterowa esencja",
+      "GreenVitriol": "Zielony witriol",
+      "SulphuricAcid": "Kwas siarkowy",
+      "SaltpetreSulphur": "Sproszkowana saletra i siarka",
+      "MagnesiumShavings": "Opiłki magnezu",
+      "KeroseneRockOil": "Nafta i olej skalny",
+      "WhitePhosphorus": "Biały fosfor",
+      "AmmoniumCarbonate": "Węglan amonu",
+      "LavenderOil": "Olejek lawendowy",
+      "YellowSulphur": "Żółta siarka w proszku",
+      "CharcoalDust": "Pył węgla drzewnego",
+      "FreshMorrLeaves": "Świeże liście morzyca",
+      "OintmentBase": "Baza maściowa (tłuszcz)",
+      "MandrakeExtractIng": "Wyciąg z korzenia mandragory",
+      "Mead": "Miód pitny",
+      "SnakeweedCharcoal": "Ziele wężowe i węgiel aktywny",
+      "ApothecarySpirits": "Spirytus aptekarski",
+      "StJohnsWortMelissa": "Kwiaty dziurawca i melisa",
+      "MintDistillate": "Destylat miętowy",
+      "GriffinDown": "Puch młodego gryfa",
+      "BoarGland": "Gruczoł piżmowy dzika",
+      "MeteoricSilver": "Meteorytowe srebro",
+      "AethyrCrystal": "Krystaliczny Aethyr",
+      "WindStone": "Sproszkowany kamień wiatru",
+      "FourLeafClover": "Koniczyna aethyryczna",
+      "MagneticNeedle": "Igła magnetyczna z meteorytu",
+      "CrystalPrism": "Szlifowany pryzmat krystaliczny",
+      "CinnabarDust": "Czerwony pył cynobrowy",
+      "SalamanderEssence": "Serce salamandry / esencja żaru",
+      "SpringDew": "Rosa z dębu nefrytowego",
+      "OakSap": "Sok z prastarego dębu",
+      "Ironbark": "Kora żelaznego dębu",
+      "WolfEye": "Oko wilka leśnego",
+      "BearClaw": "Pazur niedźwiedzia jaskiniowego",
+      "BeastFangs": "Kły drapieżnika",
+      "BadgerFat": "Tłuszcz borsuczy",
+      "GraveDust": "Ziemia cmentarna z ogrodu Morra",
+      "HourglassSand": "Piasek z klepsydry kapłana Morra",
+      "Sulfur": "Siarka alchemiczna",
+      "Saltpeter": "Saletra oczyszczona",
+      "RockOil": "Olej skalny",
+      "PureAlcohol": "Czysty spirytus winny",
+      "PureWater": "Woda źródlana czysta",
+      "AmmoniaSalts": "Sole trzeźwiące bazy",
+      "WillowCharcoal": "Sadza wierzbowa oczyszczona",
+      "ActivatedCharcoal": "Węgiel drzewny aktywny",
+      "PineResin": "Żywica sosnowa",
+      "Beeswax": "Wosk pszczeli",
+      "Comfrey": "Korzeń żywokostu cesarskiego",
+      "MandrakeRoot": "Korzeń mandragory",
+      "BlackLotusPetals": "Płatki czarnego lotosu",
+      "BullRoot": "Wyciąg z korzenia byka",
+      "SageLeaves": "Liście szałwii srebrzystej",
+      "MintOil": "Olejek z mięty pieprzowej",
+      "DaturaOil": "Olejek z bielunia",
+      "RosePetals": "Płatki róży imperialnej",
+      "RoseWater": "Woda różana destylowana",
+      "VeracityRoot": "Korzeń szczerości",
+      "AntidoteHerb": "Zioło odtrutki leśnej",
+      "KavehBeans": "Ziarna kawy arabyjskiej",
+      "TrollRoot": "Korzeń trolla",
+      "ManticoreSaliva": "Ślina mantikory",
+      "LemonBalm": "Liście melisy leśnej",
+      "HopCones": "Szyszki chmielu leśnego",
+      "NettleOil": "Olej z pokrzywy",
+      "ArtichokeLeaf": "Liście karczocha leśnego",
+      "WarpstoneDust": "Pył czystego spaczenia",
+      "SkavenBlood": "Krew szczuroczłeka",
+      "GingersnapRoot": "Korzeń Imbirówki",
+      "SilverLotus": "Srebrzysty Lotos",
+      "EaglesEye": "Orle Oko (Ziele)",
+      "Valerian": "Korzeń kozłka lekarskiego",
+      "Nightshade": "Jagody wilczej jagody"
+    },
+    "IngredientsDesc": {
+      "GoldIronFilings": "Drobno zmielone opiłki metalicznego żelaza zmieszane z płatkami złota, używane w transmutacji Chamonu.",
+      "PurifiedQuicksilver": "Wielokrotnie destylowana płynna rtęć o srebrzystym połysku, podstawowy nośnik energii alchemicznej.",
+      "GoldDust": "Najczystszy, przesiany pył z żółtego złota najwyższej próby z krasnoludzkich kopalni.",
+      "DragonAcid": "Niezwykle żrąca, sycząca ciecz pozyskana z gruczołów trawiennych młodego smoka.",
+      "QuicksilverCondensate": "Zagęszczony destylat rtęciowy nasycony oparami siarki, o wysokiej gęstości magicznej.",
+      "AlchemicalSalts": "Oczyszczone kryształy soli alchemicznych stabilizujące gwałtowne reakcje w tyglu.",
+      "LeadOxide": "Ciężki proszek tlenku ołowiu, wykorzystywany do wiązania i osadzania lotnych esencji.",
+      "NulnWineSpirits": "Wysokoprocentowy spirytus winny z nulneńskich gorzelni, doskonały rozpuszczalnik alchemiczny.",
+      "WhiteAlchemicalGold": "Rzadki stop złota transmuted ze srebrem, podstawa najpotężniejszych eliksirów Złotego Kolegium.",
+      "SunDistilledWater": "Czysta woda zebrana o świcie i poddana trzykrotnej destylacji w skupionym świetle słonecznym.",
+      "AmberGoldPowder": "Proszek ze starożytnego bursztynu z wybrzeży Norski zmieszany z mikrogranulkami złota.",
+      "EthericEssence": "Uwięziona w szczelnej fiolce lotna esencja Osnowy, mieniąca się złotawą poświatą.",
+      "GreenVitriol": "Zielonkawe kryształy siarczanu żelaza, służące do wytwarzania kwasów i odczynników żrących.",
+      "SulphuricAcid": "Gęsty, dymiący kwas siarkowy trawiący większość metali i tkanin organicznych.",
+      "SaltpetreSulphur": "Wysoko wybuchowa mieszanina oczyszczonej saletry i siarki, baza ognia alchemicznego.",
+      "MagnesiumShavings": "Wiórki metalicznego magnezu dające przy zapłonie oślepiający, biały błysk.",
+      "KeroseneRockOil": "Oczyszczona nafta i ropa naftowa ze skał Kislevu, wysoce łatwopalna ciecz.",
+      "WhitePhosphorus": "Skrajnie niebezpieczny związek zapalający się samoczynnie w zetknięciu z powietrzem.",
+      "AmmoniumCarbonate": "Sole trzeźwiące wydzielające gryzący zapach amoniaku, pobudzające zmysły.",
+      "LavenderOil": "Kojący, skoncentrowany olejek eteryczny z polnych kwiatów lawendy.",
+      "YellowSulphur": "Jasnożółty pył siarkowy z kraterów wulkanicznych, niezbędny w procesach dymotwórczych.",
+      "CharcoalDust": "Drobny pył węgla drzewnego z twardego drewna dębowego, absorbent zanieczyszczeń.",
+      "FreshMorrLeaves": "Młode liście morzyca zebrane o zmierzchu w cieniu cmentarnych cyprysów.",
+      "OintmentBase": "Oczyszczony tłuszcz zwierzęcy z dodatkiem wosku pszczelego, baza maści i balsamów leczniczych.",
+      "MandrakeExtractIng": "Silnie usypiający i paraliżujący wyciąg z bulwiastego korzenia leśnej mandragory.",
+      "Mead": "Tradycyjny, dojrzały miód pitny z leśnych pasiek Talabeclandu.",
+      "SnakeweedCharcoal": "Mieszanka ziela wężowego i aktywnego węgla neutralizująca toksyny w żołądku.",
+      "ApothecarySpirits": "Czysty spirytus rektyfikowany stosowany w aptekach i laboratoriach medycznych.",
+      "StJohnsWortMelissa": "Suszone kwiatostany dziurawca i świeża melisa łagodzące napięcie nerwowe.",
+      "MintDistillate": "Mocny, chłodzący destylat z liści mięty pieprzowej pobudzający koncentrację umysłu.",
+      "GriffinDown": "Niezwykle lekki, naładowany wiatrem Azyru puch z piersi młodego gryfa z Gór Krańca Świata.",
+      "BoarGland": "Wydzielający gryzącą, intensywną woń gruczoł wycięty z tuszy dorosłego leśnego odyńca.",
+      "MeteoricSilver": "Niezwykle rzadki metal pozyskany ze spadających gwiazd, wykazujący silne właściwości rezonansu aethyrycznego.",
+      "AethyrCrystal": "Wysokiej jakości odczynnik alchemiczny: Krystaliczny Aethyr.",
+      "WindStone": "Wysokiej jakości odczynnik alchemiczny: Sproszkowany kamień wiatru.",
+      "FourLeafClover": "Wysokiej jakości odczynnik alchemiczny: Koniczyna aethyryczna.",
+      "MagneticNeedle": "Wysokiej jakości odczynnik alchemiczny: Igła magnetyczna z meteorytu.",
+      "CrystalPrism": "Wysokiej jakości odczynnik alchemiczny: Szlifowany pryzmat krystaliczny.",
+      "CinnabarDust": "Wysokiej jakości odczynnik alchemiczny: Czerwony pył cynobrowy.",
+      "SalamanderEssence": "Wysokiej jakości odczynnik alchemiczny: Serce salamandry / esencja żaru.",
+      "SpringDew": "Wysokiej jakości odczynnik alchemiczny: Rosa z dębu nefrytowego.",
+      "OakSap": "Wysokiej jakości odczynnik alchemiczny: Sok z prastarego dębu.",
+      "Ironbark": "Wysokiej jakości odczynnik alchemiczny: Kora żelaznego dębu.",
+      "WolfEye": "Wysokiej jakości odczynnik alchemiczny: Oko wilka leśnego.",
+      "BearClaw": "Wysokiej jakości odczynnik alchemiczny: Pazur niedźwiedzia jaskiniowego.",
+      "BeastFangs": "Wysokiej jakości odczynnik alchemiczny: Kły drapieżnika.",
+      "BadgerFat": "Wysokiej jakości odczynnik alchemiczny: Tłuszcz borsuczy.",
+      "GraveDust": "Wysokiej jakości odczynnik alchemiczny: Ziemia cmentarna z ogrodu Morra.",
+      "HourglassSand": "Wysokiej jakości odczynnik alchemiczny: Piasek z klepsydry kapłana Morra.",
+      "Sulfur": "Wysokiej jakości odczynnik alchemiczny: Siarka alchemiczna.",
+      "Saltpeter": "Wysokiej jakości odczynnik alchemiczny: Saletra oczyszczona.",
+      "RockOil": "Wysokiej jakości odczynnik alchemiczny: Olej skalny.",
+      "PureAlcohol": "Wysokiej jakości odczynnik alchemiczny: Czysty spirytus winny.",
+      "PureWater": "Wysokiej jakości odczynnik alchemiczny: Woda źródlana czysta.",
+      "AmmoniaSalts": "Wysokiej jakości odczynnik alchemiczny: Sole trzeźwiące bazy.",
+      "WillowCharcoal": "Wysokiej jakości odczynnik alchemiczny: Sadza wierzbowa oczyszczona.",
+      "ActivatedCharcoal": "Wysokiej jakości odczynnik alchemiczny: Węgiel drzewny aktywny.",
+      "PineResin": "Wysokiej jakości odczynnik alchemiczny: Żywica sosnowa.",
+      "Beeswax": "Wysokiej jakości odczynnik alchemiczny: Wosk pszczeli.",
+      "Comfrey": "Wysokiej jakości odczynnik alchemiczny: Korzeń żywokostu cesarskiego.",
+      "MandrakeRoot": "Wysokiej jakości odczynnik alchemiczny: Korzeń mandragory.",
+      "BlackLotusPetals": "Wysokiej jakości odczynnik alchemiczny: Płatki czarnego lotosu.",
+      "BullRoot": "Wysokiej jakości odczynnik alchemiczny: Wyciąg z korzenia byka.",
+      "SageLeaves": "Wysokiej jakości odczynnik alchemiczny: Liście szałwii srebrzystej.",
+      "MintOil": "Wysokiej jakości odczynnik alchemiczny: Olejek z mięty pieprzowej.",
+      "DaturaOil": "Wysokiej jakości odczynnik alchemiczny: Olejek z bielunia.",
+      "RosePetals": "Wysokiej jakości odczynnik alchemiczny: Płatki róży imperialnej.",
+      "RoseWater": "Wysokiej jakości odczynnik alchemiczny: Woda różana destylowana.",
+      "VeracityRoot": "Wysokiej jakości odczynnik alchemiczny: Korzeń szczerości.",
+      "AntidoteHerb": "Wysokiej jakości odczynnik alchemiczny: Zioło odtrutki leśnej.",
+      "KavehBeans": "Wysokiej jakości odczynnik alchemiczny: Ziarna kawy arabyjskiej.",
+      "TrollRoot": "Wysokiej jakości odczynnik alchemiczny: Korzeń trolla.",
+      "ManticoreSaliva": "Wysokiej jakości odczynnik alchemiczny: Ślina mantikory.",
+      "LemonBalm": "Wysokiej jakości odczynnik alchemiczny: Liście melisy leśnej.",
+      "HopCones": "Wysokiej jakości odczynnik alchemiczny: Szyszki chmielu leśnego.",
+      "NettleOil": "Wysokiej jakości odczynnik alchemiczny: Olej z pokrzywy.",
+      "ArtichokeLeaf": "Wysokiej jakości odczynnik alchemiczny: Liście karczocha leśnego.",
+      "WarpstoneDust": "Wysokiej jakości odczynnik alchemiczny: Pył czystego spaczenia.",
+      "SkavenBlood": "Wysokiej jakości odczynnik alchemiczny: Krew szczuroczłeka.",
+      "GingersnapRoot": "Ognisty korzeń o właściwościach silnie pobudzających krążenie i refleks.",
+      "SilverLotus": "Rzadki kwiat o srebrzystych płatkach, oczyszczający i skupiający zmysły.",
+      "EaglesEye": "Leśne ziele o żółtych kwiatach rozszerzające percepcję wzrokową.",
+      "Valerian": "Korzeń o uspokajających właściwościach, zbierany i suszony przez zielarzy.",
+      "Nightshade": "Trujące jagody wilczej jagody, używane w małych dawkach do sporządzania silnych preparatów."
+    },
+    "Colleges": {
+      "AllColleges": "Wszystkie Kolegia",
+      "Aqshy": "Jasny Zakon (Aqshy)",
+      "Azyr": "Niebieski Zakon (Azyr)",
+      "Chamon": "Złoty Zakon (Chamon)",
+      "Ghyran": "Nefrytowy Zakon (Ghyran)",
+      "Ghur": "Bursztynowy Zakon (Ghur)",
+      "Hysh": "Biały Zakon (Hysh)",
+      "Shyish": "Ametystowy Zakon (Shyish)",
+      "Ulgu": "Szary Zakon (Ulgu)"
+    },
+    "PrepTime": {
+      "30Min": "30 minut",
+      "1Hour": "1 godzina",
+      "2Hours": "2 godziny",
+      "3Hours": "3 godziny",
+      "4Hours": "4 godziny",
+      "5Hours": "5 godzin",
+      "6Hours": "6 godzin",
+      "8Hours": "8 godzin"
+    },
+    "Memory": {
+      "Title": "Pamięć Receptur",
+      "Used": "zapamiętanych",
+      "ChamonBonusTooltip": "Bonus Złotego Kolegium: +5 slotów pamięci oraz darmowe sloty dla receptur Chamonu",
+      "FreeChamonTooltip": "Wrodzona wiedza Złotego Kolegium (0 slotów pamięci)",
+      "ZeroSlots": "0 slotów"
+    },
+    "Knowledge": {
+      "Memorized": "Z Pamięci",
+      "MemorizedTooltip": "Znasz tę recepturę na pamięć i możesz z niej warzyć w dowolnym momencie.",
+      "Unknown": "Nieznana",
+      "FilterAll": "Wszystkie Znane",
+      "FilterMemorized": "Z Pamięci",
+      "FilterGrimoires": "Z Posiadanych Ksiąg",
+      "FilterUnknown": "Nieznane (MG)",
+      "Books": "ksiąg",
+      "KnownFromMemory": "Znasz tę recepturę na pamięć.",
+      "KnownFromBook": "Dostępna z posiadanej księgi",
+      "AlsoInBooks": "Dostępna także z ksiąg",
+      "NotKnown": "Postać nie zna jeszcze tej receptury. Zdobądź księgę lub naucz się formuły!",
+      "Memorize": "Zapamiętaj Przepis",
+      "MemorizeTooltip": "Zapamiętaj recepturę w umyśle, aby móc z niej warzyć bez księgi (kosztuje 1 slot pamięci).",
+      "Forget": "Zapomnij",
+      "ForgetTooltip": "Usuń recepturę z pamięci, aby zwolnić slot na inną formułę.",
+      "GMAward": "Nadaj Postaci (MG)",
+      "GMAwardTooltip": "Jako Mistrz Gry natychmiast zapamiętaj tę recepturę w umyśle postaci.",
+      "ManageBooks": "Zarządzaj księgami",
+      "CarriedBooks": "Księgi postaci",
+      "DropRecipeIntoBook": "Przeciągnij recepturę na księgę, aby dodać ją do jej zawartości.",
+      "BookAccessible": "Dostępna",
+      "BookNeedsEquipped": "Wymaga założenia",
+      "BookNeedsLanguage": "Brak wymaganej znajomości języka",
+      "RequiredLanguage": "Wymagany język (puste pole oznacza brak wymagań)",
+      "NoLanguageRequirement": "Brak wymagań",
+      "SaveBookRequirements": "Zapisz wymagania księgi",
+      "RemoveFromBook": "Usuń recepturę z księgi",
+      "EmptyBook": "Księga nie zawiera jeszcze receptur. Przeciągnij tu recepturę.",
+      "NoBooks": "Postać nie ma ksiąg receptur w ekwipunku.",
+      "UnregisteredBooks": "Rozpoznane księgi do włączenia:",
+      "RegisterBook": "Włącz jako księgę receptur"
+    },
+    "Editor": {
+      "Title": "Kreator Receptur Alchemicznych",
+      "AddRecipe": "Dodaj Przepis",
+      "CreateTooltip": "Otwórz kreator, aby stworzyć nową autorską recepturę (dostępne dla MG)",
+      "PlaceholderName": "Nazwa receptury (np. Balsam z Ognistych Ziół)",
+      "Category": "Kategoria",
+      "TestAndCraft": "Parametry Testu i Warzenia",
+      "Skill": "Umiejętność testu",
+      "Difficulty": "Poziom trudności",
+      "Volatility": "Stopień trudności warzenia",
+      "VolatilityMinor": "Niska",
+      "VolatilityModerate": "Umiarkowana",
+      "VolatilityMajor": "Wysoka",
+      "VolatilityExtreme": "Ekstremalna",
+      "ExpiryMode": "Po upływie trwałości",
+      "ExpirySpoilage": "Test zepsucia według zasad WFRP",
+      "ExpiryDeactivate": "Mikstura przestaje działać",
+      "CreationDifficultySL": "Modyfikator trudności (PS)",
+      "CreationTimeDays": "Czas tworzenia (dni)",
+      "ShelfLifeHint": "Określa, kiedy mikstura traci świeżość. Sposób działania po tym czasie wybierzesz poniżej.",
+      "PrepTime": "Czas przygotowania",
+      "BonusDaysPerSL": "Dni bonusu za każde PS",
+      "AddIngredient": "Dodaj składnik",
+      "Quantity": "Ilość",
+      "RemoveIngredient": "Usuń składnik",
+      "Descriptions": "Opisy i Działanie",
+      "FlavorDesc": "Opis fabularny",
+      "PlaceholderDesc": "Krótki opis wyglądu, zapachu i pochodzenia mikstury...",
+      "PlaceholderEffect": "Dokładny opis działania mechanicznego (stany, cechy, rany)...",
+      "SaveRecipe": "Zapisz Recepturę",
+      "Edit": "Edytuj recepturę",
+      "Delete": "Usuń recepturę",
+      "DeleteConfirmTitle": "Usuwanie Receptury",
+      "DeleteConfirmContent": "Czy na pewno chcesz bezpowrotnie usunąć tę autorską recepturę?",
+      "DefaultSkill": "Rzemiosło (Alchemia)",
+      "Categories": {
+        "apothecary": "Aptekarstwo / Medycyna",
+        "mundane": "Alchemia Świecka / Chemia",
+        "herbal": "Zielarstwo",
+        "college-chamon": "Kolegium Metalu (Chamon)",
+        "college-aqshy": "Kolegium Ognia (Aqshy)",
+        "college-azyr": "Kolegium Niebios (Azyr)",
+        "college-ghyran": "Kolegium Życia (Ghyran)",
+        "college-ghur": "Kolegium Bestii (Ghur)",
+        "college-hysh": "Kolegium Światła (Hysh)",
+        "college-shyish": "Kolegium Śmierci (Shyish)",
+        "college-ulgu": "Kolegium Cienia (Ulgu)",
+        "forbidden": "Alchemia Zakazana"
+      },
+      "IconAlt": "Ikona receptury",
+      "PickIcon": "Wybierz plik ikony"
+    },
+    "DragDropHint": "Przeciągnij zwój, aby zapamiętać",
+    "DragDropHintTooltip": "Możesz przeciągnąć recepturę z Kompendium bezpośrednio tutaj lub na kartę postaci!",
+    "CustomRecipe": "Autorska receptura MG",
+    "NoRecipesInView": "Brak receptur w wybranym widoku.",
+    "NoRecipesPlayerHint": "Twoja postać nie zna jeszcze żadnych receptur z tej kategorii. Zdobądź księgę lub naucz się formuły!",
+    "RecipeScrollTitle": "Receptura: {name}",
+    "Settings": {
+      "StrictModuleFilter": "Ścisłe filtrowanie podręczników",
+      "StrictModuleFilterHint": "Ukrywa receptury z podręczników, których moduły nie są włączone w świecie gry.",
+      "RequireDiscovery": "System Odkrywania Receptur i Ksiąg",
+      "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć.",
+      "RequireEquippedBooks": "Wymagaj założenia księgi receptur",
+      "RequireEquippedBooksHint": "Księga udostępnia receptury tylko wtedy, gdy jest założona lub noszona przez postać."
+    },
+    "Time": {
+      "Hours": "{count} godz.",
+      "HoursShort": "{count} godz.",
+      "Days": "{count} dni",
+      "Weeks": "{count} tyg.",
+      "Rounds": "{count} rund",
+      "Minutes": "{count} min"
+    },
+    "Effects": {
+      "HealingLimit": "Leczenie miksturą (limit spotkania)"
+    },
+    "Conditions": {
+      "Blinded": "Oślepienie (3)",
+      "Broken": "Panika",
+      "Stunned": "Oszołomienie",
+      "Unconscious": "Utrata Przytomności"
+    },
+    "Compendium": {
+      "RequiredIngredients": "Wymagane składniki:",
+      "ScrollHint": "Przeciągnij ten zwój na kartę postaci lub okno Warsztatu, aby zapamiętać recepturę!",
+      "BookHint": "Posiadanie tej księgi w ekwipunku odblokowuje zawarte w niej receptury w Warsztacie Alchemicznym (z księgi).",
+      "Books": {
+        "Chamon": {
+          "Name": "Traktat Złotego Kolegium o Transmutacji",
+          "Desc": "Oficjalny traktat Alchemików Złotego Kolegium w Altdorfie, opisujący nasycanie stopów i wywarów esencją Żółtego Wiatru Chamon."
+        },
+        "Apothecary": {
+          "Name": "Zielnik i Receptariusz Mistrza Aptekarza",
+          "Desc": "Kunsztownie oprawiony zbiór receptur leczniczych, balsamów przeciwgorączkowych i ekstraktów ziołowych stosowanych przez cechy aptekarskie Nuln i Altdorfu."
+        },
+        "Field": {
+          "Name": "Podręcznik Alchemii Polowej i Pirotechniki",
+          "Desc": "Zbiór formuł chemicznych dla inżynierów i alchemików wojskowych Imperium, zawierający kwasy trawiące, substancje zapalające oraz mieszanki dymne."
+        }
+      }
+    },
+    "GMSettings": {
+      "Title": "Ustawienia MG dla {actor}",
+      "PlayerAccess": "Udostępnij Warsztat graczowi przypisanemu do tej postaci",
+      "CapacityMod": "Punkty podtrzymania: modyfikator",
+      "MemoryMod": "Pamięć receptur: modyfikator limitu",
+      "Schools": "Szkoły magii widoczne dla gracza",
+      "Save": "Zapisz ustawienia"
+    },
+    "Packs": {
+      "Ingredients": "Alchemia – Składniki",
+      "Potions": "Alchemia – Mikstury",
+      "Recipes": "Alchemia – Księgi i Receptury"
+    }
+  }
+}

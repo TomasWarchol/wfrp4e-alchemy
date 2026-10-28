@@ -1,0 +1,123 @@
+<div class="alchemy-editor-root">
+  <div class="editor-header">
+    <div class="img-preview-group">
+      <img class="recipe-img-preview" src="{{recipe.img}}" alt="{{localize "GOLD_ALCHEMY.Editor.IconAlt"}}"/>
+      <button type="button" class="file-picker-btn" title="{{localize "GOLD_ALCHEMY.Editor.PickIcon"}}">
+        <i class="fas fa-file-image"></i>
+      </button>
+    </div>
+    <div class="header-inputs">
+      <input type="text" name="name" value="{{recipe.name}}" placeholder="{{localize "GOLD_ALCHEMY.Editor.PlaceholderName"}}" required class="input-recipe-name"/>
+      <input type="hidden" name="img" value="{{recipe.img}}"/>
+      <div class="header-row">
+        <div class="form-group">
+          <label><i class="fas fa-tag"></i> {{localize "GOLD_ALCHEMY.Editor.Category"}}:</label>
+          <select name="category">
+            {{#each categories}}
+              <option value="{{this.id}}" {{#if (bajeryEq this.id ../recipe.category)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-link"></i> {{localize "GOLD_ALCHEMY.Capacity.Title"}}:</label>
+          <input type="number" name="attunementCost" value="{{recipe.attunementCost}}" min="0" max="10" step="1"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-scroll">
+    <!-- PARAMETRY TESTU I TRWAŁOŚCI -->
+    <fieldset class="editor-section">
+      <legend><i class="fas fa-dice-d20"></i> {{localize "GOLD_ALCHEMY.Editor.TestAndCraft"}}</legend>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.Skill"}}:</label>
+          <input type="text" name="testSkill" value="{{recipe.testSkill}}"/>
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.Volatility"}}:</label>
+          <select name="volatility">
+            {{#each volatilityOptions}}
+              <option value="{{this.value}}" {{#if (bajeryEq this.value ../recipe.volatility)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.CreationDifficultySL"}}:</label>
+          <input type="number" name="creationDifficultySL" value="{{recipe.creationDifficultySL}}" min="-5" max="5" step="1" />
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.CreationTimeDays"}}:</label>
+          <input type="number" name="creationTimeDays" value="{{recipe.creationTimeDays}}" min="0.25" max="365" step="0.25" />
+        </div>
+        <div class="form-group">
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Details.ShelfBase"}} ({{localize "GOLD_ALCHEMY.Days"}}):</label>
+          <input type="number" name="shelfLifeDays" value="{{recipe.shelfLifeDays}}" min="1" max="3650" step="1"/>
+          <small>{{localize "GOLD_ALCHEMY.Editor.ShelfLifeHint"}}</small>
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.BonusDaysPerSL"}}:</label>
+          <input type="number" name="bonusDaysPerSL" value="{{recipe.bonusDaysPerSL}}" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>{{localize "GOLD_ALCHEMY.Editor.ExpiryMode"}}:</label>
+          <select name="expiryMode">
+            {{#each expiryOptions}}
+              <option value="{{this.value}}" {{#if (bajeryEq this.value ../recipe.expiryMode)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- SKŁADNIKI RECEPTURY -->
+    <fieldset class="editor-section">
+      <legend>
+        <i class="fas fa-mortar-pestle"></i> {{localize "GOLD_ALCHEMY.Details.IngredientsTitle"}}
+        <button type="button" class="btn-add-ing" data-action="addIngredient" title="{{localize "GOLD_ALCHEMY.Editor.AddIngredient"}}">
+          <i class="fas fa-plus"></i> {{localize "GOLD_ALCHEMY.Editor.AddIngredient"}}
+        </button>
+      </legend>
+      <div class="ingredients-editor-list">
+        {{#each recipe.ingredients}}
+          <div class="ingredient-row">
+            <select name="ingKey" class="select-ing">
+              {{#each ../availableIngredients}}
+                <option value="{{this.key}}" {{#if (bajeryEq this.key ../key)}}selected{{/if}}>{{this.name}}</option>
+              {{/each}}
+            </select>
+            <div class="qty-group">
+              <label>{{localize "GOLD_ALCHEMY.Editor.Quantity"}}:</label>
+              <input type="number" name="ingQty" value="{{this.quantity}}" min="1" max="99" class="input-qty"/>
+            </div>
+            <button type="button" class="btn-remove-ing" data-action="removeIngredient" data-index="{{@index}}" title="{{localize "GOLD_ALCHEMY.Editor.RemoveIngredient"}}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        {{/each}}
+      </div>
+    </fieldset>
+
+    <!-- OPIS FABULARNY I MECHANICZNY -->
+    <fieldset class="editor-section">
+      <legend><i class="fas fa-book-open"></i> {{localize "GOLD_ALCHEMY.Editor.Descriptions"}}</legend>
+      <div class="form-group full-width">
+        <label>{{localize "GOLD_ALCHEMY.Editor.FlavorDesc"}}:</label>
+        <textarea name="description" rows="2" placeholder="{{localize "GOLD_ALCHEMY.Editor.PlaceholderDesc"}}">{{recipe.description}}</textarea>
+      </div>
+      <div class="form-group full-width">
+        <label>{{localize "GOLD_ALCHEMY.Details.Effect"}}:</label>
+        <textarea name="effectDescription" rows="3" placeholder="{{localize "GOLD_ALCHEMY.Editor.PlaceholderEffect"}}">{{recipe.effectDescription}}</textarea>
+      </div>
+    </fieldset>
+  </div>
+
+  <footer class="editor-footer">
+    <button type="button" class="btn-save-recipe" data-action="saveRecipe">
+      <i class="fas fa-save"></i> {{localize "GOLD_ALCHEMY.Editor.SaveRecipe"}}
+    </button>
+  </footer>
+</div>
