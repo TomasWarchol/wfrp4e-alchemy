@@ -44,6 +44,14 @@ export const recipeEntryType = {
 
   same: (a, b) => a.data.recipeId === b.data.recipeId,
 
+  pages(entry) {
+    const recipe = recipeOf(entry);
+    return recipe && RecipeRegistry.isMagical(recipe) ? 2 : 1;
+  },
+
+  canCopy: (_entry, status) => ['available', 'memorized'].includes(status),
+  flawNote: () => loc('Book.FlawRecipe'),
+
   name(entry) {
     return game.i18n.localize(recipeOf(entry)?.name ?? entry.data.name);
   },

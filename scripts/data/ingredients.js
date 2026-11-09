@@ -7,6 +7,16 @@ import { MODULE_ID } from '../config.js';
 import { resolveAlchemyImage } from './image-compatibility.js';
 
 export const ALCHEMY_INGREDIENTS = [
+  {
+    key: 'AlchemicalInk',
+    name: 'GOLD_ALCHEMY.Ingredients.AlchemicalInk',
+    category: 'magical',
+    img: 'icons/tools/scribal/ink-quill-pink.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.AlchemicalInk',
+    price: { gc: 0, ss: 8, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
   // ==========================================
   // 1. ODCZYNNIKI AETHYRYCZNE I UNIWERSALNA MAGIA
   // ==========================================

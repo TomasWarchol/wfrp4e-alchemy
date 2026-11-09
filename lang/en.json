@@ -799,7 +799,8 @@
       "SilverLotus": "Silver Lotus",
       "EaglesEye": "Eagle's Eye Herb",
       "Valerian": "Valerian Root",
-      "Nightshade": "Deadly Nightshade Berries"
+      "Nightshade": "Deadly Nightshade Berries",
+      "AlchemicalInk": "Alchemical Ink"
     },
     "IngredientsDesc": {
       "GoldIronFilings": "Finely ground iron filings mixed with real gold flakes, used in Chamon transmutations.",
@@ -885,7 +886,8 @@
       "SilverLotus": "A rare flower with silvery petals, clarifying and focusing the senses.",
       "EaglesEye": "Forest herb with yellow blooms expanding visual perception.",
       "Valerian": "A calming root gathered and dried by herbalists.",
-      "Nightshade": "Poisonous berries used in small quantities for potent preparations."
+      "Nightshade": "Poisonous berries used in small quantities for potent preparations.",
+      "AlchemicalInk": "Ink steeped with reagents, which holds magical formulae without fading."
     },
     "Colleges": {
       "AllColleges": "All Colleges",
@@ -1008,7 +1010,9 @@
       "StrictModuleFilter": "Strict Source Module Filtering",
       "StrictModuleFilterHint": "Hides recipes from official books whose modules are not active in the world.",
       "RequireDiscovery": "Recipe Discovery & Grimoire System",
-      "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it."
+      "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it.",
+      "CopyNeedsInk": "Copying needs Alchemical Ink",
+      "CopyNeedsInkHint": "Copying a spell or a magical recipe into another book uses one Alchemical Ink per page."
     },
     "Time": {
       "Hours": "{count} h",
@@ -1080,7 +1084,8 @@
         "Memorize": "Memorise",
         "MemorizeScroll": "Memorise and use up",
         "Workshop": "Open the Workshop"
-      }
+      },
+      "FlawRecipe": "-1 SL when brewing from this book."
     }
   }
 }

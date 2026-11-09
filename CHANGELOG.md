@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.0
+- **Requires WFRP4e – Grimoires 0.6+.**
+- Recipes can be copied between books, also by players. Copying a spell or a magical recipe uses the new **Alchemical Ink**, one per page (world setting).
+- A recipe known only from a flawed copy brews at -1 SL.
+- Recipes take up pages in books with a limit: magical 2, others 1. Ciphered and forbidden pages unlock their recipes only once they are read.
+
 ## 1.6.0
 - **Recipe books use the book engine** from *WFRP4e – Grimoires*: the same open-book window, inventory section and reading requirements as spellbooks. One book can hold spells and recipes together.
 - **Requires WFRP4e – Grimoires 0.5+, Foundry v14 and WFRP4e 10.0+.**

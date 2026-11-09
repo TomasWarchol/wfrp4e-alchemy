@@ -15,11 +15,25 @@ import { ALCHEMY_RECIPES } from './data/recipes.js';
 import { CompendiumEngine } from './logic/compendium-engine.js';
 import { RecipeRegistry } from './logic/recipe-registry.js';
 import { registry, registerSheetButton } from '../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
-import { isBook, registerEntryType } from '../../wfrp4e-grimoires/scripts/public.mjs';
+import { isBook, registerCopyCost, registerEntryType } from '../../wfrp4e-grimoires/scripts/public.mjs';
 import { recipeEntryType } from './logic/recipe-entry-type.js';
 import { legacyBookUpdate } from './logic/recipe-book-data.js';
 
 registerEntryType(recipeEntryType);
+
+// Przepisywanie wymaga atramentu: zaklęcia i receptury magiczne, po jednym na stronę
+const INK = { key: 'AlchemicalInk', name: 'GOLD_ALCHEMY.Ingredients.AlchemicalInk' };
+registerCopyCost(({ entry, pages, actor }) => {
+  if (!game.settings.get(MODULE_ID, 'copyNeedsInk')) return null;
+  const recipe = entry.type === 'recipe' ? RecipeRegistry.getRecipeById(entry.data.recipeId) : null;
+  if (recipe && !RecipeRegistry.isMagical(recipe)) return null;
+  const need = { ingredients: [{ ...INK, quantity: pages }] };
+  return {
+    label: `${game.i18n.localize(INK.name)} ×${pages}`,
+    available: BrewingEngine.checkIngredients(actor, need).canBrew,
+    consume: () => BrewingEngine.consumeIngredients(actor, need)
+  };
+});
 
 Hooks.once('init', () => {
   console.log(`${MODULE_ID} | Old World Alchemy – init`);
@@ -77,6 +91,15 @@ Hooks.once('init', () => {
     config: false,
     type: String,
     default: ''
+  });
+
+  game.settings.register(MODULE_ID, 'copyNeedsInk', {
+    name: 'GOLD_ALCHEMY.Settings.CopyNeedsInk',
+    hint: 'GOLD_ALCHEMY.Settings.CopyNeedsInkHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
   });
 
   game.settings.register(MODULE_ID, 'recipesDataVersion', {

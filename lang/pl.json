@@ -799,7 +799,8 @@
       "SilverLotus": "Srebrzysty Lotos",
       "EaglesEye": "Orle Oko (Ziele)",
       "Valerian": "Korzeń kozłka lekarskiego",
-      "Nightshade": "Jagody wilczej jagody"
+      "Nightshade": "Jagody wilczej jagody",
+      "AlchemicalInk": "Atrament alchemiczny"
     },
     "IngredientsDesc": {
       "GoldIronFilings": "Drobno zmielone opiłki metalicznego żelaza zmieszane z płatkami złota, używane w transmutacji Chamonu.",
@@ -885,7 +886,8 @@
       "SilverLotus": "Rzadki kwiat o srebrzystych płatkach, oczyszczający i skupiający zmysły.",
       "EaglesEye": "Leśne ziele o żółtych kwiatach rozszerzające percepcję wzrokową.",
       "Valerian": "Korzeń o uspokajających właściwościach, zbierany i suszony przez zielarzy.",
-      "Nightshade": "Trujące jagody wilczej jagody, używane w małych dawkach do sporządzania silnych preparatów."
+      "Nightshade": "Trujące jagody wilczej jagody, używane w małych dawkach do sporządzania silnych preparatów.",
+      "AlchemicalInk": "Atrament nasycony odczynnikami, który utrwala magiczne formuły i nie blaknie."
     },
     "Colleges": {
       "AllColleges": "Wszystkie Kolegia",
@@ -1008,7 +1010,9 @@
       "StrictModuleFilter": "Ścisłe filtrowanie podręczników",
       "StrictModuleFilterHint": "Ukrywa receptury z podręczników, których moduły nie są włączone w świecie gry.",
       "RequireDiscovery": "System Odkrywania Receptur i Ksiąg",
-      "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć."
+      "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć.",
+      "CopyNeedsInk": "Przepisywanie wymaga atramentu alchemicznego",
+      "CopyNeedsInkHint": "Przepisanie zaklęcia albo receptury magicznej do innej księgi zużywa jeden atrament alchemiczny na stronę."
     },
     "Time": {
       "Hours": "{count} godz.",
@@ -1080,7 +1084,8 @@
         "Memorize": "Zapamiętaj",
         "MemorizeScroll": "Zapamiętaj i zużyj",
         "Workshop": "Otwórz Warsztat"
-      }
+      },
+      "FlawRecipe": "-1 PS przy warzeniu z tej księgi."
     }
   }
 }

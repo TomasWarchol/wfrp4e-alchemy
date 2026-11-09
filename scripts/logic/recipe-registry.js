@@ -10,7 +10,7 @@
 
 import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from '../config.js';
 import { ALCHEMY_RECIPES } from '../data/recipes.js';
-import { bookAccess, addEntryToBook, entriesOfType, isGrimoire, languageLabel, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
+import { bookAccess, addEntryToBook, entriesOfType, isGrimoire, languageLabel, openEntries, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
 import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
@@ -250,7 +250,26 @@ export class RecipeRegistry {
 
   /** Identyfikatory receptur zapisanych w księdze. */
   static bookRecipeIds(book) {
-    return entriesOfType(readBook(book), RECIPE_TYPE).map(entry => this.getRecipeById(entry.data.recipeId)?.id ?? entry.data.recipeId);
+    return this.openRecipeEntries(book).map(entry => this.canonicalRecipeId(entry));
+  }
+
+  /** Wpisy receptur dostępne właścicielowi księgi (bez stron szyfrowanych i zakazanych). */
+  static openRecipeEntries(book) {
+    return entriesOfType({ entries: openEntries(book) }, RECIPE_TYPE);
+  }
+
+  static canonicalRecipeId(entry) {
+    return this.getRecipeById(entry.data.recipeId)?.id ?? entry.data.recipeId;
+  }
+
+  /** Czy postać ma recepturę wyłącznie z wadliwych odpisów (i nie zna jej na pamięć). */
+  static brewsFromFlawedCopy(actor, recipe) {
+    if (this.getMemorizedRecipeIds(actor).includes(recipe.id)) return false;
+    const copies = this.getRecipeBooks(actor)
+      .filter(book => bookAccess(book).accessible)
+      .flatMap(book => this.openRecipeEntries(book))
+      .filter(entry => this.canonicalRecipeId(entry) === recipe.id);
+    return copies.length > 0 && copies.every(entry => entry.flawed);
   }
 
   static getRecipeBookDetails(actor, books = null) {

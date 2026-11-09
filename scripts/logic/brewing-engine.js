@@ -294,7 +294,8 @@ export class BrewingEngine {
     });
     const talentSlBonus = hasMagicalSense ? 1 : 0;
 
-    const totalSlBonus = labSlMod + talentSlBonus + (Number(recipe.creationDifficultySL) || 0);
+    const flawPenalty = RecipeRegistry.brewsFromFlawedCopy(actor, recipe) ? -1 : 0;
+    const totalSlBonus = labSlMod + talentSlBonus + flawPenalty + (Number(recipe.creationDifficultySL) || 0);
     const category = recipe.category || '';
     const approach = category === 'herbal' ? 'herbalism'
       : category === 'apothecary' ? 'apothecary'
