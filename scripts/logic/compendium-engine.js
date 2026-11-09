@@ -3,6 +3,7 @@
  * Rejestruje i automatycznie zasila compendia w Foundry VTT
  */
 
+import { recipeBookFlags, recipeEntry, recipeScrollFlags } from './recipe-book-data.js';
 import { MODULE_ID, isSourceModuleActive } from '../config.js';
 import { ALCHEMY_INGREDIENTS, createIngredientItemData } from '../data/ingredients.js';
 import { RecipeRegistry } from './recipe-registry.js';
@@ -80,7 +81,7 @@ export function createRecipeScrollItemData(recipe) {
     type: 'trapping',
     img: 'icons/sundries/scrolls/scroll-bound-sealed-brown.webp',
     system: {
-      trappingType: { value: 'misc' },
+      trappingType: { value: 'booksAndDocuments' },
       quantity: { value: 1 },
       encumbrance: { value: 0.1 },
       price: { gc: 1, ss: 10, bp: 0 },
@@ -94,7 +95,8 @@ export function createRecipeScrollItemData(recipe) {
         isRecipe: true,
         recipeId: recipe.id,
         recipeKey: recipe.key
-      }
+      },
+      ...recipeScrollFlags(recipeEntry(recipe.id, recipe))
     }
   };
 }
@@ -113,7 +115,7 @@ export function createRecipeBookItemData(name, img, recipeIds, description) {
     type: 'trapping',
     img: resolveAlchemyImage(img, 'book'),
     system: {
-      trappingType: { value: 'misc' },
+      trappingType: { value: 'booksAndDocuments' },
       quantity: { value: 1 },
       encumbrance: { value: 1.0 },
       price: { gc: 15, ss: 0, bp: 0 },
@@ -124,9 +126,9 @@ export function createRecipeBookItemData(name, img, recipeIds, description) {
     },
     flags: {
       [MODULE_ID]: {
-        isRecipeBook: true,
-        recipes: recipeIds
-      }
+        isRecipeBook: true
+      },
+      ...recipeBookFlags(recipeIds.map(id => recipeEntry(id, RecipeRegistry.getRecipeById(id))), { carried: game.settings.get(MODULE_ID, 'requireEquippedBooks') === true })
     }
   };
 }
@@ -137,6 +139,8 @@ export class CompendiumEngine {
   static RECIPES_PACK = `${MODULE_ID}.alchemy-recipes`;
   /** Podnieś, gdy zmieniają się efekty mikstur – wygenerowane wpisy kompendium zostaną odbudowane. */
   static POTIONS_DATA_VERSION = 3;
+  /** Podnieś, gdy zmienia się format zwojów i ksiąg – wygenerowane wpisy zostaną przepisane. */
+  static RECIPES_DATA_VERSION = 1;
 
   /** Update module-owned compendium entries while keeping anything added by a GM. */
   static async syncPack(pack, itemsData, getDataKey, getDocumentKey, force = false) {
@@ -296,6 +300,7 @@ export class CompendiumEngine {
       return;
     }
 
+    const dataVersionStale = (Number(game.settings.get(MODULE_ID, 'recipesDataVersion')) || 0) < this.RECIPES_DATA_VERSION;
     const activeRecipes = RecipeRegistry.getActiveRecipes();
     console.log(`${MODULE_ID} | Seeding recipes and grimoires into ${this.RECIPES_PACK}...`);
 
@@ -336,8 +341,9 @@ export class CompendiumEngine {
         const flags = document.flags?.[MODULE_ID] || {};
         return flags.recipeId || (flags.isRecipeBook ? `book:${document.name}` : null);
       },
-      force
+      force || dataVersionStale
     );
+    if (dataVersionStale) await game.settings.set(MODULE_ID, 'recipesDataVersion', this.RECIPES_DATA_VERSION);
     console.log(`${MODULE_ID} | Recipes compendium initialized with ${allData.length} items.`);
   }
 

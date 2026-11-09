@@ -940,14 +940,11 @@
       "BookAccessible": "Dostępna",
       "BookNeedsEquipped": "Wymaga założenia",
       "BookNeedsLanguage": "Brak wymaganej znajomości języka",
-      "RequiredLanguage": "Wymagany język (puste pole oznacza brak wymagań)",
-      "NoLanguageRequirement": "Brak wymagań",
-      "SaveBookRequirements": "Zapisz wymagania księgi",
-      "RemoveFromBook": "Usuń recepturę z księgi",
       "EmptyBook": "Księga nie zawiera jeszcze receptur. Przeciągnij tu recepturę.",
       "NoBooks": "Postać nie ma ksiąg receptur w ekwipunku.",
-      "UnregisteredBooks": "Rozpoznane księgi do włączenia:",
-      "RegisterBook": "Włącz jako księgę receptur"
+      "OpenBook": "Otwórz księgę",
+      "NewBook": "Nowa księga",
+      "BookNeedsReadWrite": "Wymaga Czytania/Pisania"
     },
     "Editor": {
       "Title": "Kreator Receptur Alchemicznych",
@@ -1011,9 +1008,7 @@
       "StrictModuleFilter": "Ścisłe filtrowanie podręczników",
       "StrictModuleFilterHint": "Ukrywa receptury z podręczników, których moduły nie są włączone w świecie gry.",
       "RequireDiscovery": "System Odkrywania Receptur i Ksiąg",
-      "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć.",
-      "RequireEquippedBooks": "Wymagaj założenia księgi receptur",
-      "RequireEquippedBooksHint": "Księga udostępnia receptury tylko wtedy, gdy jest założona lub noszona przez postać."
+      "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć."
     },
     "Time": {
       "Hours": "{count} godz.",
@@ -1034,7 +1029,7 @@
     },
     "Compendium": {
       "RequiredIngredients": "Wymagane składniki:",
-      "ScrollHint": "Przeciągnij ten zwój na kartę postaci lub okno Warsztatu, aby zapamiętać recepturę!",
+      "ScrollHint": "Otwórz ten zwój, aby zapamiętać recepturę. Zwój ulega zużyciu.",
       "BookHint": "Posiadanie tej księgi w ekwipunku odblokowuje zawarte w niej receptury w Warsztacie Alchemicznym (z księgi).",
       "Books": {
         "Chamon": {
@@ -1063,6 +1058,29 @@
       "Ingredients": "Alchemia – Składniki",
       "Potions": "Alchemia – Mikstury",
       "Recipes": "Alchemia – Księgi i Receptury"
+    },
+    "Book": {
+      "Section": "Receptury",
+      "Status": {
+        "memorized": "Zapamiętana",
+        "available": "Możesz warzyć z tej księgi",
+        "notCarried": "Księga musi być przy sobie",
+        "unreadable": "Nie możesz tego przeczytać",
+        "missing": "Receptura niedostępna w tym świecie"
+      },
+      "Note": {
+        "memorized": "Znasz tę recepturę na pamięć i nie potrzebujesz księgi, aby ją uwarzyć.",
+        "available": "Dopóki masz tę księgę, możesz warzyć według tej receptury w Warsztacie. Zapamiętaj ją, aby warzyć bez księgi.",
+        "availableScroll": "Zapamiętanie zajmuje jedno miejsce w pamięci receptur i zużywa zwój.",
+        "notCarried": "Oznacz księgę jako noszoną przy sobie, aby z niej warzyć.",
+        "unreadable": "Nie potrafisz tego przeczytać.",
+        "missing": "Ta receptura jest niedostępna w tym świecie. Wróci, gdy jej moduł będzie aktywny."
+      },
+      "Action": {
+        "Memorize": "Zapamiętaj",
+        "MemorizeScroll": "Zapamiętaj i zużyj",
+        "Workshop": "Otwórz Warsztat"
+      }
     }
   }
 }

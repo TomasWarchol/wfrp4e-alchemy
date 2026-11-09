@@ -15,6 +15,11 @@ import { ALCHEMY_RECIPES } from './data/recipes.js';
 import { CompendiumEngine } from './logic/compendium-engine.js';
 import { RecipeRegistry } from './logic/recipe-registry.js';
 import { registry, registerSheetButton } from '../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
+import { isBook, registerEntryType } from '../../wfrp4e-grimoires/scripts/public.mjs';
+import { recipeEntryType } from './logic/recipe-entry-type.js';
+import { legacyBookUpdate } from './logic/recipe-book-data.js';
+
+registerEntryType(recipeEntryType);
 
 Hooks.once('init', () => {
   console.log(`${MODULE_ID} | Old World Alchemy – init`);
@@ -51,11 +56,10 @@ Hooks.once('init', () => {
     default: true
   });
 
+  // Warunki należą teraz do księgi; ustawienie służy konwersji starych ksiąg
   game.settings.register(MODULE_ID, 'requireEquippedBooks', {
-    name: 'GOLD_ALCHEMY.Settings.RequireEquippedBooks',
-    hint: 'GOLD_ALCHEMY.Settings.RequireEquippedBooksHint',
     scope: 'world',
-    config: true,
+    config: false,
     type: Boolean,
     default: false
   });
@@ -75,6 +79,20 @@ Hooks.once('init', () => {
     default: ''
   });
 
+  game.settings.register(MODULE_ID, 'recipesDataVersion', {
+    scope: 'world',
+    config: false,
+    type: Number,
+    default: 0
+  });
+
+  game.settings.register(MODULE_ID, 'booksMigrated', {
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register(MODULE_ID, 'potionsDataVersion', {
     scope: 'world',
     config: false,
@@ -91,6 +109,7 @@ Hooks.once('init', () => {
 
 Hooks.once('ready', async () => {
   await CompendiumEngine.initializeCompendiums();
+  await migrateRecipeBooks();
 
   game.alchemy = {
     CapacityEngine,
@@ -196,16 +215,47 @@ Hooks.once('ready', async () => {
   console.log(`${MODULE_ID} | Module ready. API accessible at game.alchemy`);
 });
 
+const legacyOptions = () => ({
+  carried: game.settings.get(MODULE_ID, 'requireEquippedBooks') === true,
+  resolve: id => RecipeRegistry.getRecipeById(id)
+});
+
+/** Jednorazowa konwersja ksiąg i zwojów receptur sprzed 1.6 w całym świecie (aktywny MG). */
+async function migrateRecipeBooks() {
+  if (game.user !== game.users.activeGM || game.settings.get(MODULE_ID, 'booksMigrated')) return;
+  const options = legacyOptions();
+  const updatesFor = items => [...items].flatMap(item => {
+    const update = legacyBookUpdate(item, options);
+    return update ? [{ _id: item.id, ...update }] : [];
+  });
+
+  const worldItems = updatesFor(game.items);
+  if (worldItems.length) await Item.updateDocuments(worldItems);
+  const tokenActors = game.scenes.contents.flatMap(scene => scene.tokens.contents.filter(token => !token.actorLink && token.actor).map(token => token.actor));
+  for (const actor of [...game.actors, ...tokenActors]) {
+    const updates = updatesFor(actor.items);
+    if (updates.length) await actor.updateEmbeddedDocuments('Item', updates);
+  }
+  await game.settings.set(MODULE_ID, 'booksMigrated', true);
+}
+
+// Przedmioty w starym formacie, które trafiają do świata później (np. z importu)
+Hooks.on('preCreateItem', item => {
+  if (!game.ready) return;
+  const update = legacyBookUpdate(item, legacyOptions());
+  if (update) item.updateSource(update);
+});
+
 function refreshOpenWorkshop(document) {
   const workshop = foundry.applications?.instances?.get('alchemy-workshop-app');
   const ownerId = document?.parent?.id || document?.id;
   if (workshop?.actor?.id !== ownerId) return;
   // Inventory totals stay cached while navigating tabs; invalidate when any owned item changes.
   workshop._alchemyIngredientInventoryCache = null;
-  const isRecipeBook = document.type === 'trapping'
-    && (document.getFlag?.(MODULE_ID, 'isRecipeBook') || /księg|książ|grimuar|zielnik|traktat|receptariusz|formular|book|grimoire/i.test(document.name || ''));
+  const isRecipeBook = isBook(document);
   const isLanguageSkill = document.type === 'skill' && /(language|język)/i.test(document.name || '');
-  if ((isRecipeBook || isLanguageSkill) && !workshop._alchemyRefreshScheduled) {
+  const isReadingTalent = document.type === 'talent' && /read|czyt/i.test(document.name || '');
+  if ((isRecipeBook || isLanguageSkill || isReadingTalent) && !workshop._alchemyRefreshScheduled) {
     workshop._alchemyRefreshScheduled = true;
     requestAnimationFrame(() => {
       workshop._alchemyRefreshScheduled = false;

@@ -17,6 +17,7 @@ import { RecipeRegistry } from '../logic/recipe-registry.js';
 import { RecipeEditorApp } from './recipe-editor.js';
 import { ALCHEMY_IMAGE_FALLBACKS, resolveAlchemyImage } from '../data/image-compatibility.js';
 import { registry } from '../../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
+import { createBook, openBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
@@ -52,9 +53,8 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       selectSubCategory: this._onSelectSubCategory,
       selectKnowledgeFilter: this._onSelectKnowledgeFilter,
       toggleBookManager: this._onToggleBookManager,
-      saveBookRequirements: this._onSaveBookRequirements,
-      removeRecipeFromBook: this._onRemoveRecipeFromBook,
-      registerRecipeBook: this._onRegisterRecipeBook,
+      openBook: this._onOpenBook,
+      createRecipeBook: this._onCreateRecipeBook,
       saveActorAlchemySettings: this._onSaveActorAlchemySettings,
       toggleAllWorldRecipes: this._onToggleAllWorldRecipes,
       selectRecipe: this._onSelectRecipe,
@@ -100,12 +100,8 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     const memorizedIds = RecipeRegistry.getMemorizedRecipeIds(this.actor);
     const bookItems = RecipeRegistry.getRecipeBookItems(this.actor);
     const grimoireMap = RecipeRegistry.getGrimoireRecipeMap(this.actor, bookItems.recipeBooks);
-    let recipeBooks = RecipeRegistry.getRecipeBookDetails(this.actor, bookItems.recipeBooks);
-    const unregisteredBooks = bookItems.unregisteredBooks.map(book => ({
-      id: book.id,
-      name: book.name,
-      img: book.img
-    }));
+    const recipeBooksCount = bookItems.recipeBooks.length;
+    let recipeBooks = RecipeRegistry.getRecipeBookDetails(this.actor, [...bookItems.recipeBooks, ...bookItems.emptyBooks]);
 
     // 4. Pobranie aktywnych receptur i wstępne zawężenie kategorii.
     // Nie przygotowujemy wiedzy i składników dla receptur, których ten widok nie pokaże.
@@ -142,20 +138,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       const ingCheck = BrewingEngine.checkIngredients(this.actor, recipe, ingredientInventory);
       const knowledge = RecipeRegistry.getRecipeKnowledge(this.actor, recipe, memorizedIds, grimoireMap, memoryState);
 
-      let catLabel = recipe.category;
-      if (recipe.college) {
-        catLabel = recipe.college.toUpperCase();
-      } else if (recipe.category === 'magical') {
-        catLabel = game.i18n.localize('GOLD_ALCHEMY.Category.Magical');
-      } else if (recipe.category === 'apothecary') {
-        catLabel = game.i18n.localize('GOLD_ALCHEMY.Category.Apothecary');
-      } else if (recipe.category === 'mundane') {
-        catLabel = game.i18n.localize('GOLD_ALCHEMY.Category.Mundane');
-      } else if (recipe.category === 'herbal') {
-        catLabel = game.i18n.localize('GOLD_ALCHEMY.Category.Herbal');
-      } else if (recipe.category === 'forbidden') {
-        catLabel = game.i18n.localize('GOLD_ALCHEMY.Category.Forbidden');
-      }
+      const catLabel = RecipeRegistry.categoryLabel(recipe);
 
       // Receptura może być warzona, jeśli jest znana (z pamięci lub z księgi) i są składniki oraz podtrzymanie
       const isKnown = knowledge.isMemorized || knowledge.isFromBook;
@@ -230,12 +213,11 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       this.selectedRecipeId = selectedRecipe?.id || null;
     }
     if (selectedRecipe) {
-      const price = RecipeRegistry.priceFromSS(selectedRecipe.listPriceSS);
       selectedRecipe = {
         ...selectedRecipe,
         creationTimeLabel: RecipeRegistry.formatCreationTime(selectedRecipe.creationTimeDays),
         dosesLabel: selectedRecipe.track === 'mundane' ? game.i18n.localize('GOLD_ALCHEMY.Details.DosesBatch') : '1',
-        priceLabel: `${price.gc ? `${price.gc} ${game.i18n.localize('GOLD_ALCHEMY.Currency.GC')} ` : ''}${price.ss} ${game.i18n.localize('GOLD_ALCHEMY.Currency.SS')}`
+        priceLabel: RecipeRegistry.priceLabel(selectedRecipe.listPriceSS)
       };
     }
 
@@ -253,9 +235,8 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
         ...memoryState,
         percent: memoryPercent
       },
-      recipeBooksCount: recipeBooks.length,
+      recipeBooksCount,
       recipeBooks,
-      unregisteredBooks,
       showBookManager: this.showBookManager,
       categories: ALCHEMY_CONFIG.CATEGORIES,
       selectedCategory: this.selectedCategory,
@@ -335,25 +316,13 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     this.render();
   }
 
-  static async _onSaveBookRequirements(event, target) {
-    if (!game.user.isGM) return;
-    const card = target.closest('.recipe-book-card');
-    const book = this.actor.items.get(card?.dataset.bookId);
-    const requiredLanguage = card?.querySelector('[name="requiredLanguage"]')?.value || '';
-    await RecipeRegistry.setBookRequirements(book, requiredLanguage);
+  static _onOpenBook(event, target) {
+    const book = this.actor.items.get(target.closest('[data-book-id]')?.dataset.bookId);
+    if (book) openBook(book);
   }
 
-  static async _onRemoveRecipeFromBook(event, target) {
-    const card = target.closest('.recipe-book-card');
-    const book = this.actor.items.get(card?.dataset.bookId);
-    const recipeId = target.dataset.recipeId;
-    await RecipeRegistry.removeRecipeFromBook(book, recipeId);
-  }
-
-  static async _onRegisterRecipeBook(event, target) {
-    if (!game.user.isGM) return;
-    const book = this.actor.items.get(target.dataset.bookId);
-    await RecipeRegistry.registerRecipeBook(book);
+  static async _onCreateRecipeBook() {
+    if (game.user.isGM) await createBook(this.actor);
   }
 
   static async _onSaveActorAlchemySettings(event, target) {

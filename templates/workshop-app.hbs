@@ -140,7 +140,10 @@
     <section class="recipe-books-panel">
       <header class="recipe-books-header">
         <h3><i class="fas fa-book-open"></i> {{localize "GOLD_ALCHEMY.Knowledge.CarriedBooks"}}</h3>
-        {{#if isGM}}<small>{{localize "GOLD_ALCHEMY.Knowledge.DropRecipeIntoBook"}}</small>{{/if}}
+        {{#if isGM}}
+          <small>{{localize "GOLD_ALCHEMY.Knowledge.DropRecipeIntoBook"}}</small>
+          <button type="button" data-action="createRecipeBook"><i class="fas fa-book-medical"></i> {{localize "GOLD_ALCHEMY.Knowledge.NewBook"}}</button>
+        {{/if}}
       </header>
       {{#if recipeBooks.length}}
         <div class="recipe-books-grid">
@@ -152,26 +155,19 @@
                   <strong>{{this.name}}</strong>
                   {{#if this.accessible}}
                     <span class="book-access-status is-accessible"><i class="fas fa-unlock"></i> {{localize "GOLD_ALCHEMY.Knowledge.BookAccessible"}}</span>
-                  {{else if (bajeryEq this.accessReason 'equipped')}}
+                  {{else if (bajeryEq this.accessReason 'carried')}}
                     <span class="book-access-status"><i class="fas fa-lock"></i> {{localize "GOLD_ALCHEMY.Knowledge.BookNeedsEquipped"}}</span>
+                  {{else if (bajeryEq this.accessReason 'readWrite')}}
+                    <span class="book-access-status"><i class="fas fa-lock"></i> {{localize "GOLD_ALCHEMY.Knowledge.BookNeedsReadWrite"}}</span>
                   {{else}}
-                    <span class="book-access-status"><i class="fas fa-lock"></i> {{localize "GOLD_ALCHEMY.Knowledge.BookNeedsLanguage"}}: {{this.requiredLanguage}}</span>
+                    <span class="book-access-status"><i class="fas fa-lock"></i> {{localize "GOLD_ALCHEMY.Knowledge.BookNeedsLanguage"}}: {{this.languageLabel}}</span>
                   {{/if}}
                 </div>
+                <button type="button" data-action="openBook" title="{{localize "GOLD_ALCHEMY.Knowledge.OpenBook"}}"><i class="fas fa-book-open"></i></button>
               </div>
-              {{#if ../isGM}}
-                <div class="book-requirement-editor">
-                  <label>{{localize "GOLD_ALCHEMY.Knowledge.RequiredLanguage"}}</label>
-                  <input type="text" name="requiredLanguage" value="{{this.requiredLanguage}}" placeholder="{{localize "GOLD_ALCHEMY.Knowledge.NoLanguageRequirement"}}" />
-                  <button type="button" data-action="saveBookRequirements" title="{{localize "GOLD_ALCHEMY.Knowledge.SaveBookRequirements"}}"><i class="fas fa-save"></i></button>
-                </div>
-              {{/if}}
               <ul class="recipe-book-recipes">
                 {{#each this.recipes}}
-                  <li>
-                    <span>{{this.name}}</span>
-                    {{#if ../../isGM}}<button type="button" data-action="removeRecipeFromBook" data-recipe-id="{{this.id}}" title="{{localize "GOLD_ALCHEMY.Knowledge.RemoveFromBook"}}"><i class="fas fa-times"></i></button>{{/if}}
-                  </li>
+                  <li><span>{{this.name}}</span></li>
                 {{else}}
                   <li class="empty-book-hint">{{localize "GOLD_ALCHEMY.Knowledge.EmptyBook"}}</li>
                 {{/each}}
@@ -181,18 +177,6 @@
         </div>
       {{else}}
         <p class="empty-book-hint">{{localize "GOLD_ALCHEMY.Knowledge.NoBooks"}}</p>
-      {{/if}}
-      {{#if isGM}}
-      {{#if unregisteredBooks.length}}
-        <div class="unregistered-books">
-          <strong>{{localize "GOLD_ALCHEMY.Knowledge.UnregisteredBooks"}}</strong>
-          {{#each unregisteredBooks}}
-            <button type="button" data-action="registerRecipeBook" data-book-id="{{this.id}}" title="{{localize "GOLD_ALCHEMY.Knowledge.RegisterBook"}}">
-              <i class="fas fa-book-medical"></i> {{this.name}}
-            </button>
-          {{/each}}
-        </div>
-      {{/if}}
       {{/if}}
     </section>
   {{/if}}

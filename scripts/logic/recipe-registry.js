@@ -10,6 +10,8 @@
 
 import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from '../config.js';
 import { ALCHEMY_RECIPES } from '../data/recipes.js';
+import { bookAccess, addEntryToBook, entriesOfType, isGrimoire, languageLabel, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
+import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 
@@ -204,103 +206,59 @@ export class RecipeRegistry {
     return false;
   }
 
+  /** Etykieta kategorii receptury (szkoła, rzemiosło). */
+  static categoryLabel(recipe) {
+    if (recipe.college) return recipe.college.toUpperCase();
+    const key = { magical: 'Magical', apothecary: 'Apothecary', mundane: 'Mundane', herbal: 'Herbal', forbidden: 'Forbidden' }[recipe.category];
+    return key ? game.i18n.localize(`GOLD_ALCHEMY.Category.${key}`) : recipe.category;
+  }
+
+  /** Cena z szylingów jako tekst. */
+  static priceLabel(listPriceSS) {
+    const price = this.priceFromSS(listPriceSS);
+    return `${price.gc ? `${price.gc} ${game.i18n.localize('GOLD_ALCHEMY.Currency.GC')} ` : ''}${price.ss} ${game.i18n.localize('GOLD_ALCHEMY.Currency.SS')}`;
+  }
+
+  /** Czy szkoła receptury jest widoczna dla tej postaci (ustawienie MG). */
+  static isSchoolVisible(actor, recipe) {
+    if (!recipe.category.startsWith('college-') && recipe.category !== 'chamon') return true;
+    const allowed = actor.getFlag(MODULE_ID, 'visibleAlchemySchools');
+    return !Array.isArray(allowed) || allowed.includes(recipe.category === 'chamon' ? 'chamon' : recipe.category.slice('college-'.length));
+  }
+
   /* -------------------------------------------- */
   /*  System Wiedzy o Recepturach i Pamięć        */
   /* -------------------------------------------- */
 
-  /**
-   * Zwraca fizyczne przedmioty w ekwipunku postaci będące Księgami Receptur / Grimuarami
-   * @param {Actor} actor
-   * @returns {Array<Item>}
-   */
-  static getRecipeBooks(actor) {
-    if (!actor || !actor.items) return [];
-
-    return actor.items.filter(item => {
-      if (item.type !== 'trapping') return false;
-      const flags = item.flags?.[MODULE_ID];
-      if (flags?.isRecipeBook === true) return true;
-      if (Array.isArray(flags?.recipes) && flags.recipes.length > 0) return true;
-      return false;
-    });
-  }
-
-  /** Collect recipe books and likely unregistered books in one inventory pass. */
+  /** Księgi postaci: z recepturami i puste (można do nich wpisać receptury). */
   static getRecipeBookItems(actor) {
     const recipeBooks = [];
-    const unregisteredBooks = [];
-    if (!actor?.items) return { recipeBooks, unregisteredBooks };
-
-    const bookNamePattern = /księg|książ|grimuar|zielnik|traktat|receptariusz|formular|book|grimoire|manual/i;
+    const emptyBooks = [];
+    if (!actor?.items) return { recipeBooks, emptyBooks };
     for (const item of actor.items) {
-      if (item.type !== 'trapping') continue;
-      const flags = item.flags?.[MODULE_ID];
-      if (flags?.isRecipeBook === true || (Array.isArray(flags?.recipes) && flags.recipes.length > 0)) {
-        recipeBooks.push(item);
-      } else if (!flags?.isRecipeBook && bookNamePattern.test(item.name || '')) {
-        unregisteredBooks.push(item);
-      }
+      if (!isGrimoire(item)) continue;
+      const book = readBook(item);
+      if (entriesOfType(book, RECIPE_TYPE).length) recipeBooks.push(item);
+      else if (!book.entries.length) emptyBooks.push(item);
     }
-
-    return { recipeBooks, unregisteredBooks };
+    return { recipeBooks, emptyBooks };
   }
 
-  static getUnregisteredRecipeBooks(actor) {
-    if (!actor?.items) return [];
-    return actor.items.filter(item => {
-      if (item.type !== 'trapping' || item.flags?.[MODULE_ID]?.isRecipeBook) return false;
-      return /księg|książ|grimuar|zielnik|traktat|receptariusz|formular|book|grimoire|manual/i.test(item.name || '');
-    });
+  static getRecipeBooks(actor) {
+    return this.getRecipeBookItems(actor).recipeBooks;
   }
 
-  static isBookEquipped(book) {
-    const value = book.system?.equipped?.value
-      ?? book.system?.equipped
-      ?? book.system?.worn?.value
-      ?? book.system?.worn;
-    return value === true;
-  }
-
-  static actorKnowsLanguage(actor, requiredLanguage) {
-    const normalize = value => String(value || '')
-      .toLocaleLowerCase()
-      .replace(/^(language|język)\s*[:(]?\s*/i, '')
-      .replace(/[()]/g, '')
-      .trim();
-    const required = normalize(requiredLanguage);
-    if (!required) return true;
-
-    return (actor.itemTypes?.skill || []).some(skill => {
-      const name = String(skill.name || '');
-      if (!/(language|język)/i.test(name)) return false;
-      return normalize(name) === required;
-    });
-  }
-
-  static getBookAccess(actor, book) {
-    const flags = book.flags?.[MODULE_ID] || {};
-    const requireEquipped = game.settings?.get(MODULE_ID, 'requireEquippedBooks') === true;
-    if (requireEquipped && !this.isBookEquipped(book)) {
-      return { accessible: false, reason: 'equipped' };
-    }
-    if (flags.requiredLanguage && !this.actorKnowsLanguage(actor, flags.requiredLanguage)) {
-      return { accessible: false, reason: 'language' };
-    }
-    return { accessible: true, reason: null };
+  /** Identyfikatory receptur zapisanych w księdze. */
+  static bookRecipeIds(book) {
+    return entriesOfType(readBook(book), RECIPE_TYPE).map(entry => this.getRecipeById(entry.data.recipeId)?.id ?? entry.data.recipeId);
   }
 
   static getRecipeBookDetails(actor, books = null) {
-    const recipesById = new Map();
-    for (const recipe of this.getAllRecipes()) {
-      recipesById.set(recipe.id, recipe);
-      if (recipe.key) recipesById.set(recipe.key, recipe);
-    }
-
     return (books || this.getRecipeBooks(actor)).map(book => {
-      const flags = book.flags?.[MODULE_ID] || {};
-      const access = this.getBookAccess(actor, book);
-      const recipes = (Array.isArray(flags.recipes) ? flags.recipes : []).map(id => {
-        const recipe = recipesById.get(id);
+      const data = readBook(book);
+      const access = bookAccess(book);
+      const recipes = this.bookRecipeIds(book).map(id => {
+        const recipe = this.getRecipeById(id);
         return { id, name: recipe ? game.i18n.localize(recipe.name) : id };
       });
       return {
@@ -308,10 +266,9 @@ export class RecipeRegistry {
         name: book.name,
         img: resolveAlchemyImage(book.img, 'book'),
         recipes,
-        requiredLanguage: flags.requiredLanguage || '',
+        languageLabel: languageLabel(data.language),
         accessible: access.accessible,
-        accessReason: access.reason,
-        equipped: this.isBookEquipped(book)
+        accessReason: access.reason
       };
     });
   }
@@ -326,10 +283,8 @@ export class RecipeRegistry {
     books = books || this.getRecipeBooks(actor);
 
     for (const book of books) {
-      if (!this.getBookAccess(actor, book).accessible) continue;
-      const bookRecipes = book.getFlag(MODULE_ID, 'recipes');
-      if (!Array.isArray(bookRecipes)) continue;
-      for (const recipeId of bookRecipes) {
+      if (!bookAccess(book).accessible) continue;
+      for (const recipeId of this.bookRecipeIds(book)) {
         const names = map.get(recipeId) || [];
         if (!names.includes(book.name)) names.push(book.name);
         map.set(recipeId, names);
@@ -481,9 +436,10 @@ export class RecipeRegistry {
    * Zapamiętuje recepturę w pamięci postaci
    * @param {Actor} actor
    * @param {string} recipeId
+   * @param {{fromScroll?: boolean}} [options]  zapamiętanie z posiadanego zwoju
    * @returns {Promise<boolean>}
    */
-  static async memorizeRecipe(actor, recipeId) {
+  static async memorizeRecipe(actor, recipeId, { fromScroll = false } = {}) {
     if (!actor) return false;
     const recipe = this.getRecipeById(recipeId);
     if (!recipe) return false;
@@ -492,7 +448,7 @@ export class RecipeRegistry {
     if (!game.user.isGM) {
       if (!actor.isOwner) return false;
       const knowledge = this.getRecipeKnowledge(actor, recipe);
-      if (!knowledge.isFromBook) {
+      if (!knowledge.isFromBook && !fromScroll) {
         ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Notifications.MemorizeFromBookOnly'));
         return false;
       }
@@ -538,7 +494,7 @@ export class RecipeRegistry {
   }
 
   /**
-   * Zapisuje recepturę do fizycznej Księgi Receptur w ekwipunku postaci
+   * Zapisuje recepturę do księgi (tylko MG)
    * @param {Item} bookItem
    * @param {string} recipeId
    * @returns {Promise<boolean>}
@@ -548,48 +504,14 @@ export class RecipeRegistry {
       ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Notifications.BookEditGMOnly'));
       return false;
     }
-    if (!bookItem || bookItem.type !== 'trapping' || !bookItem.parent || !this.getRecipeById(recipeId)) return false;
-    const current = [...(bookItem.getFlag(MODULE_ID, 'recipes') || [])];
-    if (!current.includes(recipeId)) {
-      current.push(recipeId);
-      await bookItem.setFlag(MODULE_ID, 'recipes', current);
-      await bookItem.setFlag(MODULE_ID, 'isRecipeBook', true);
-
-      const recipe = this.getRecipeById(recipeId);
-      const recipeName = recipe ? game.i18n.localize(recipe.name) : recipeId;
-      ui.notifications.info(game.i18n.format('GOLD_ALCHEMY.Notifications.RecipeAddedToBook', {
-        recipe: recipeName,
-        book: bookItem.name
-      }));
-      return true;
-    }
-    return false;
-  }
-
-  static async removeRecipeFromBook(bookItem, recipeId) {
-    if (!game.user.isGM) return false;
-    if (!bookItem || bookItem.type !== 'trapping' || !bookItem.parent) return false;
-    const current = bookItem.getFlag(MODULE_ID, 'recipes') || [];
-    const updated = current.filter(id => id !== recipeId);
-    if (updated.length === current.length) return false;
-    await bookItem.setFlag(MODULE_ID, 'recipes', updated);
-    return true;
-  }
-
-  static async setBookRequirements(bookItem, requiredLanguage = '') {
-    if (!game.user.isGM || !bookItem || bookItem.type !== 'trapping' || !bookItem.parent) return false;
-    await bookItem.setFlag(MODULE_ID, 'isRecipeBook', true);
-    await bookItem.setFlag(MODULE_ID, 'requiredLanguage', String(requiredLanguage || '').trim());
-    return true;
-  }
-
-  static async registerRecipeBook(bookItem) {
-    if (!game.user.isGM) return false;
-    if (!bookItem || bookItem.type !== 'trapping' || !bookItem.parent) return false;
-    await bookItem.setFlag(MODULE_ID, 'isRecipeBook', true);
-    if (!Array.isArray(bookItem.getFlag(MODULE_ID, 'recipes'))) {
-      await bookItem.setFlag(MODULE_ID, 'recipes', []);
-    }
+    const recipe = this.getRecipeById(recipeId);
+    if (!isGrimoire(bookItem) || !recipe) return false;
+    const added = await addEntryToBook(bookItem, recipeEntry(recipe.id, recipe), (a, b) => a.data.recipeId === b.data.recipeId);
+    if (!added) return false;
+    ui.notifications.info(game.i18n.format('GOLD_ALCHEMY.Notifications.RecipeAddedToBook', {
+      recipe: game.i18n.localize(recipe.name),
+      book: bookItem.name
+    }));
     return true;
   }
 
@@ -608,7 +530,8 @@ export class RecipeRegistry {
     // Przeciągnięcie z kompendium lub niestandardowego payloadu
     if (dropData.type === 'Item' && dropData.uuid) {
       const item = await fromUuid(dropData.uuid);
-      if (item) {
+      // Mikstury też noszą identyfikator receptury – liczą się tylko zwoje
+      if (item?.getFlag(MODULE_ID, 'isRecipe')) {
         recipeId = item.getFlag(MODULE_ID, 'recipeId') || item.flags?.[MODULE_ID]?.recipeKey || null;
       }
     } else if (dropData.recipeId) {
@@ -630,7 +553,7 @@ export class RecipeRegistry {
     }
 
     // Jeśli upuszczono na konkretną księgę w ekwipunku
-    if (targetItem && targetItem.type === 'trapping' && targetItem.parent?.id === actor.id) {
+    if (targetItem && isGrimoire(targetItem) && targetItem.parent?.id === actor.id) {
       return await this.addRecipeToBook(targetItem, recipeId);
     }
 

@@ -2,7 +2,7 @@
 
 **English** | [Polski](README.pl.md)
 
-A module for **Foundry VTT v13–v14** and the **Warhammer Fantasy Roleplay 4th Edition** system. It replaces the standard potion-making procedure with an **Alchemical Workshop**:
+A module for **Foundry VTT v14** and the **Warhammer Fantasy Roleplay 4th Edition** system. It replaces the standard potion-making procedure with an **Alchemical Workshop**:
 
 * **Magical draughts** of the eight Colleges are brewed quickly and stay potent only while the alchemist sustains them with their **magical tether** (tether points tied to the alchemist's magic).
 * **Mundane alchemy, apothecary and herbalism** stay close to the official rules: longer creation times, ingredient costs and list prices from the rulebooks.
@@ -19,12 +19,13 @@ In Foundry: **Add-on Modules → Install Module**, paste this into *Manifest URL
 https://github.com/TomasWarchol/wfrp4e-alchemy/releases/latest/download/module.json
 ```
 
-Foundry also installs the required **WFRP4e – Companion Library** (`wfrp4e-companion-lib`). Enable both modules in your world.
+Foundry also installs the required **WFRP4e – Companion Library** (`wfrp4e-companion-lib`) and **WFRP4e – Grimoires** (`wfrp4e-grimoires`). Enable all three modules in your world.
 
 ## 📦 Requirements
 
-* Foundry VTT v13–v14 and the WFRP4e system 9.0+.
+* Foundry VTT v14 and the WFRP4e system 10.0+.
 * **WFRP4e – Companion Library** (`wfrp4e-companion-lib`).
+* **WFRP4e – Grimoires** (`wfrp4e-grimoires`) 0.5+.
 * Optional: Simple Calendar (otherwise Foundry's calendar is used), the official WFRP4e content modules (extra ingredients and recipes appear when their modules are active).
 
 ---
@@ -33,7 +34,7 @@ Foundry also installs the required **WFRP4e – Companion Library** (`wfrp4e-com
 
 * **Alchemical Workshop** per character: recipes grouped by College and craft, required ingredients, test skill, creation time, number of doses and price.
 * **Tether points**: each magical potion keeps a share of the alchemist's tether while it exists. Giving a potion to an ally keeps the tether; when the potion is used or dissolved, the points return.
-* **Recipe memory**: the alchemist remembers a limited number of recipes; more come from **recipe scrolls and grimoires** in the inventory.
+* **Recipe memory**: the alchemist remembers a limited number of recipes; more come from **books** in the inventory, which use the same window and reading requirements as spellbooks and can hold spells and recipes together. Opening a **recipe scroll** lets the character memorise it, which uses up the scroll.
 * **Brewing test** with modifiers shown in the WFRP4e test dialog; the result and the brewed potion go to the chat and the inventory.
 * **Potion effects** built on WFRP4e effect scripts: conditions, armour, characteristic and skill bonuses, healing; combat potions can be **thrown** at a target from the item's context menu.
 * **Spoilage** of mundane preparations over the seasons.

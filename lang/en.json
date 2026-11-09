@@ -940,14 +940,11 @@
       "BookAccessible": "Accessible",
       "BookNeedsEquipped": "Must be equipped",
       "BookNeedsLanguage": "Required language not known",
-      "RequiredLanguage": "Required language (leave blank for none)",
-      "NoLanguageRequirement": "No requirement",
-      "SaveBookRequirements": "Save book requirements",
-      "RemoveFromBook": "Remove recipe from book",
       "EmptyBook": "This book has no recipes yet. Drop one here.",
       "NoBooks": "This character has no recipe books in their inventory.",
-      "UnregisteredBooks": "Recognized books to register:",
-      "RegisterBook": "Register as a recipe book"
+      "OpenBook": "Open the book",
+      "NewBook": "New book",
+      "BookNeedsReadWrite": "Requires Read/Write"
     },
     "Editor": {
       "Title": "Alchemy Recipe Creator",
@@ -1011,9 +1008,7 @@
       "StrictModuleFilter": "Strict Source Module Filtering",
       "StrictModuleFilterHint": "Hides recipes from official books whose modules are not active in the world.",
       "RequireDiscovery": "Recipe Discovery & Grimoire System",
-      "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it.",
-      "RequireEquippedBooks": "Require equipped recipe books",
-      "RequireEquippedBooksHint": "Books grant recipe access only while equipped or worn by the character."
+      "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it."
     },
     "Time": {
       "Hours": "{count} h",
@@ -1034,7 +1029,7 @@
     },
     "Compendium": {
       "RequiredIngredients": "Required ingredients:",
-      "ScrollHint": "Drag this scroll onto a character sheet or the Workshop window to memorise the recipe!",
+      "ScrollHint": "Open this scroll to memorise the recipe. The scroll is used up.",
       "BookHint": "Carrying this book unlocks its recipes in the Alchemical Workshop (from book).",
       "Books": {
         "Chamon": {
@@ -1063,6 +1058,29 @@
       "Ingredients": "Alchemy – Ingredients",
       "Potions": "Alchemy – Potions",
       "Recipes": "Alchemy – Recipes and Grimoires"
+    },
+    "Book": {
+      "Section": "Recipes",
+      "Status": {
+        "memorized": "Memorised",
+        "available": "You can brew from this book",
+        "notCarried": "The book must be carried",
+        "unreadable": "You can't read it",
+        "missing": "Recipe not available in this world"
+      },
+      "Note": {
+        "memorized": "You know this recipe by heart and don't need the book to brew it.",
+        "available": "While you have this book you can brew the recipe in the Workshop. Memorise it to brew without the book.",
+        "availableScroll": "Memorising takes one slot of recipe memory and uses up the scroll.",
+        "notCarried": "Mark the book as carried to brew from it.",
+        "unreadable": "You can't read this.",
+        "missing": "This recipe is not available in this world. It comes back when its module is active."
+      },
+      "Action": {
+        "Memorize": "Memorise",
+        "MemorizeScroll": "Memorise and use up",
+        "Workshop": "Open the Workshop"
+      }
     }
   }
 }

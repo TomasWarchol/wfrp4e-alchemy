@@ -2,9 +2,9 @@
   "id": "wfrp4e-alchemy",
   "title": "WFRP4e – Old World Alchemy",
   "description": "Alchemy for Warhammer Fantasy Roleplay 4e: magical draughts of the eight Colleges brewed quickly and sustained through the alchemist's magical tether, plus mundane alchemy, apothecary and herbalism closer to the official rules. Alchemical Workshop, recipe memory, potion spoilage, thrown potions and generated compendia. English and Polish.",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "compatibility": {
-    "minimum": "13",
+    "minimum": "14",
     "verified": "14",
     "maximum": "14"
   },
@@ -21,7 +21,7 @@
         "id": "wfrp4e",
         "type": "system",
         "compatibility": {
-          "minimum": "9.0.0"
+          "minimum": "10.0.0"
         }
       }
     ],
@@ -32,6 +32,14 @@
         "manifest": "https://github.com/TomasWarchol/wfrp4e-companion-lib/releases/latest/download/module.json",
         "compatibility": {
           "minimum": "1.0.0"
+        }
+      },
+      {
+        "id": "wfrp4e-grimoires",
+        "type": "module",
+        "manifest": "https://github.com/TomasWarchol/wfrp4e-grimoires/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "0.5.0"
         }
       }
     ]
