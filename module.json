@@ -112,5 +112,17 @@
   "bugs": "https://github.com/TomasWarchol/wfrp4e-alchemy/issues",
   "readme": "https://github.com/TomasWarchol/wfrp4e-alchemy/blob/main/README.md",
   "changelog": "https://github.com/TomasWarchol/wfrp4e-alchemy/blob/main/CHANGELOG.md",
-  "license": "https://github.com/TomasWarchol/wfrp4e-alchemy/blob/main/LICENSE"
+  "license": "https://github.com/TomasWarchol/wfrp4e-alchemy/blob/main/LICENSE",
+  "packFolders": [
+    {
+      "name": "mods",
+      "sorting": "a",
+      "color": "#6b2d1f",
+      "packs": [
+        "alchemy-ingredients",
+        "alchemy-potions",
+        "alchemy-recipes"
+      ]
+    }
+  ]
 }
