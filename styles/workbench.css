@@ -1,0 +1,339 @@
+/* WFRP4e – Old World Alchemy: wygląd „Pracownia Alchemika” (klasa okna .al-workbench,
+   ustawienie klienta „Wygląd warsztatu”). Czcionki i pergamin z systemu WFRP4e, ozdoby z assets/ui. */
+
+@font-face { font-family: "AL Nodesto"; src: url("../../../systems/wfrp4e/fonts/NodestoCapsCondensed.otf") format("opentype"); font-display: swap; }
+@font-face { font-family: "AL Caslon Antique"; src: url("../../../systems/wfrp4e/fonts/CaslonAntique.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "AL Caslon Antique"; font-weight: bold; src: url("../../../systems/wfrp4e/fonts/CaslonAntique-Bold.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "AL Caslon"; src: url("../../../systems/wfrp4e/fonts/ACaslonPro-Regular.otf") format("opentype"); font-display: swap; }
+@font-face { font-family: "AL Caslon"; font-style: italic; src: url("../../../systems/wfrp4e/fonts/ACaslonPro-Italic.otf") format("opentype"); font-display: swap; }
+
+/* ─── Paleta ─── */
+.gold-alchemy-app.al-workbench {
+  --al-wood: #2e1d12;
+  --al-wood-deep: #1c120b;
+  --al-paper: #f1e4c3;
+  --al-paper-deep: #e2cf9f;
+  --al-ink: #2a1d12;
+  --al-ink-soft: #5c4530;
+  --al-brass: #c9a24b;
+  --al-brass-deep: #7d5e1f;
+  --al-gold-text: #f0dca6;
+  --al-display: "AL Nodesto", "Nodesto Caps Condensed", var(--font-header, serif);
+  --al-title: "AL Caslon Antique", "Caslon Antique", serif;
+  --al-body: "AL Caslon", "Adobe Caslon Pro", var(--font-body, serif);
+  --al-parchment: url("../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp");
+  --al-accent: #2a3550;
+  --al-wash: rgba(42, 53, 80, 0.08);
+}
+
+/* Akcent tradycji i wiatru (kontrast z pergaminem co najmniej 4.5:1) */
+.gold-alchemy-app.al-workbench [data-tradition="colleges"] { --al-accent: #2a3550; --al-wash: rgba(42, 53, 80, 0.08); }
+.gold-alchemy-app.al-workbench [data-tradition="alchemy"] { --al-accent: #4b5a1a; --al-wash: rgba(85, 107, 26, 0.1); }
+.gold-alchemy-app.al-workbench [data-tradition="apothecary"] { --al-accent: #6e4f16; --al-wash: rgba(160, 120, 40, 0.1); }
+.gold-alchemy-app.al-workbench [data-tradition="herbal"] { --al-accent: #3c5a1f; --al-wash: rgba(63, 90, 31, 0.1); }
+.gold-alchemy-app.al-workbench [data-tradition="forbidden"] { --al-accent: #7a0f0f; --al-wash: rgba(122, 15, 15, 0.08); }
+.gold-alchemy-app.al-workbench [data-wind="aqshy"] { --al-accent: #9c2a0c; --al-wash: rgba(176, 48, 15, 0.08); }
+.gold-alchemy-app.al-workbench [data-wind="azyr"] { --al-accent: #1d4a83; --al-wash: rgba(31, 78, 138, 0.08); }
+.gold-alchemy-app.al-workbench [data-wind="chamon"] { --al-accent: #6a5112; --al-wash: rgba(160, 122, 28, 0.1); }
+.gold-alchemy-app.al-workbench [data-wind="ghyran"] { --al-accent: #2b632b; --al-wash: rgba(46, 107, 46, 0.08); }
+.gold-alchemy-app.al-workbench [data-wind="ghur"] { --al-accent: #7a440c; --al-wash: rgba(154, 91, 19, 0.1); }
+.gold-alchemy-app.al-workbench [data-wind="hysh"] { --al-accent: #6a510c; --al-wash: rgba(201, 162, 39, 0.12); }
+.gold-alchemy-app.al-workbench [data-wind="shyish"] { --al-accent: #57286a; --al-wash: rgba(87, 40, 106, 0.08); }
+.gold-alchemy-app.al-workbench [data-wind="ulgu"] { --al-accent: #464b53; --al-wash: rgba(74, 79, 87, 0.08); }
+
+.gold-alchemy-app.al-workbench .al-icon { width: 1.15em; height: 1.15em; fill: currentColor; vertical-align: -0.2em; flex: 0 0 auto; }
+
+/* ─── Rama pracowni ─── */
+.gold-alchemy-app.al-workbench .window-content { padding: 0; overflow: hidden; background: var(--al-wood-deep); }
+.gold-alchemy-app.al-workbench .al-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 12px 14px 14px;
+  color: var(--al-gold-text);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)), var(--al-wood);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(0, 0, 0, 0.6);
+  isolation: isolate;
+  overflow: hidden;
+}
+.gold-alchemy-app.al-workbench .al-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: rgba(255, 220, 170, 0.07);
+  -webkit-mask: url("../assets/ui/ornaments/wood_tile.svg") repeat 0 0 / 120px 60px;
+  mask: url("../assets/ui/ornaments/wood_tile.svg") repeat 0 0 / 120px 60px;
+  pointer-events: none;
+}
+.gold-alchemy-app.al-workbench .al-frame-corner { position: absolute; z-index: 3; width: 44px; height: 44px; color: var(--al-brass); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); pointer-events: none; }
+.gold-alchemy-app.al-workbench .al-frame-corner .al-icon { width: 100%; height: 100%; vertical-align: top; }
+.gold-alchemy-app.al-workbench .al-frame-corner.tl { left: 1px; top: 1px; }
+.gold-alchemy-app.al-workbench .al-frame-corner.tr { right: 1px; top: 1px; transform: scaleX(-1); }
+.gold-alchemy-app.al-workbench .al-frame-corner.bl { left: 1px; bottom: 1px; transform: scaleY(-1); }
+.gold-alchemy-app.al-workbench .al-frame-corner.br { right: 1px; bottom: 1px; transform: scale(-1, -1); }
+
+/* ─── Nagłówek: alchemik, Więź, pamięć ─── */
+.gold-alchemy-app.al-workbench .al-head { display: flex; align-items: center; gap: 14px; padding: 2px 30px 0; flex: 0 0 auto; }
+.gold-alchemy-app.al-workbench .al-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.gold-alchemy-app.al-workbench .al-portrait { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--al-brass); object-fit: cover; }
+.gold-alchemy-app.al-workbench .al-who h2 { margin: 0; border: none; font-family: var(--al-display); font-size: 1.25rem; letter-spacing: 0.04em; color: var(--al-gold-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gold-alchemy-app.al-workbench .al-date { font-family: var(--al-body); font-size: 0.85rem; opacity: 0.85; }
+.gold-alchemy-app.al-workbench .al-meters { display: grid; gap: 3px; flex: 1; min-width: 0; }
+.gold-alchemy-app.al-workbench .al-meter { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.gold-alchemy-app.al-workbench .al-meter-label { flex: 0 0 92px; font-family: var(--al-display); letter-spacing: 0.04em; font-size: 0.9rem; }
+.gold-alchemy-app.al-workbench .al-meter-value { font-family: var(--al-display); font-size: 1rem; }
+.gold-alchemy-app.al-workbench .al-chain, .gold-alchemy-app.al-workbench .al-shelf-slots { display: flex; flex-wrap: wrap; gap: 0 1px; min-width: 0; }
+.gold-alchemy-app.al-workbench .al-link { width: 12px; height: 16px; color: rgba(201, 162, 75, 0.35); }
+.gold-alchemy-app.al-workbench .al-link.is-held { color: var(--al-brass); filter: drop-shadow(0 0 2px rgba(255, 210, 120, 0.5)); }
+.gold-alchemy-app.al-workbench .al-slot { width: 11px; height: 16px; color: rgba(240, 220, 166, 0.35); }
+.gold-alchemy-app.al-workbench .al-slot.is-used { color: var(--al-gold-text); }
+.gold-alchemy-app.al-workbench :is(.al-link, .al-slot) .al-icon { width: 100%; height: 100%; vertical-align: top; }
+.gold-alchemy-app.al-workbench .al-chamon { display: inline-flex; align-items: center; gap: 2px; font-family: var(--al-display); color: var(--al-brass); }
+.gold-alchemy-app.al-workbench .al-drawer-toggle { flex: 0 0 auto; width: 34px; height: 34px; padding: 0; color: var(--al-gold-text); background: transparent; border: 1px solid var(--al-brass); border-radius: 50%; }
+.gold-alchemy-app.al-workbench .al-drawer-toggle.active { background: var(--al-brass-deep); }
+
+/* Fiolki na Więzi */
+.gold-alchemy-app.al-workbench .al-vials { flex: 0 0 auto; margin: 0 30px; font-family: var(--al-body); }
+.gold-alchemy-app.al-workbench .al-vials summary { cursor: pointer; font-family: var(--al-display); letter-spacing: 0.04em; }
+.gold-alchemy-app.al-workbench .al-vials ul { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; max-height: 120px; overflow-y: auto; }
+.gold-alchemy-app.al-workbench .al-vials li { display: flex; align-items: center; gap: 10px; padding: 3px 6px; color: var(--al-ink); background: var(--al-paper) var(--al-parchment); border-radius: 3px; }
+.gold-alchemy-app.al-workbench .al-vials li strong { flex: 1; font-family: var(--al-title); }
+.gold-alchemy-app.al-workbench .al-vials li button { flex: 0 0 auto; width: auto; padding: 1px 8px; font-family: var(--al-display); color: #7a0f0f; background: transparent; border: 1px solid #7a0f0f; }
+.gold-alchemy-app.al-workbench .al-vial { width: 14px; height: 24px; color: var(--al-brass-deep); }
+.gold-alchemy-app.al-workbench .al-vial .al-icon { width: 100%; height: 100%; }
+
+/* ─── Szuflada MG ─── */
+.gold-alchemy-app.al-workbench .al-drawer {
+  position: absolute;
+  top: 66px;
+  right: 0;
+  bottom: 14px;
+  z-index: 10;
+  width: 290px;
+  padding: 10px 12px;
+  overflow-y: auto;
+  color: var(--al-ink);
+  background: var(--al-paper) var(--al-parchment);
+  border: 4px solid #5a3a20;
+  border-right: none;
+  box-shadow: -6px 0 14px rgba(0, 0, 0, 0.6);
+  transform: translateX(105%);
+  transition: transform 200ms ease;
+}
+.gold-alchemy-app.al-workbench .al-drawer.is-open { transform: none; }
+.gold-alchemy-app.al-workbench .al-drawer h3, .gold-alchemy-app.al-workbench .al-drawer h4 { margin: 0 0 6px; border: none; font-family: var(--al-display); letter-spacing: 0.04em; color: var(--al-ink); }
+.gold-alchemy-app.al-workbench .al-drawer-actions { display: grid; gap: 4px; margin-bottom: 10px; }
+.gold-alchemy-app.al-workbench .al-drawer button { display: flex; align-items: center; gap: 6px; justify-content: flex-start; font-family: var(--al-display); letter-spacing: 0.03em; color: var(--al-ink); background: rgba(255, 250, 235, 0.6); border: 1px solid var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-drawer button.active { color: var(--al-paper); background: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-drawer-settings { display: grid; gap: 6px; font-family: var(--al-body); }
+.gold-alchemy-app.al-workbench .al-drawer-settings :is(input[type="number"]) { width: 60px; color: var(--al-ink); background: rgba(255, 250, 235, 0.75); border: none; border-bottom: 1px solid var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-drawer-settings fieldset { border: 1px solid rgba(92, 69, 48, 0.4); }
+
+/* ─── Układ: receptariusz i stół ─── */
+.gold-alchemy-app.al-workbench .al-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 10px; }
+.gold-alchemy-app.al-workbench :is(.al-ledger, .al-bench) {
+  min-height: 0;
+  color: var(--al-ink);
+  background: var(--al-paper) var(--al-parchment);
+  border-radius: 3px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55), inset 0 0 18px rgba(90, 60, 25, 0.25);
+  font-family: var(--al-body);
+}
+
+/* Receptariusz */
+.gold-alchemy-app.al-workbench .al-ledger { display: flex; flex-direction: column; padding: 8px; gap: 6px; }
+.gold-alchemy-app.al-workbench :is(.al-traditions, .al-winds, .al-knowledge) { display: flex; flex-wrap: wrap; gap: 3px; }
+.gold-alchemy-app.al-workbench :is(.al-traditions, .al-winds, .al-knowledge) button {
+  flex: 1 1 0;
+  min-width: 26px;
+  height: 30px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-family: var(--al-display);
+  color: var(--al-ink-soft);
+  background: rgba(255, 250, 235, 0.45);
+  border: 1px solid rgba(92, 69, 48, 0.35);
+  border-radius: 3px;
+}
+.gold-alchemy-app.al-workbench :is(.al-traditions, .al-winds, .al-knowledge) button .al-icon { width: 20px; height: 20px; }
+.gold-alchemy-app.al-workbench :is(.al-traditions, .al-winds, .al-knowledge) button.active { color: var(--al-paper); background: var(--al-accent, var(--al-ink-soft)); border-color: transparent; }
+.gold-alchemy-app.al-workbench .al-winds button[data-wind] { color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-winds button[data-wind].active { color: var(--al-paper); background: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-books-panel { display: grid; gap: 3px; padding: 4px; background: rgba(255, 250, 235, 0.4); border: 1px dashed rgba(92, 69, 48, 0.4); }
+.gold-alchemy-app.al-workbench .al-book { display: flex; align-items: center; gap: 6px; }
+.gold-alchemy-app.al-workbench .al-book span { flex: 1; font-family: var(--al-title); }
+.gold-alchemy-app.al-workbench .al-book.is-locked { opacity: 0.6; }
+.gold-alchemy-app.al-workbench .al-book button { width: 26px; height: 24px; padding: 0; }
+
+.gold-alchemy-app.al-workbench .al-recipes { flex: 1; min-height: 0; overflow-y: auto; display: grid; align-content: start; gap: 2px; scrollbar-width: thin; }
+.gold-alchemy-app.al-workbench .al-recipe {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-left: 3px solid transparent;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+}
+.gold-alchemy-app.al-workbench .al-recipe:hover { background: var(--al-wash); }
+.gold-alchemy-app.al-workbench .al-recipe.selected { background: var(--al-wash); border-left-color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-recipe:focus-visible { outline: 2px solid var(--al-brass); outline-offset: 1px; }
+.gold-alchemy-app.al-workbench .al-recipe.is-unknown { opacity: 0.65; }
+.gold-alchemy-app.al-workbench .al-recipe-mark { width: 22px; height: 22px; color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-recipe-mark .al-icon { width: 100%; height: 100%; }
+.gold-alchemy-app.al-workbench .al-recipe-name { min-width: 0; font-family: var(--al-title); font-size: 1rem; line-height: 1.15; }
+.gold-alchemy-app.al-workbench .al-src { color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-recipe-state { display: inline-flex; align-items: center; gap: 4px; font-family: var(--al-display); }
+.gold-alchemy-app.al-workbench .al-cost { color: var(--al-brass-deep); }
+.gold-alchemy-app.al-workbench .al-state.is-ready { color: #2f5d1e; }
+.gold-alchemy-app.al-workbench .al-state.is-missing { color: #8a1f1f; }
+.gold-alchemy-app.al-workbench .al-state.is-brewing { color: #9c2a0c; }
+.gold-alchemy-app.al-workbench .al-empty { font-style: italic; color: var(--al-ink-soft); text-align: center; }
+
+/* Stół roboczy */
+.gold-alchemy-app.al-workbench .al-bench { padding: 10px 14px; overflow-y: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: 8px; }
+.gold-alchemy-app.al-workbench .al-bench-top { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: start; }
+.gold-alchemy-app.al-workbench .al-vessel-wrap { position: relative; width: 110px; height: 132px; color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-vessel { width: 100%; height: 100%; vertical-align: top; }
+.gold-alchemy-app.al-workbench .al-vessel-sigil { position: absolute; left: 50%; top: 52%; width: 28px; height: 28px; transform: translate(-50%, -50%); color: var(--al-paper); filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6)); }
+.gold-alchemy-app.al-workbench .al-vessel-sigil .al-icon { width: 100%; height: 100%; }
+.gold-alchemy-app.al-workbench .al-bubbles { position: absolute; left: 30%; top: 0; width: 40%; height: 55%; color: var(--al-accent); opacity: 0.7; animation: al-rise 1.6s ease-in-out infinite alternate; }
+.gold-alchemy-app.al-workbench .al-bubbles .al-icon { width: 100%; height: 100%; }
+@keyframes al-rise { from { transform: translateY(6px); opacity: 0.35; } to { transform: translateY(-4px); opacity: 0.8; } }
+.gold-alchemy-app.al-workbench .al-tradition { font-family: var(--al-display); letter-spacing: 0.08em; color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-bench-title h2 { margin: 0; border: none; font-family: var(--al-title); font-size: 1.6rem; font-weight: bold; color: var(--al-ink); }
+.gold-alchemy-app.al-workbench .al-desc { margin: 2px 0 6px; font-style: italic; color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-params { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--al-body); }
+.gold-alchemy-app.al-workbench .al-params > span { display: inline-flex; align-items: center; gap: 4px; }
+.gold-alchemy-app.al-workbench .al-params .al-icon { color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-flames { gap: 0; }
+.gold-alchemy-app.al-workbench .al-flame { width: 12px; height: 16px; color: rgba(92, 69, 48, 0.3); }
+.gold-alchemy-app.al-workbench .al-flame.is-lit { color: #b8460f; }
+.gold-alchemy-app.al-workbench .al-flame .al-icon { width: 100%; height: 100%; color: inherit; }
+.gold-alchemy-app.al-workbench .al-gm-recipe { display: flex; gap: 4px; }
+.gold-alchemy-app.al-workbench .al-gm-recipe button { width: 30px; height: 30px; padding: 0; }
+
+.gold-alchemy-app.al-workbench .al-know-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 8px; background: var(--al-wash); border-left: 3px solid var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-know-bar.is-unknown { border-left-color: #8a1f1f; }
+.gold-alchemy-app.al-workbench .al-know-bar button { flex: 0 0 auto; width: auto; padding: 2px 10px; font-family: var(--al-display); color: var(--al-accent); background: rgba(255, 250, 235, 0.6); border: 1px solid var(--al-accent); border-radius: 14px; }
+
+/* Składniki jako słoje na półce */
+.gold-alchemy-app.al-workbench .al-ingredients h4, .gold-alchemy-app.al-workbench .al-effect h4 { margin: 0 0 4px; border: none; font-family: var(--al-display); letter-spacing: 0.05em; color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-jars { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: flex-end; }
+.gold-alchemy-app.al-workbench .al-jar { display: grid; justify-items: center; width: 74px; text-align: center; }
+.gold-alchemy-app.al-workbench .al-jar-art { position: relative; width: 40px; height: 54px; color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-jar.is-full .al-jar-art { color: var(--al-accent); }
+.gold-alchemy-app.al-workbench .al-jar-art > .al-icon { width: 100%; height: 100%; vertical-align: top; }
+.gold-alchemy-app.al-workbench .al-jar-glyph { position: absolute; left: 50%; top: 60%; width: 18px; height: 18px; transform: translate(-50%, -50%); color: var(--al-ink); }
+.gold-alchemy-app.al-workbench .al-jar-glyph .al-icon { width: 100%; height: 100%; }
+.gold-alchemy-app.al-workbench .al-jar-name { font-size: 0.78rem; line-height: 1.1; }
+.gold-alchemy-app.al-workbench .al-jar-qty { font-family: var(--al-display); font-size: 0.85rem; }
+.gold-alchemy-app.al-workbench .al-jar.is-empty .al-jar-qty b { color: #8a1f1f; }
+.gold-alchemy-app.al-workbench .al-shelf-board { display: block; height: 22px; margin-top: -4px; background-color: #6b4a2a; -webkit-mask: url("../assets/ui/ornaments/shelf.svg") repeat-x 0 0 / 220px 22px; mask: url("../assets/ui/ornaments/shelf.svg") repeat-x 0 0 / 220px 22px; }
+
+/* Palenisko */
+.gold-alchemy-app.al-workbench .al-fire { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; background: rgba(90, 60, 25, 0.08); border: 1px solid rgba(92, 69, 48, 0.3); border-radius: 4px; }
+.gold-alchemy-app.al-workbench .al-lab { display: inline-flex; align-items: center; gap: 6px; font-family: var(--al-display); }
+.gold-alchemy-app.al-workbench .al-lab select { width: auto; color: var(--al-ink); background: rgba(255, 250, 235, 0.75); border: none; border-bottom: 1px solid var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-pending { flex: 1 1 100%; margin: 0; font-style: italic; color: #9c2a0c; }
+.gold-alchemy-app.al-workbench .al-brew {
+  margin-left: auto;
+  width: auto;
+  padding: 6px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--al-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: #fbeccd;
+  background: linear-gradient(180deg, #b8460f, #7a240a);
+  border: 1px solid #4a1606;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.gold-alchemy-app.al-workbench .al-brew:disabled { filter: grayscale(0.8); opacity: 0.6; cursor: not-allowed; }
+.gold-alchemy-app.al-workbench .al-cancel { width: auto; font-family: var(--al-display); color: #7a0f0f; background: transparent; border: 1px solid #7a0f0f; }
+.gold-alchemy-app.al-workbench .al-effect p { margin: 0; line-height: 1.4; }
+.gold-alchemy-app.al-workbench :is(button, select, input, summary):focus-visible { outline: 2px solid var(--al-brass); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-alchemy-app.al-workbench * { animation: none !important; transition: none !important; }
+}
+
+/* Osiem wiatrów i „wszystkie Kolegia” w jednym rzędzie */
+.gold-alchemy-app.al-workbench .al-winds { flex-wrap: nowrap; gap: 2px; }
+.gold-alchemy-app.al-workbench .al-winds button { min-width: 0; padding: 0; }
+.gold-alchemy-app.al-workbench .al-winds button .al-icon { width: 18px; height: 18px; }
+
+/* Szuflada MG: ciemny tekst na pergaminie (klasyczne style dają jasne podpisy) */
+.gold-alchemy-app.al-workbench .al-drawer-settings :is(label, legend) { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--al-ink); font-family: var(--al-body); }
+.gold-alchemy-app.al-workbench .al-drawer-settings input[type="checkbox"] { accent-color: var(--al-brass-deep); }
+.gold-alchemy-app.al-workbench .al-drawer-settings fieldset { display: grid; gap: 2px; padding: 4px 6px; color: var(--al-ink); }
+
+/* ─── Karty czatu w wyglądzie pracowni (klasa body.al-workbench-chat zależna od ustawienia oglądającego) ─── */
+body:not(.al-workbench-chat) .gold-alchemy-card :is(.al-chat-mark, .al-chat-seal) { display: none; }
+.gold-alchemy-card.al-card { --al-accent: #2a3550; }
+.gold-alchemy-card.al-card[data-tradition="alchemy"] { --al-accent: #4b5a1a; }
+.gold-alchemy-card.al-card[data-tradition="apothecary"] { --al-accent: #6e4f16; }
+.gold-alchemy-card.al-card[data-tradition="herbal"] { --al-accent: #3c5a1f; }
+.gold-alchemy-card.al-card[data-tradition="forbidden"] { --al-accent: #7a0f0f; }
+.gold-alchemy-card.al-card[data-wind="aqshy"] { --al-accent: #9c2a0c; }
+.gold-alchemy-card.al-card[data-wind="azyr"] { --al-accent: #1d4a83; }
+.gold-alchemy-card.al-card[data-wind="chamon"] { --al-accent: #6a5112; }
+.gold-alchemy-card.al-card[data-wind="ghyran"] { --al-accent: #2b632b; }
+.gold-alchemy-card.al-card[data-wind="ghur"] { --al-accent: #7a440c; }
+.gold-alchemy-card.al-card[data-wind="hysh"] { --al-accent: #6a510c; }
+.gold-alchemy-card.al-card[data-wind="shyish"] { --al-accent: #57286a; }
+.gold-alchemy-card.al-card[data-wind="ulgu"] { --al-accent: #464b53; }
+body.al-workbench-chat .gold-alchemy-card.al-card {
+  position: relative;
+  padding: 8px 10px;
+  color: #2a1d12;
+  background: #f1e4c3 url("../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp");
+  border: 3px double var(--al-accent);
+  border-radius: 2px;
+  font-family: "AL Caslon", "Adobe Caslon Pro", serif;
+}
+body.al-workbench-chat .gold-alchemy-card.al-card.is-failed {
+  border-color: #4a2a14;
+  box-shadow: inset 0 0 22px rgba(70, 30, 5, 0.45), inset 0 0 4px rgba(30, 10, 0, 0.6);
+}
+body.al-workbench-chat .gold-alchemy-card.al-card .card-header { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--al-accent); }
+body.al-workbench-chat .gold-alchemy-card.al-card .card-header h3 { margin: 0; border: none; font-family: "AL Caslon Antique", serif; font-weight: bold; color: #2a1d12; }
+body.al-workbench-chat .gold-alchemy-card.al-card .card-header h3 i { display: none; }
+body.al-workbench-chat .gold-alchemy-card.al-card .al-chat-mark { display: inline-block; flex: 0 0 26px; width: 26px; height: 26px; color: var(--al-accent); vertical-align: middle; margin-right: 4px; }
+body.al-workbench-chat .gold-alchemy-card.al-card .al-chat-seal { position: absolute; top: -6px; right: -4px; width: 34px; height: 34px; color: #2f5d1e; transform: rotate(-10deg); filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)); }
+body.al-workbench-chat .gold-alchemy-card.al-card svg.al-icon { width: 100%; height: 100%; fill: currentColor; vertical-align: top; }
+body.al-workbench-chat .gold-alchemy-card.al-card strong { font-family: "AL Nodesto", serif; font-weight: normal; letter-spacing: 0.04em; color: var(--al-accent); }
+body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .card-content { display: flex; align-items: center; gap: 6px; }
+body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .al-chat-mark { color: #7a0f0f; }
+
+/* ─── Edytor receptur w stylu pracowni (MG) ─── */
+.gold-alchemy-editor.al-workbench .window-content {
+  color: #2a1d12;
+  background: #f1e4c3 url("../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp");
+  font-family: "AL Caslon", "Adobe Caslon Pro", serif;
+}
+.gold-alchemy-editor.al-workbench :is(label, legend, h3, h4) { color: #2a1d12; font-family: "AL Nodesto", serif; font-weight: normal; letter-spacing: 0.04em; }
+.gold-alchemy-editor.al-workbench :is(input[type="text"], input[type="number"], select, textarea) {
+  color: #2a1d12;
+  background: rgba(255, 250, 235, 0.75);
+  border: none;
+  border-bottom: 1px solid #5c4530;
+  border-radius: 0;
+}
+.gold-alchemy-editor.al-workbench .input-recipe-name { font-family: "AL Caslon Antique", serif; font-size: 1.4rem; font-weight: bold; }
+.gold-alchemy-editor.al-workbench button { font-family: "AL Nodesto", serif; letter-spacing: 0.04em; color: #2a1d12; background: rgba(255, 250, 235, 0.6); border: 1px solid #5c4530; }
+.gold-alchemy-editor.al-workbench button[type="submit"] { color: #fbeccd; background: linear-gradient(180deg, #b8460f, #7a240a); border-color: #4a1606; }
+.gold-alchemy-editor.al-workbench :is(input, select, textarea, button):focus-visible { outline: 2px solid #c9a24b; outline-offset: 1px; }
+
+/* Kotły laboratorium (warzenia w toku / liczba kotłów) */
+.gold-alchemy-app.al-workbench .al-cauldrons { display: inline-flex; align-items: center; gap: 4px; font-family: var(--al-display); color: var(--al-ink-soft); }

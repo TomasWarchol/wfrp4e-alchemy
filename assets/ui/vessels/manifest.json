@@ -1,0 +1,27 @@
+[
+  {
+    "id": "alembic",
+    "file": "alembic.svg",
+    "subject": "Copper alembic: pot still with a long beaked head and a receiver flask, over a small brazier (magical potions)"
+  },
+  {
+    "id": "retort",
+    "file": "retort.svg",
+    "subject": "Glass retort on a stand over a flame, neck leading into a receiver (mundane alchemy)"
+  },
+  {
+    "id": "mortar",
+    "file": "mortar.svg",
+    "subject": "Large stone mortar with pestle, a few loose seeds and a small jar beside it (apothecary)"
+  },
+  {
+    "id": "herbal",
+    "file": "herbal.svg",
+    "subject": "Bunch of herbs hanging from a rod above a simmering pot (herbalism)"
+  },
+  {
+    "id": "forbidden",
+    "file": "forbidden.svg",
+    "subject": "Black squat flask with a chained stopper and dripping residue (forbidden, GM only)"
+  }
+]

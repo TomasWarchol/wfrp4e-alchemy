@@ -18,6 +18,12 @@ import { RecipeEditorApp } from './recipe-editor.js';
 import { ALCHEMY_IMAGE_FALLBACKS, resolveAlchemyImage } from '../data/image-compatibility.js';
 import { registry } from '../../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
 import { createBook, openBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
+import { useWorkbench } from '../ui.js';
+import { workbenchContext } from './workbench-view.js';
+import { cauldronCount, getPendingBrews } from '../logic/pending-brews.js';
+import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
+
+const INGREDIENT_CATEGORY = new Map(ALCHEMY_INGREDIENTS.map((ing) => [ing.key, ing.category]));
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
@@ -31,6 +37,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     this.showBookManager = false;
     this.showAllWorldRecipes = false; // Podgląd receptur świata wymaga jawnego włączenia przez MG
     this.selectedLabTier = 'standard';
+    this.gmDrawerOpen = false;
 
     this.selectedRecipeId = RecipeRegistry.getActiveRecipes()[0]?.id || null;
   }
@@ -68,7 +75,8 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       deleteRecipe: this._onDeleteRecipe,
       openIngredientsCompendium: this._onOpenIngredientsCompendium,
       openPotionsCompendium: this._onOpenPotionsCompendium,
-      openRecipesCompendium: this._onOpenRecipesCompendium
+      openRecipesCompendium: this._onOpenRecipesCompendium,
+      toggleGmDrawer: this._onToggleGmDrawer
     }
   };
 
@@ -132,7 +140,11 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     const requireDiscovery = game.settings?.get(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.REQUIRE_DISCOVERY) !== false;
 
     // 5. Przetworzenie każdej receptury pod kątem wiedzy, składników i uprawnień
-    const pendingBrew = this.actor.getFlag(MODULE_ID, 'pendingBrew');
+    // Kotły: każde warzenie w toku zajmuje jeden; dobre laboratorium ma dwa
+    const pendingBrews = getPendingBrews(this.actor);
+    const currentLab = BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier;
+    const cauldrons = cauldronCount(currentLab);
+    const freeCauldron = pendingBrews.length < cauldrons;
     const currentTimestamp = CalendarIntegration.getCurrentTimestamp();
     const recipes = categoryRecipes.map(recipe => {
       const ingCheck = BrewingEngine.checkIngredients(this.actor, recipe, ingredientInventory);
@@ -143,16 +155,19 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       // Receptura może być warzona, jeśli jest znana (z pamięci lub z księgi) i są składniki oraz podtrzymanie
       const isKnown = knowledge.isMemorized || knowledge.isFromBook;
       const hasTether = recipe.attunementCost === 0 || capacityState.available >= recipe.attunementCost;
-      const isPendingBrew = pendingBrew?.recipeId === recipe.id;
-      const canBrew = (!requireDiscovery || isKnown) && ingCheck.canBrew && hasTether
-        && (!pendingBrew || (isPendingBrew && currentTimestamp >= pendingBrew.completesAt));
+      const ownBrew = pendingBrews.find((b) => b.recipeId === recipe.id);
+      const isPendingBrew = Boolean(ownBrew);
+      // A4: przy rezerwacji składniki i Więź tego warzenia są już w kotle
+      const reservedPending = isPendingBrew && Boolean(ownBrew.reserved);
+      const canBrew = (!requireDiscovery || isKnown) && (reservedPending || (ingCheck.canBrew && hasTether))
+        && (isPendingBrew ? currentTimestamp >= ownBrew.completesAt : freeCauldron);
 
       return {
         ...recipe,
         img: resolveAlchemyImage(recipe.img, 'potion'),
         canBrew,
         isPendingBrew,
-        pendingBrewReady: isPendingBrew && currentTimestamp >= pendingBrew.completesAt,
+        pendingBrewReady: isPendingBrew && currentTimestamp >= ownBrew.completesAt,
         isKnown,
         knowledge,
         isMemorized: knowledge.isMemorized,
@@ -223,7 +238,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
 
     const currentDateFormatted = CalendarIntegration.formatDate(CalendarIntegration.getCurrentTimestamp());
 
-    return {
+    const context = {
       actor: this.actor,
       isGM,
       showAllWorldRecipes: this.showAllWorldRecipes,
@@ -264,20 +279,38 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       playerWorkshopEnabled: registry.isFeatureUnlocked(this.actor, 'alchemy'),
       recipes: filteredRecipes,
       selectedRecipe,
-      selectedLabTier: this.selectedLabTier,
+      selectedLabTier: BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier,
+      canChooseLab: !BrewingEngine.labByGM() || isGM,
+      labIcon: `ui-lab_${BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier}`,
+      labName: ALCHEMY_CONFIG.LAB_TIERS[BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier]?.name,
       labTiers: ALCHEMY_CONFIG.LAB_TIERS,
       tetheredPotions: capacityState.tethered,
       currentDateFormatted,
-      pendingBrew: pendingBrew ? {
-        ...pendingBrew,
-        isReady: currentTimestamp >= pendingBrew.completesAt,
-        completionDate: CalendarIntegration.formatDate(pendingBrew.completesAt),
-        statusText: game.i18n.format('GOLD_ALCHEMY.Details.PendingBrew', {
-          recipe: pendingBrew.recipeName,
-          date: CalendarIntegration.formatDate(pendingBrew.completesAt)
-        })
-      } : null
+      gmDrawerOpen: this.gmDrawerOpen,
+      // Warzenie w toku wybranej receptury (a w widoku klasycznym – pierwsze, jak dawniej)
+      pendingBrew: (() => {
+        const brew = pendingBrews.find((b) => b.recipeId === selectedRecipe?.id) ?? (useWorkbench() ? null : pendingBrews[0]);
+        return brew ? {
+          ...brew,
+          isReady: currentTimestamp >= brew.completesAt,
+          completionDate: CalendarIntegration.formatDate(brew.completesAt),
+          statusText: game.i18n.format('GOLD_ALCHEMY.Details.PendingBrew', {
+            recipe: brew.recipeName,
+            date: CalendarIntegration.formatDate(brew.completesAt)
+          })
+        } : null;
+      })(),
+      cauldrons: {
+        total: cauldrons,
+        used: pendingBrews.length,
+        brewing: pendingBrews.map((b) => ({ name: b.recipeName, date: CalendarIntegration.formatDate(b.completesAt), ready: currentTimestamp >= b.completesAt }))
+      }
     };
+    // Pracownia: te same dane ułożone dla nowego wyglądu (ustawienie klienta „Wygląd warsztatu”)
+    const workbench = useWorkbench();
+    return workbench
+      ? { ...context, workbench, ...workbenchContext(context, { ingredientCategory: (key) => INGREDIENT_CATEGORY.get(key) }) }
+      : { ...context, workbench };
   }
 
 
@@ -311,6 +344,12 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     this.render();
   }
 
+  /** Pracownia: wysuwana szuflada z narzędziami MG. */
+  static _onToggleGmDrawer() {
+    this.gmDrawerOpen = !this.gmDrawerOpen;
+    this.render();
+  }
+
   static _onToggleBookManager() {
     this.showBookManager = !this.showBookManager;
     this.render();
@@ -327,7 +366,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
 
   static async _onSaveActorAlchemySettings(event, target) {
     if (!game.user.isGM) return;
-    const root = target.closest('.gm-alchemy-settings');
+    const root = target.closest('.gm-alchemy-settings, .al-drawer');
     const capacity = Number.parseInt(root?.querySelector('[name="customCapacityMod"]')?.value, 10);
     const memory = Number.parseInt(root?.querySelector('[name="customMemoryMod"]')?.value, 10);
     const schools = [...(root?.querySelectorAll('[name="visibleAlchemySchools"]:checked') || [])]
@@ -373,7 +412,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
 
   static async _onCancelPendingBrew() {
     if (!game.user.isGM) return;
-    await BrewingEngine.cancelPendingBrew(this.actor);
+    await BrewingEngine.cancelPendingBrew(this.actor, this.selectedRecipeId);
     this.render();
   }
 
@@ -451,12 +490,32 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
 
     const html = this.element;
     if (!html) return;
+    html.classList.toggle('al-workbench', Boolean(context.workbench));
+    html.dataset.tradition = context.selectedRecipe?.tradition ?? '';
+    html.dataset.wind = context.selectedRecipe?.wind ?? '';
+    // Klawiatura: elementy z akcją, które nie są przyciskami (wiersze receptur), reagują na Enter i Spację
+    for (const el of html.querySelectorAll('[data-action]:not(button, input, select, textarea, a)')) {
+      if (!el.hasAttribute('tabindex')) el.tabIndex = 0;
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+      if (el.dataset.alKeys) continue;
+      el.dataset.alKeys = '1';
+      el.addEventListener('keydown', (ev) => {
+        if (ev.target !== el || (ev.key !== 'Enter' && ev.key !== ' ')) return;
+        ev.preventDefault();
+        el.click();
+      });
+    }
 
     // Wybór poziomu laboratorium
     const labSelect = html.querySelector('select[name="labTier"]');
     if (labSelect) {
-      labSelect.addEventListener('change', (ev) => {
-        this.selectedLabTier = ev.target.value;
+      labSelect.addEventListener('change', async (ev) => {
+        // A3: MG zapisuje poziom na postaci; bez tej zasady wybór dotyczy tylko bieżącego warzenia
+        if (BrewingEngine.labByGM()) {
+          if (game.user.isGM) await this.actor.setFlag(MODULE_ID, 'labTier', ev.target.value);
+        } else {
+          this.selectedLabTier = ev.target.value;
+        }
       });
     }
 

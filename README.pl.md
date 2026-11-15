@@ -38,8 +38,18 @@ Foundry doinstaluje też wymaganą bibliotekę **WFRP4e – Companion Library** 
 * **Test warzenia** z modyfikatorami widocznymi w oknie testu WFRP4e; wynik i mikstura trafiają na czat i do ekwipunku.
 * **Efekty mikstur** oparte na skryptach efektów WFRP4e: stany, pancerz, premie do cech i umiejętności, leczenie; mikstury bojowe można **rzucić** w cel z menu kontekstowego przedmiotu.
 * **Psucie się** świeckich preparatów z upływem sezonów.
+* **Składniki alchemiczne** mają własny dział w ekwipunku. Nowy składnik tworzy pozycja **Składnik alchemiczny** w oknie tworzenia przedmiotu, a każdy przedmiot zamienia w składnik przycisk **Zamień w składnik alchemiczny** w nagłówku jego arkusza; **+** w dziale otwiera kompendium składników.
 * **Kompendia** generowane przez moduł: składniki, mikstury, zwoje receptur i księgi (odbudowywane w języku świata).
 * **Edytor receptur** dla MG i ustawienia MG dla postaci (dostęp gracza, modyfikatory Więzi i pamięci, widoczne Kolegia).
+
+## 🎨 Wygląd pracowni
+
+Domyślnie (ustawienie klienta **Wygląd warsztatu**) warsztat wygląda jak pracownia alchemika: po lewej receptariusz z zakładkami tradycji i sigilami ośmiu wiatrów, po prawej stół roboczy z naczyniem tradycji w kolorze wiatru, składnikami jako słojami na półce i przyciskiem **Rozpal palenisko**. Więź to złoty łańcuch z ogniwem na każdy punkt i listą mikstur, które ją trzymają; pamięć receptur to półka ze zwojami. Narzędzia MG są w szufladzie. *Klasyczny* zostawia dotychczasowy wygląd. Zrzuty pokazują interfejs angielski.
+
+| | |
+|---|---|
+| ![Magia Kolegiów](docs/screenshots/workbench-colleges.png) | ![Receptura Shyish](docs/screenshots/workbench-shyish.png) |
+| ![Łańcuch Więzi](docs/screenshots/workbench-tether.png) | ![Karty czatu](docs/screenshots/workbench-chat.png) |
 
 ## 🛠️ Uruchomienie
 

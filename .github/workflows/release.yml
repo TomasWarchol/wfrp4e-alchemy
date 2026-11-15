@@ -32,7 +32,9 @@ jobs:
         run: |
           zip -r module.zip . \
             -x ".git/*" ".github/*" ".gitignore" \
-               "packs/*/LOCK" "packs/*/LOG" "packs/*/LOG.old"
+               "packs/*/LOCK" "packs/*/LOG" "packs/*/LOG.old" \
+               "node_modules/*" "test/*" "docs/*" "tools/*" \
+               "package.json" "package-lock.json"
 
       - name: Attach files to the release
         uses: softprops/action-gh-release@v2

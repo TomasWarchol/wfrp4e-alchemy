@@ -6,6 +6,8 @@
 import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from './config.js';
 import { AlchemyQueries } from './queries.js';
 import { CapacityEngine } from './logic/capacity-engine.js';
+import { iconMarkup, registerUi, syncChatStyle, windMarkup } from './ui.js';
+import { registerInventory } from './inventory.js';
 import { BrewingEngine } from './logic/brewing-engine.js';
 import { PotionConsumer } from './logic/potion-consumer.js';
 import { SpoilageEngine } from './logic/spoilage-engine.js';
@@ -50,6 +52,9 @@ Hooks.once('init', () => {
 
   // Zapytania do MG / właścicieli zamiast surowego socketu
   AlchemyQueries.init();
+  CapacityEngine.registerHooks();
+  registerUi();
+  registerInventory();
 
   // Rejestracja ustawień modułu
   game.settings.register(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.STRICT_MODULE_FILTER, {
@@ -71,6 +76,61 @@ Hooks.once('init', () => {
   });
 
   // Warunki należą teraz do księgi; ustawienie służy konwersji starych ksiąg
+  // A3: laboratorium należy do postaci i ustawia je MG (gracz nie wybiera poziomu przy każdym warzeniu)
+  game.settings.register(MODULE_ID, 'labByGM', {
+    name: 'GOLD_ALCHEMY.Settings.LabByGM',
+    hint: 'GOLD_ALCHEMY.Settings.LabByGMHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
+  // A4: rozpoczęcie warzenia od razu zużywa składniki i rezerwuje Więź do końca warzenia
+  game.settings.register(MODULE_ID, 'reserveOnStart', {
+    name: 'GOLD_ALCHEMY.Settings.ReserveOnStart',
+    hint: 'GOLD_ALCHEMY.Settings.ReserveOnStartHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
+  // A5: jakość mikstury z PS warzenia (dodatkowe dawki, tańsza Więź dla wybornej)
+  game.settings.register(MODULE_ID, 'qualityFromSL', {
+    name: 'GOLD_ALCHEMY.Settings.QualityFromSL',
+    hint: 'GOLD_ALCHEMY.Settings.QualityFromSLHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
+  // A6: premia Chamonu w pamięci receptur
+  game.settings.register(MODULE_ID, 'chamonBonusMode', {
+    name: 'GOLD_ALCHEMY.Settings.ChamonBonusMode',
+    hint: 'GOLD_ALCHEMY.Settings.ChamonBonusModeHint',
+    scope: 'world',
+    config: true,
+    type: String,
+    choices: {
+      freeRecipes: 'GOLD_ALCHEMY.Settings.ChamonFreeRecipes',
+      both: 'GOLD_ALCHEMY.Settings.ChamonBoth',
+      slots: 'GOLD_ALCHEMY.Settings.ChamonSlots'
+    },
+    default: 'freeRecipes'
+  });
+
+  // A7: skutki katastrof przy pechu działają same
+  game.settings.register(MODULE_ID, 'automateDisasters', {
+    name: 'GOLD_ALCHEMY.Settings.AutomateDisasters',
+    hint: 'GOLD_ALCHEMY.Settings.AutomateDisastersHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
   game.settings.register(MODULE_ID, 'requireEquippedBooks', {
     scope: 'world',
     config: false,
@@ -125,12 +185,23 @@ Hooks.once('init', () => {
 
   foundry.applications.handlebars.loadTemplates([
     `modules/${MODULE_ID}/templates/workshop-app.hbs`,
-    `modules/${MODULE_ID}/templates/recipe-editor.hbs`
+    `modules/${MODULE_ID}/templates/recipe-editor.hbs`,
+    `modules/${MODULE_ID}/templates/parts/workshop-classic.hbs`,
+    `modules/${MODULE_ID}/templates/parts/workshop-workbench.hbs`
   ]);
 
 });
 
+// Karty czatu w wyglądzie pracowni: sanitizer wycina <svg>, więc karta niesie data-al-glyph / data-al-wind
+Hooks.on('renderChatMessageHTML', (_message, html) => {
+  for (const el of html.querySelectorAll?.('.gold-alchemy-card [data-al-glyph], .gold-alchemy-card [data-al-wind]') ?? []) {
+    if (el.querySelector('svg')) continue;
+    el.insertAdjacentHTML('afterbegin', el.dataset.alWind ? windMarkup(el.dataset.alWind) : iconMarkup(el.dataset.alGlyph));
+  }
+});
+
 Hooks.once('ready', async () => {
+  syncChatStyle();
   await CompendiumEngine.initializeCompendiums();
   await migrateRecipeBooks();
 

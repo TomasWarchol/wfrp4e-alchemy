@@ -1,0 +1,202 @@
+[
+  {
+    "id": "tab_colleges",
+    "file": "tab_colleges.svg",
+    "subject": "Tall alembic with a small star-burst above the neck"
+  },
+  {
+    "id": "tab_alchemy",
+    "file": "tab_alchemy.svg",
+    "subject": "Retort flask with a curved neck dripping into a small cup"
+  },
+  {
+    "id": "tab_apothecary",
+    "file": "tab_apothecary.svg",
+    "subject": "Mortar with a pestle"
+  },
+  {
+    "id": "tab_herbal",
+    "file": "tab_herbal.svg",
+    "subject": "Bundle of herbs tied with string, leaves up"
+  },
+  {
+    "id": "tab_forbidden",
+    "file": "tab_forbidden.svg",
+    "subject": "Narrow black vial with a skull-shaped stopper"
+  },
+  {
+    "id": "know_memory",
+    "file": "know_memory.svg",
+    "subject": "Head in profile with a small flask inside it"
+  },
+  {
+    "id": "know_book",
+    "file": "know_book.svg",
+    "subject": "Closed book with a flask on the cover"
+  },
+  {
+    "id": "know_all",
+    "file": "know_all.svg",
+    "subject": "Three stacked recipe slips"
+  },
+  {
+    "id": "know_unknown",
+    "file": "know_unknown.svg",
+    "subject": "Padlock on a small scroll"
+  },
+  {
+    "id": "know_flawed",
+    "file": "know_flawed.svg",
+    "subject": "Ink blot over a recipe slip"
+  },
+  {
+    "id": "state_ready",
+    "file": "state_ready.svg",
+    "subject": "Wax seal with a check-like notch"
+  },
+  {
+    "id": "state_missing",
+    "file": "state_missing.svg",
+    "subject": "Empty jar with a crack"
+  },
+  {
+    "id": "state_brewing",
+    "file": "state_brewing.svg",
+    "subject": "Flask over a flame with rising bubbles"
+  },
+  {
+    "id": "state_done",
+    "file": "state_done.svg",
+    "subject": "Stoppered flask with a small star-burst"
+  },
+  {
+    "id": "stat_volatility",
+    "file": "stat_volatility.svg",
+    "subject": "Single flame"
+  },
+  {
+    "id": "stat_time",
+    "file": "stat_time.svg",
+    "subject": "Hourglass"
+  },
+  {
+    "id": "stat_shelf",
+    "file": "stat_shelf.svg",
+    "subject": "Calendar leaf with a corner fold"
+  },
+  {
+    "id": "stat_doses",
+    "file": "stat_doses.svg",
+    "subject": "Three small vials side by side"
+  },
+  {
+    "id": "stat_price",
+    "file": "stat_price.svg",
+    "subject": "Stack of three coins"
+  },
+  {
+    "id": "stat_tether",
+    "file": "stat_tether.svg",
+    "subject": "Two interlocked chain links"
+  },
+  {
+    "id": "stat_memory",
+    "file": "stat_memory.svg",
+    "subject": "Rolled scroll on a small shelf bracket"
+  },
+  {
+    "id": "stat_skill",
+    "file": "stat_skill.svg",
+    "subject": "Pair of tongs crossed with a stirring rod"
+  },
+  {
+    "id": "lab_poor",
+    "file": "lab_poor.svg",
+    "subject": "Rickety stool with a single cracked pot"
+  },
+  {
+    "id": "lab_standard",
+    "file": "lab_standard.svg",
+    "subject": "Plain workbench with one flask"
+  },
+  {
+    "id": "lab_fine",
+    "file": "lab_fine.svg",
+    "subject": "Workbench with alembic and two flasks"
+  },
+  {
+    "id": "act_brew",
+    "file": "act_brew.svg",
+    "subject": "Flame under a cauldron"
+  },
+  {
+    "id": "act_complete",
+    "file": "act_complete.svg",
+    "subject": "Ladle pouring into a vial"
+  },
+  {
+    "id": "act_cancel",
+    "file": "act_cancel.svg",
+    "subject": "Cauldron with a cross over it"
+  },
+  {
+    "id": "act_memorise",
+    "file": "act_memorise.svg",
+    "subject": "Lit candle beside a recipe slip"
+  },
+  {
+    "id": "act_forget",
+    "file": "act_forget.svg",
+    "subject": "Eraser-like knife scraping a slip"
+  },
+  {
+    "id": "act_award",
+    "file": "act_award.svg",
+    "subject": "Recipe slip with a ribbon and a wax seal attached"
+  },
+  {
+    "id": "act_sever",
+    "file": "act_sever.svg",
+    "subject": "Open shears cutting a chain link"
+  },
+  {
+    "id": "act_drink",
+    "file": "act_drink.svg",
+    "subject": "Tilted vial with drops leaving the neck"
+  },
+  {
+    "id": "act_throw",
+    "file": "act_throw.svg",
+    "subject": "Round flask with motion lines behind it"
+  },
+  {
+    "id": "act_open_ingredients",
+    "file": "act_open_ingredients.svg",
+    "subject": "Open crate with jars"
+  },
+  {
+    "id": "act_open_potions",
+    "file": "act_open_potions.svg",
+    "subject": "Rack with three vials"
+  },
+  {
+    "id": "act_open_recipes",
+    "file": "act_open_recipes.svg",
+    "subject": "Open book with a flask on the left page"
+  },
+  {
+    "id": "act_add_recipe",
+    "file": "act_add_recipe.svg",
+    "subject": "Recipe slip with a small plus-shaped star-burst"
+  },
+  {
+    "id": "act_world_mode",
+    "file": "act_world_mode.svg",
+    "subject": "Eye above an open book"
+  },
+  {
+    "id": "act_gm_drawer",
+    "file": "act_gm_drawer.svg",
+    "subject": "Drawer pulled half out of a cabinet"
+  }
+]

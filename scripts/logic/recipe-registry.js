@@ -12,6 +12,7 @@ import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from '../config.js';
 import { ALCHEMY_RECIPES } from '../data/recipes.js';
 import { bookAccess, addEntryToBook, entriesOfType, isGrimoire, languageLabel, openEntries, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
 import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
+import { memoryState } from './rules.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 
@@ -332,80 +333,15 @@ export class RecipeRegistry {
     if (!actor || !actor.system) {
       return { max: 0, used: 0, available: 0, hasChamonBonus: false, chamonBonus: 0, memorizedCount: 0 };
     }
-
-    // 1. Bonus Inteligencji (BInt)
-    const bInt = Number(actor.system.characteristics?.int?.bonus) || 0;
-
-    // 2. Umiejętność Alchemii lub Splatania Magii (/ 10)
-    let highestSkillAdvances = 0;
-    if (actor.itemTypes?.skill) {
-      for (const skill of actor.itemTypes.skill) {
-        const sName = skill.name.toLowerCase();
-        if (sName.includes('alchemi') || sName.includes('splatanie') || sName.includes('channelling') || sName.includes('aptekar')) {
-          const adv = Number(skill.system.advances?.value) || 0;
-          if (adv > highestSkillAdvances) highestSkillAdvances = adv;
-        }
-      }
-    }
-    const skillBonus = Math.floor(highestSkillAdvances / 10);
-
-    // 3. Talent Przyrządzanie Mikstur (Concoct) -> +2 sloty za każdy stopień
-    let concoctAdvances = 0;
-    if (actor.itemTypes?.talent) {
-      for (const t of actor.itemTypes.talent) {
-        const tName = t.name.toLowerCase();
-        if (tName.includes('przyrządzanie mikstur') || tName.includes('przyrzadzanie mikstur') || tName.includes('concoct')) {
-          concoctAdvances += (Number(t.system.advances?.value) || 1);
-        }
-      }
-    }
-    const concoctBonus = concoctAdvances * 2;
-
-    // 4. Bonus Złotego Kolegium (Chamon):
-    // Czarodzieje Chamonu mają umysły stworzone do formuł transmutacji (+5 slotów)
-    let hasChamonBonus = false;
-    if (actor.itemTypes?.talent) {
-      hasChamonBonus = actor.itemTypes.talent.some(t => /dostrojony do chamonu|attuned to chamon/i.test(t.name));
-    }
-    if (!hasChamonBonus && actor.itemTypes?.skill) {
-      hasChamonBonus = actor.itemTypes.skill.some(s => /splatanie magii \(chamon\)|channelling \(chamon\)/i.test(s.name));
-    }
-    const chamonBonus = hasChamonBonus ? 5 : 0;
-
-    // Sumaryczny limit slotów pamięci
-    const customMod = Number(actor.getFlag(MODULE_ID, 'customMemoryMod')) || 0;
-    const baseMax = bInt + skillBonus + concoctBonus + chamonBonus;
-    const maxSlots = Math.max(0, baseMax + customMod);
-
-    // Kalkulacja zajętych slotów:
-    // Dla postaci Chamonu receptury z kategorii 'college-chamon' są darmowe w pamięci!
-    const memorizedIds = this.getMemorizedRecipeIds(actor);
-    let usedSlots = 0;
-
-    for (const id of memorizedIds) {
-      const recipe = this.getRecipeById(id);
-      if (recipe && hasChamonBonus && (recipe.category === 'college-chamon' || recipe.category === 'chamon')) {
-        // Darmowy slot (wrodzona wiedza o metalu)
-        continue;
-      }
-      usedSlots += 1;
-    }
-
-    const availableSlots = Math.max(0, maxSlots - usedSlots);
-
-    return {
-      max: maxSlots,
-      baseMax,
-      customMod,
-      used: usedSlots,
-      available: availableSlots,
-      hasChamonBonus,
-      chamonBonus,
-      memorizedCount: memorizedIds.length,
-      bInt,
-      skillBonus,
-      concoctBonus
-    };
+    // Wzory w rules.memoryState: BInt + umiejętność ÷ 10 + 2 × Przyrządzanie + Chamon, receptury Chamonu za darmo
+    return memoryState({
+      intBonus: Number(actor.system.characteristics?.int?.bonus) || 0,
+      skills: actor.itemTypes?.skill ?? [],
+      talents: actor.itemTypes?.talent ?? [],
+      customMod: actor.getFlag(MODULE_ID, 'customMemoryMod'),
+      memorized: this.getMemorizedRecipeIds(actor).map((id) => this.getRecipeById(id)),
+      chamonMode: (() => { try { return game.settings.get(MODULE_ID, 'chamonBonusMode'); } catch { return 'freeRecipes'; } })()
+    });
   }
 
   /**
@@ -433,7 +369,7 @@ export class RecipeRegistry {
 
     // Czy receptura jest darmowa dla alchemika Chamonu
     const memoryState = knownMemoryState || this.getMemoryState(actor);
-    const isFreeChamon = memoryState.hasChamonBonus && (recipe.category === 'college-chamon' || recipe.category === 'chamon');
+    const isFreeChamon = (memoryState.chamonFreeRecipes ?? memoryState.hasChamonBonus) && (recipe.category === 'college-chamon' || recipe.category === 'chamon');
 
     return {
       state,

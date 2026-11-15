@@ -1,3 +1,6 @@
+/* Wygląd „Pracownia Alchemika” w osobnym pliku (musi stać przed pozostałymi regułami) */
+@import url("workbench.css");
+
 /**
  * Stylizacja interfejsu modułu WFRP4e - Alchemia Starego Świata
  */

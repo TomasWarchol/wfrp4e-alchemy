@@ -5,6 +5,7 @@
 import { MODULE_ID, ALCHEMY_CONFIG } from '../config.js';
 import { RecipeRegistry } from '../logic/recipe-registry.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
+import { useWorkbench } from '../ui.js';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -73,7 +74,8 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   async _prepareContext(options) {
-    const categories = ["apothecary", "mundane", "herbal", "college-chamon", "college-aqshy", "college-azyr", "college-ghyran", "college-ghur", "college-hysh", "college-shyish", "college-ulgu", "forbidden"].map(id => ({ id, name: game.i18n.localize(`GOLD_ALCHEMY.Editor.Categories.${id}`) }));
+    // „magical” to ogólne receptury magiczne (bez Kolegium) – bez tej pozycji lista zaznaczała Aptekarstwo
+    const categories = ["apothecary", "mundane", "herbal", "magical", "college-chamon", "college-aqshy", "college-azyr", "college-ghyran", "college-ghur", "college-hysh", "college-shyish", "college-ulgu", "forbidden"].map(id => ({ id, name: game.i18n.localize(`GOLD_ALCHEMY.Editor.Categories.${id}`) }));
 
     const volatilityOptions = [
       { value: 'minor', label: game.i18n.localize('GOLD_ALCHEMY.Editor.VolatilityMinor') },
@@ -91,8 +93,10 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
       name: game.i18n ? game.i18n.localize(ing.name) : ing.name
     }));
 
+    // Wbudowane receptury trzymają klucze tłumaczeń; w polach edytora pokazujemy przetłumaczony tekst
+    const text = (value) => (typeof value === 'string' && game.i18n.has(value) ? game.i18n.localize(value) : value);
     return {
-      recipe: this.recipe,
+      recipe: { ...this.recipe, name: text(this.recipe.name), description: text(this.recipe.description), effectDescription: text(this.recipe.effectDescription) },
       categories,
       volatilityOptions,
       expiryOptions,
@@ -157,7 +161,12 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!form) return;
 
     const fd = new FormData(form);
-    this.recipe.name = fd.get('name') || this.recipe.name;
+    // Niezmieniony przetłumaczony tekst wraca do klucza tłumaczenia (receptura zostaje wielojęzyczna)
+    const keep = (field, value) => {
+      const original = this.recipe[field];
+      return typeof original === 'string' && game.i18n.has(original) && game.i18n.localize(original) === value ? original : value;
+    };
+    this.recipe.name = keep('name', fd.get('name')) || this.recipe.name;
     this.recipe.category = fd.get('category') || this.recipe.category;
     this.recipe.attunementCost = Number(fd.get('attunementCost')) || 0;
     this.recipe.testSkill = fd.get('testSkill') || this.recipe.testSkill;
@@ -171,8 +180,8 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.recipe.bonusDaysPerSL = Number.isFinite(bonusDaysPerSL) ? Math.max(0, bonusDaysPerSL) : 5;
     this.recipe.expiryMode = fd.get('expiryMode') === 'deactivate' ? 'deactivate' : 'spoilage';
     this.recipe.img = fd.get('img') || this.recipe.img;
-    this.recipe.description = fd.get('description') || '';
-    this.recipe.effectDescription = fd.get('effectDescription') || '';
+    this.recipe.description = keep('description', fd.get('description') || '');
+    this.recipe.effectDescription = keep('effectDescription', fd.get('effectDescription') || '');
 
     // Odczyt składników z dynamicznych pól
     const ingKeys = fd.getAll('ingKey');
@@ -191,6 +200,8 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
   _onRender(context, options) {
     super._onRender(context, options);
+    // Edytor w stylu pracowni, gdy klient używa tego wyglądu
+    this.element?.classList.toggle('al-workbench', useWorkbench());
 
     const html = this.element;
     if (!html) return;

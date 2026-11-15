@@ -39,18 +39,21 @@ export const ALCHEMY_CONFIG = {
   LAB_TIERS: {
     poor: {
       id: 'poor',
+      cauldrons: 1,
       name: 'GOLD_ALCHEMY.Lab.Poor',
       slMod: -1,
       costZK: 200
     },
     standard: {
       id: 'standard',
+      cauldrons: 1,
       name: 'GOLD_ALCHEMY.Lab.Standard',
       slMod: 0,
       costZK: 400
     },
     fine: {
       id: 'fine',
+      cauldrons: 2,
       name: 'GOLD_ALCHEMY.Lab.Fine',
       slMod: 1,
       costZK: 800

@@ -1,0 +1,12 @@
+{
+  "name": "wfrp4e-alchemy",
+  "private": true,
+  "type": "module",
+  "description": "Narzędzia deweloperskie modułu. Nie trafiają do module.zip – moduł działa bez kroku budowania.",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
+  }
+}

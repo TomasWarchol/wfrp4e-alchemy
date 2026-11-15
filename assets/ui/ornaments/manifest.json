@@ -1,0 +1,82 @@
+[
+  {
+    "id": "frame_corner",
+    "file": "frame_corner.svg",
+    "subject": "brass corner bracket with rivets and a flask-shaped cut-out (top-left)"
+  },
+  {
+    "id": "wood_tile",
+    "file": "wood_tile.svg",
+    "subject": "seamless low-contrast wood grain tile with a knot"
+  },
+  {
+    "id": "shelf",
+    "file": "shelf.svg",
+    "subject": "wooden shelf plank with two corbel brackets, plank tiles horizontally"
+  },
+  {
+    "id": "jar_full",
+    "file": "jar_full.svg",
+    "subject": "apothecary jar with lid, liquid band and blank label"
+  },
+  {
+    "id": "jar_empty",
+    "file": "jar_empty.svg",
+    "subject": "the same apothecary jar empty, with a crack"
+  },
+  {
+    "id": "chain_link",
+    "file": "chain_link.svg",
+    "subject": "one chain link seen face on, joins to its neighbours in a row"
+  },
+  {
+    "id": "chain_link_broken",
+    "file": "chain_link_broken.svg",
+    "subject": "the same chain link cut through"
+  },
+  {
+    "id": "vial_hanging",
+    "file": "vial_hanging.svg",
+    "subject": "small corked vial hanging from a ring"
+  },
+  {
+    "id": "scroll_slot",
+    "file": "scroll_slot.svg",
+    "subject": "rolled scroll standing upright, tied with a ribbon"
+  },
+  {
+    "id": "scroll_slot_empty",
+    "file": "scroll_slot_empty.svg",
+    "subject": "dashed outline of the same scroll (free slot)"
+  },
+  {
+    "id": "flame_meter",
+    "file": "flame_meter.svg",
+    "subject": "one woodcut flame for the volatility meter"
+  },
+  {
+    "id": "label_frame",
+    "file": "label_frame.svg",
+    "subject": "apothecary label with double border, cut corners and blank centre"
+  },
+  {
+    "id": "label_scorched",
+    "file": "label_scorched.svg",
+    "subject": "the same label with burned ragged edges and scorch marks"
+  },
+  {
+    "id": "wax_seal",
+    "file": "wax_seal.svg",
+    "subject": "blank wax seal with irregular edge and inner ring"
+  },
+  {
+    "id": "bubbles",
+    "file": "bubbles.svg",
+    "subject": "column of rising bubbles of different sizes"
+  },
+  {
+    "id": "divider",
+    "file": "divider.svg",
+    "subject": "rule with a small flask at the centre and leaf ends"
+  }
+]

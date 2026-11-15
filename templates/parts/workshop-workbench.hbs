@@ -1,0 +1,245 @@
+{{!-- Pracownia Alchemika: receptariusz, stół roboczy z naczyniem, łańcuch Więzi i półka pamięci --}}
+<div class="al-root" data-tradition="{{selectedRecipe.tradition}}" data-wind="{{selectedRecipe.wind}}">
+  <span class="al-frame-corner tl">{{alIcon "orn-frame_corner"}}</span>
+  <span class="al-frame-corner tr">{{alIcon "orn-frame_corner"}}</span>
+  <span class="al-frame-corner bl">{{alIcon "orn-frame_corner"}}</span>
+  <span class="al-frame-corner br">{{alIcon "orn-frame_corner"}}</span>
+
+  {{!-- ─── Nagłówek: alchemik, Więź (łańcuch) i pamięć (półka) ─── --}}
+  <header class="al-head">
+    <div class="al-who">
+      <img class="al-portrait" src="{{actor.img}}" alt="">
+      <div>
+        <h2>{{actor.name}}</h2>
+        <span class="al-date">{{alIcon "ui-stat_shelf"}} {{currentDateFormatted}}</span>
+      </div>
+    </div>
+
+    <div class="al-meters">
+      <div class="al-meter al-tether" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.TetherHint'}}">
+        <span class="al-meter-label">{{alIcon "ui-stat_tether"}} {{localize "GOLD_ALCHEMY.Workbench.Tether"}}</span>
+        <span class="al-chain" aria-hidden="true">
+          {{#each tetherLinks}}<span class="al-link {{#if filled}}is-held{{/if}}">{{alIcon "orn-chain_link"}}</span>{{/each}}
+        </span>
+        <b class="al-meter-value">{{capacity.used}}/{{capacity.max}}</b>
+      </div>
+      <div class="al-meter al-memory" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.MemoryHint'}}">
+        <span class="al-meter-label">{{alIcon "ui-stat_memory"}} {{localize "GOLD_ALCHEMY.Workbench.Memory"}}</span>
+        <span class="al-shelf-slots" aria-hidden="true">
+          {{#each memorySlots}}<span class="al-slot {{#if filled}}is-used{{/if}}">{{#if filled}}{{alIcon "orn-scroll_slot"}}{{else}}{{alIcon "orn-scroll_slot_empty"}}{{/if}}</span>{{/each}}
+        </span>
+        <b class="al-meter-value">{{memory.used}}/{{memory.max}}</b>
+        {{#if memory.hasChamonBonus}}<span class="al-chamon" data-tooltip="{{localize 'GOLD_ALCHEMY.Memory.ChamonBonusTooltip'}}">{{alWind "chamon"}} +{{memory.chamonBonus}}</span>{{/if}}
+      </div>
+    </div>
+
+    {{#if isGM}}
+      <button type="button" class="al-drawer-toggle {{#if gmDrawerOpen}}active{{/if}}" data-action="toggleGmDrawer" aria-label="{{localize 'GOLD_ALCHEMY.Workbench.GMDrawer'}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.GMDrawer'}}">{{alIcon "ui-act_gm_drawer"}}</button>
+    {{/if}}
+  </header>
+
+  {{!-- Fiolki zawieszone na Więzi: kto trzyma miksturę, ile punktów, do kiedy --}}
+  {{#if tetheredPotions.length}}
+    <details class="al-vials">
+      <summary>{{alIcon "orn-vial_hanging"}} {{localize "GOLD_ALCHEMY.Tethers.Title"}} ({{tetheredPotions.length}})</summary>
+      <ul>
+        {{#each tetheredPotions}}
+          <li>
+            <span class="al-vial">{{alIcon "orn-vial_hanging"}}</span>
+            <strong>{{this.recipeName}}</strong>
+            <span>{{this.holder.name}}</span>
+            <span>{{alIcon "ui-stat_tether"}} {{this.totalCost}}</span>
+            <span>{{alIcon "ui-stat_time"}} {{this.expiryDate}}</span>
+            <button type="button" data-action="severTether" data-uuid="{{this.item.uuid}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Tethers.SeverTooltip'}}">{{alIcon "ui-act_sever"}} {{localize "GOLD_ALCHEMY.Tethers.Sever"}}</button>
+          </li>
+        {{/each}}
+      </ul>
+    </details>
+  {{/if}}
+
+  {{!-- ─── Szuflada MG ─── --}}
+  {{#if isGM}}
+    <aside class="al-drawer {{#if gmDrawerOpen}}is-open{{/if}}" aria-label="{{localize 'GOLD_ALCHEMY.Workbench.GMDrawer'}}">
+      <h3>{{alIcon "ui-act_gm_drawer"}} {{localize "GOLD_ALCHEMY.Workbench.GMDrawer"}}</h3>
+      <div class="al-drawer-actions">
+        <button type="button" data-action="openIngredientsCompendium">{{alIcon "ui-act_open_ingredients"}} {{localize "GOLD_ALCHEMY.Button.OpenIngredients"}}</button>
+        <button type="button" data-action="openPotionsCompendium">{{alIcon "ui-act_open_potions"}} {{localize "GOLD_ALCHEMY.Button.OpenPotions"}}</button>
+        <button type="button" data-action="openRecipesCompendium">{{alIcon "ui-act_open_recipes"}} {{localize "GOLD_ALCHEMY.Button.OpenRecipes"}}</button>
+        <button type="button" data-action="createRecipe">{{alIcon "ui-act_add_recipe"}} {{localize "GOLD_ALCHEMY.Editor.AddRecipe"}}</button>
+        <button type="button" class="{{#if showAllWorldRecipes}}active{{/if}}" data-action="toggleAllWorldRecipes" aria-pressed="{{#if showAllWorldRecipes}}true{{else}}false{{/if}}">{{alIcon "ui-act_world_mode"}} {{localize "GOLD_ALCHEMY.Button.WorldRecipesMode"}}</button>
+      </div>
+      <div class="gm-alchemy-settings-grid al-drawer-settings">
+        <h4>{{localize "GOLD_ALCHEMY.GMSettings.Title" actor=actor.name}}</h4>
+        <label class="player-workshop-access"><input type="checkbox" name="playerWorkshopEnabled" {{#if playerWorkshopEnabled}}checked{{/if}} /> {{localize "GOLD_ALCHEMY.GMSettings.PlayerAccess"}}</label>
+        <label>{{localize "GOLD_ALCHEMY.GMSettings.CapacityMod"}} <input type="number" step="1" name="customCapacityMod" value="{{customCapacityMod}}" /></label>
+        <label>{{localize "GOLD_ALCHEMY.GMSettings.MemoryMod"}} <input type="number" step="1" name="customMemoryMod" value="{{customMemoryMod}}" /></label>
+        <fieldset>
+          <legend>{{localize "GOLD_ALCHEMY.GMSettings.Schools"}}</legend>
+          {{#each schoolSettings}}
+            <label class="school-visibility-option"><input type="checkbox" name="visibleAlchemySchools" value="{{this.id}}" {{#if this.enabled}}checked{{/if}} /> {{this.name}}</label>
+          {{/each}}
+        </fieldset>
+        <button type="button" data-action="saveActorAlchemySettings">{{localize "GOLD_ALCHEMY.GMSettings.Save"}}</button>
+      </div>
+    </aside>
+  {{/if}}
+
+  <div class="al-body">
+    {{!-- ─── Receptariusz ─── --}}
+    <section class="al-ledger">
+      <nav class="al-traditions" aria-label="{{localize 'GOLD_ALCHEMY.RecipeBook'}}">
+        {{#each traditionTabs}}
+          <button type="button" class="al-tab {{#if active}}active{{/if}}" data-action="selectCategory" data-category="{{id}}" aria-pressed="{{#if active}}true{{else}}false{{/if}}" data-tooltip="{{localize label}}" aria-label="{{localize label}}">{{alIcon icon}}</button>
+        {{/each}}
+      </nav>
+
+      {{#if showCollegeSubTabs}}
+        <nav class="al-winds">
+          <button type="button" class="al-wind {{#if (bajeryEq selectedSubCategory 'all-colleges')}}active{{/if}}" data-action="selectSubCategory" data-subcategory="all-colleges" data-tooltip="{{localize 'GOLD_ALCHEMY.Colleges.AllColleges'}}" aria-label="{{localize 'GOLD_ALCHEMY.Colleges.AllColleges'}}">{{alIcon "ui-tab_colleges"}}</button>
+          {{#each windTabs}}
+            <button type="button" class="al-wind {{#if active}}active{{/if}}" data-wind="{{wind}}" data-action="selectSubCategory" data-subcategory="{{id}}" data-tooltip="{{name}}" aria-label="{{name}}">{{alWind wind}}</button>
+          {{/each}}
+        </nav>
+      {{/if}}
+
+      <nav class="al-knowledge">
+        <button type="button" class="{{#if isAllKnownFilterActive}}active{{/if}}" data-action="selectKnowledgeFilter" data-knowledge="all" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.FilterAll'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.FilterAll'}}">{{alIcon "ui-know_all"}}</button>
+        <button type="button" class="{{#if (bajeryEq knowledgeFilter 'memorized')}}active{{/if}}" data-action="selectKnowledgeFilter" data-knowledge="memorized" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.FilterMemorized'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.FilterMemorized'}}">{{alIcon "ui-know_memory"}} {{memory.memorizedCount}}</button>
+        <button type="button" class="{{#if (bajeryEq knowledgeFilter 'grimoire')}}active{{/if}}" data-action="selectKnowledgeFilter" data-knowledge="grimoire" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.FilterGrimoires'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.FilterGrimoires'}}">{{alIcon "ui-know_book"}} {{recipeBooksCount}}</button>
+        {{#if isGM}}
+          <button type="button" class="{{#if (bajeryEq knowledgeFilter 'unknown')}}active{{/if}}" data-action="selectKnowledgeFilter" data-knowledge="unknown" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.FilterUnknown'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.FilterUnknown'}}">{{alIcon "ui-know_unknown"}}</button>
+        {{/if}}
+        <button type="button" class="al-books {{#if showBookManager}}active{{/if}}" data-action="toggleBookManager" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.ManageBooks'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.ManageBooks'}}">{{alIcon "ui-act_open_recipes"}}</button>
+      </nav>
+
+      {{#if showBookManager}}
+        <div class="al-books-panel">
+          {{#each recipeBooks}}
+            <div class="al-book {{#unless this.accessible}}is-locked{{/unless}}" data-book-id="{{this.id}}">
+              <span>{{alIcon "ui-know_book"}} {{this.name}}</span>
+              <small>{{this.recipes.length}}</small>
+              <button type="button" data-action="openBook" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.OpenBook'}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.OpenBook'}}">{{alIcon "ui-act_open_recipes"}}</button>
+            </div>
+          {{else}}
+            <p class="al-empty">{{localize "GOLD_ALCHEMY.Knowledge.NoBooks"}}</p>
+          {{/each}}
+          {{#if isGM}}<button type="button" data-action="createRecipeBook">{{alIcon "ui-act_add_recipe"}} {{localize "GOLD_ALCHEMY.Knowledge.NewBook"}}</button>{{/if}}
+        </div>
+      {{/if}}
+
+      <div class="al-recipes recipe-scroll">
+        {{#each recipes}}
+          <div class="al-recipe {{#if (bajeryEq this.id ../selectedRecipe.id)}}selected{{/if}} {{#if this.canBrew}}is-ready{{/if}} {{#unless this.isKnown}}is-unknown{{/unless}}"
+               data-action="selectRecipe" data-recipe-id="{{this.id}}" data-tradition="{{this.tradition}}" data-wind="{{this.wind}}" draggable="true" role="button" tabindex="0">
+            <span class="al-recipe-mark">{{#if this.wind}}{{alWind this.wind}}{{else}}{{alIcon this.traditionIcon}}{{/if}}</span>
+            <span class="al-recipe-name">
+              {{localize this.name}}
+              {{#if this.isMemorized}}<span class="al-src" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.MemorizedTooltip'}}" aria-label="{{localize 'GOLD_ALCHEMY.Knowledge.Memorized'}}" role="img">{{alIcon "ui-know_memory"}}</span>
+              {{else if this.isFromBook}}<span class="al-src" data-tooltip="{{this.bookName}}" aria-label="{{this.bookName}}" role="img">{{alIcon "ui-know_book"}}</span>{{/if}}
+            </span>
+            <span class="al-recipe-state">
+              {{#if this.attunementCost}}<span class="al-cost" data-tooltip="{{localize 'GOLD_ALCHEMY.Capacity.PointsFull'}}">{{alIcon "ui-stat_tether"}}{{this.attunementCost}}</span>{{/if}}
+              {{#if this.isPendingBrew}}<span class="al-state is-brewing" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.Brewing'}}" aria-label="{{localize 'GOLD_ALCHEMY.Workbench.Brewing'}}" role="img">{{alIcon "ui-state_brewing"}}</span>
+              {{else if this.canBrew}}<span class="al-state is-ready" data-tooltip="{{localize 'GOLD_ALCHEMY.Status.Ready'}}" aria-label="{{localize 'GOLD_ALCHEMY.Status.Ready'}}" role="img">{{alIcon "ui-state_ready"}}</span>
+              {{else if this.missing}}<span class="al-state is-missing" data-tooltip="{{localize 'GOLD_ALCHEMY.Status.MissingIngredients'}}">{{alIcon "ui-state_missing"}}{{this.missing}}</span>{{/if}}
+            </span>
+          </div>
+        {{else}}
+          <p class="al-empty">{{localize "GOLD_ALCHEMY.NoRecipesInView"}}{{#unless isGM}}<br><small>{{localize "GOLD_ALCHEMY.NoRecipesPlayerHint"}}</small>{{/unless}}</p>
+        {{/each}}
+      </div>
+    </section>
+
+    {{!-- ─── Stół roboczy ─── --}}
+    <section class="al-bench recipe-details-pane">
+      {{#if selectedRecipe}}
+        <div class="al-bench-top">
+          <div class="al-vessel-wrap">
+            {{alIcon selectedRecipe.vessel "al-vessel"}}
+            {{#if selectedRecipe.wind}}<span class="al-vessel-sigil">{{alWind selectedRecipe.wind}}</span>{{/if}}
+            {{#if pendingBrew}}<span class="al-bubbles">{{alIcon "orn-bubbles"}}</span>{{/if}}
+          </div>
+          <div class="al-bench-title">
+            <span class="al-tradition">{{selectedRecipe.categoryLabel}}</span>
+            <h2>{{localize selectedRecipe.name}}</h2>
+            <p class="al-desc">{{localize selectedRecipe.description}}</p>
+            <div class="al-params">
+              <span data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.Volatility'}}" aria-label="{{localize 'GOLD_ALCHEMY.Workbench.Volatility'}}" role="img" class="al-flames">{{#each selectedRecipe.flames}}<span class="al-flame {{#if lit}}is-lit{{/if}}">{{alIcon "orn-flame_meter"}}</span>{{/each}}</span>
+              <span data-tooltip="{{localize 'GOLD_ALCHEMY.Details.CreationTime'}}">{{alIcon "ui-stat_time"}} {{selectedRecipe.creationTimeLabel}}</span>
+              <span data-tooltip="{{localize 'GOLD_ALCHEMY.Details.ShelfBase'}}">{{alIcon "ui-stat_shelf"}} {{selectedRecipe.shelfLifeDays}} {{localize "GOLD_ALCHEMY.Days"}}</span>
+              <span data-tooltip="{{localize 'GOLD_ALCHEMY.Details.Doses'}}">{{alIcon "ui-stat_doses"}} {{selectedRecipe.dosesLabel}}</span>
+              <span data-tooltip="{{localize 'GOLD_ALCHEMY.Details.PricePerDose'}}">{{alIcon "ui-stat_price"}} {{selectedRecipe.priceLabel}}</span>
+              {{#if selectedRecipe.attunementCost}}<span data-tooltip="{{localize 'GOLD_ALCHEMY.Capacity.PointsFull'}}">{{alIcon "ui-stat_tether"}} {{selectedRecipe.attunementCost}}</span>{{/if}}
+            </div>
+          </div>
+          {{#if isGM}}
+            <div class="al-gm-recipe">
+              <button type="button" data-action="editRecipe" data-recipe-id="{{selectedRecipe.id}}" aria-label="{{localize 'GOLD_ALCHEMY.Editor.Edit'}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Editor.Edit'}}">{{alIcon "ui-act_add_recipe"}}</button>
+              {{#if selectedRecipe.isCustom}}<button type="button" data-action="deleteRecipe" data-recipe-id="{{selectedRecipe.id}}" aria-label="{{localize 'GOLD_ALCHEMY.Editor.Delete'}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Editor.Delete'}}">{{alIcon "ui-act_cancel"}}</button>{{/if}}
+            </div>
+          {{/if}}
+        </div>
+
+        {{!-- Wiedza o recepturze --}}
+        <div class="al-know-bar {{#if selectedRecipe.isMemorized}}is-memorized{{else if selectedRecipe.isFromBook}}is-book{{else}}is-unknown{{/if}}">
+          <span>
+            {{#if selectedRecipe.isMemorized}}{{alIcon "ui-know_memory"}} {{localize "GOLD_ALCHEMY.Knowledge.KnownFromMemory"}}
+            {{else if selectedRecipe.isFromBook}}{{alIcon "ui-know_book"}} {{localize "GOLD_ALCHEMY.Knowledge.KnownFromBook"}}: <strong>{{selectedRecipe.bookName}}</strong>
+            {{else}}{{alIcon "ui-know_unknown"}} {{localize "GOLD_ALCHEMY.Knowledge.NotKnown"}}{{/if}}
+          </span>
+          {{#if selectedRecipe.isMemorized}}
+            <button type="button" data-action="forgetRecipe" data-recipe-id="{{selectedRecipe.id}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.ForgetTooltip'}}">{{alIcon "ui-act_forget"}} {{localize "GOLD_ALCHEMY.Knowledge.Forget"}}</button>
+          {{else if selectedRecipe.isFromBook}}
+            <button type="button" data-action="memorizeRecipe" data-recipe-id="{{selectedRecipe.id}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.MemorizeTooltip'}}">{{alIcon "ui-act_memorise"}} {{localize "GOLD_ALCHEMY.Knowledge.Memorize"}}</button>
+          {{else if isGM}}
+            <button type="button" data-action="memorizeRecipe" data-recipe-id="{{selectedRecipe.id}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Knowledge.GMAwardTooltip'}}">{{alIcon "ui-act_award"}} {{localize "GOLD_ALCHEMY.Knowledge.GMAward"}}</button>
+          {{/if}}
+        </div>
+
+        {{!-- Składniki jako słoje na półce --}}
+        <div class="al-ingredients">
+          <h4>{{alIcon "ui-tab_apothecary"}} {{localize "GOLD_ALCHEMY.Details.IngredientsTitle"}}</h4>
+          <div class="al-jars">
+            {{#each selectedRecipe.jars}}
+              <div class="al-jar {{#if sufficient}}is-full{{else}}is-empty{{/if}}" data-tooltip="{{localize name}} · {{estimatedCostGC}} {{localize 'GOLD_ALCHEMY.Currency.GC'}}">
+                <span class="al-jar-art">{{#if sufficient}}{{alIcon "orn-jar_full"}}{{else}}{{alIcon "orn-jar_empty"}}{{/if}}<span class="al-jar-glyph">{{alIcon glyph}}</span></span>
+                <span class="al-jar-name">{{localize name}}</span>
+                <span class="al-jar-qty"><b>{{owned}}</b>/{{required}}</span>
+              </div>
+            {{/each}}
+          </div>
+          <span class="al-shelf-board" aria-hidden="true"></span>
+        </div>
+
+        {{!-- Palenisko: laboratorium, warzenie w toku, przycisk --}}
+        <div class="al-fire">
+          {{#if canChooseLab}}
+            <label class="al-lab">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}
+              <select name="labTier">
+                {{#each labTiers}}<option value="{{this.id}}" {{#if (bajeryEq this.id ../selectedLabTier)}}selected{{/if}}>{{localize this.name}}</option>{{/each}}
+              </select>
+            </label>
+          {{else}}
+            <span class="al-lab" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.LabSetByGM'}}">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}: <b>{{localize labName}}</b></span>
+          {{/if}}
+          <span class="al-cauldrons" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.CauldronsHint'}}{{#each cauldrons.brewing}}<br>{{name}} · {{date}}{{/each}}">{{alIcon "craft-vessel_cauldron"}} {{localize "GOLD_ALCHEMY.Workbench.Cauldrons"}}: <b>{{cauldrons.used}}/{{cauldrons.total}}</b></span>
+          {{#if pendingBrew}}
+            <p class="al-pending">{{alIcon "ui-state_brewing"}} {{pendingBrew.statusText}}</p>
+            {{#if isGM}}<button type="button" class="al-cancel" data-action="cancelPendingBrew">{{alIcon "ui-act_cancel"}} {{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
+          {{/if}}
+          <button type="button" class="al-brew" data-action="brewPotion" {{#unless selectedRecipe.canBrew}}disabled data-tooltip="{{localize 'GOLD_ALCHEMY.Details.CannotBrewTooltip'}}"{{/unless}}>
+            {{#if selectedRecipe.isPendingBrew}}{{alIcon "ui-act_complete"}} {{localize "GOLD_ALCHEMY.Details.CompleteBrewing"}}{{else}}{{alIcon "ui-act_brew"}} {{localize "GOLD_ALCHEMY.Workbench.LightFire"}}{{/if}}
+          </button>
+        </div>
+
+        {{!-- Opis i efekt jako zwój --}}
+        <div class="al-effect">
+          <h4>{{alIcon "ui-state_done"}} {{localize "GOLD_ALCHEMY.Details.Effect"}}</h4>
+          <p>{{localize selectedRecipe.effectDescription}}</p>
+        </div>
+      {{else}}
+        <p class="al-empty">{{localize "GOLD_ALCHEMY.Details.NoRecipeSelected"}}</p>
+      {{/if}}
+    </section>
+  </div>
+</div>

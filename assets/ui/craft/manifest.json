@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ing_herb",
+    "file": "ing_herb.svg",
+    "subject": "sprig with three leaves"
+  },
+  {
+    "id": "ing_root",
+    "file": "ing_root.svg",
+    "subject": "gnarled root with hair roots"
+  },
+  {
+    "id": "ing_mushroom",
+    "file": "ing_mushroom.svg",
+    "subject": "cluster of two mushrooms"
+  },
+  {
+    "id": "ing_mineral",
+    "file": "ing_mineral.svg",
+    "subject": "faceted crystal cluster"
+  },
+  {
+    "id": "ing_metal",
+    "file": "ing_metal.svg",
+    "subject": "small ingot bar"
+  },
+  {
+    "id": "ing_powder",
+    "file": "ing_powder.svg",
+    "subject": "heap of powder with a scoop"
+  },
+  {
+    "id": "ing_liquid",
+    "file": "ing_liquid.svg",
+    "subject": "corked bottle half full"
+  },
+  {
+    "id": "ing_animal",
+    "file": "ing_animal.svg",
+    "subject": "bone and a feather crossed"
+  },
+  {
+    "id": "ing_venom",
+    "file": "ing_venom.svg",
+    "subject": "dripping fang"
+  },
+  {
+    "id": "ing_aethyr",
+    "file": "ing_aethyr.svg",
+    "subject": "glowing shard with radiating short rays"
+  },
+  {
+    "id": "ing_salt",
+    "file": "ing_salt.svg",
+    "subject": "salt cellar with a heap on top"
+  },
+  {
+    "id": "ing_oil",
+    "file": "ing_oil.svg",
+    "subject": "oil lamp"
+  },
+  {
+    "id": "vessel_vial",
+    "file": "vessel_vial.svg",
+    "subject": "slim vial"
+  },
+  {
+    "id": "vessel_jar",
+    "file": "vessel_jar.svg",
+    "subject": "apothecary jar with a lid"
+  },
+  {
+    "id": "vessel_flask",
+    "file": "vessel_flask.svg",
+    "subject": "round-bottomed flask"
+  },
+  {
+    "id": "vessel_cauldron",
+    "file": "vessel_cauldron.svg",
+    "subject": "three-legged cauldron"
+  }
+]

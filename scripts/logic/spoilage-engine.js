@@ -4,6 +4,7 @@
 
 import { MODULE_ID } from '../config.js';
 import { CalendarIntegration } from '../calendar-integration.js';
+import { spoilageChances } from './rules.js';
 
 export class SpoilageEngine {
   /**
@@ -80,25 +81,9 @@ export class SpoilageEngine {
     };
   }
 
-  /**
-   * Tabela szans zepsucia z Wiatrów Magii: wiersz = PS warzenia (0–6), kolumna = wiek w sezonach
-   * (1, 2, 3–4, 5–8, 9–16, 17+). Para [całkowicie zepsuta, zepsuta lecz działająca].
-   */
-  static SPOILAGE_TABLE = [
-    [[11, 22], [22, 44], [33, 66], [45, 88], [50, 95], [65, 95]],
-    [[10, 20], [20, 40], [30, 60], [40, 80], [50, 95], [50, 95]],
-    [[9, 18], [18, 36], [27, 54], [36, 72], [45, 90], [50, 95]],
-    [[8, 16], [16, 32], [24, 48], [32, 64], [40, 80], [50, 95]],
-    [[7, 14], [13, 28], [21, 42], [28, 56], [35, 70], [42, 84]],
-    [[6, 12], [13, 24], [18, 36], [24, 48], [30, 60], [36, 72]],
-    [[5, 10], [10, 20], [15, 30], [20, 40], [25, 50], [30, 60]]
-  ];
-
+  /** Szanse zepsucia z tabeli Wiatrów Magii (rules.spoilageChances). */
   static getSpoilageChances(seasons, sl) {
-    const row = this.SPOILAGE_TABLE[Math.max(0, Math.min(6, Number(sl) || 0))];
-    const column = seasons <= 1 ? 0 : seasons === 2 ? 1 : seasons <= 4 ? 2 : seasons <= 8 ? 3 : seasons <= 16 ? 4 : 5;
-    const [spoilChance, partialChance] = row[column];
-    return { spoilChance, partialChance };
+    return spoilageChances(seasons, sl);
   }
 
   static async rollSideEffect(drinker) {
