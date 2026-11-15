@@ -30,6 +30,8 @@ function alchemyBook(form, { entries, language = '', carried = false }) {
     cover: COVER,
     language: language ? languageKey(language) : NO_LANGUAGE,
     requirements: { readWrite: false, language: Boolean(language), lore: false, carried },
+    // Limit 4 zapisów dotyczy ksiąg zaklęć; księga receptur mieści tyle, ile ma wpisów
+    slots: null,
     entries
   };
 }

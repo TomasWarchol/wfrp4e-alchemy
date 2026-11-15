@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.1
+- Recipe books have no entry limit, so the 4-entry limit of new Grimoires spellbooks does not apply to them.
+
 ## 1.7.0
 - **Requires WFRP4e – Grimoires 0.6+.**
 - Recipes can be copied between books, also by players. Copying a spell or a magical recipe uses the new **Alchemical Ink**, one per page (world setting).
