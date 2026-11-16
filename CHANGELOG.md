@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9.0
+- Polish letters in the workbench look: when Foundry runs in Polish, headings and titles use Grenze Gotisch and Almendra (shipped with Grimoires) instead of Nodesto Caps and Caslon Antique, which lack Polish letters.
+- **Requires WFRP4e – Grimoires 0.8+.**
+- **Alchemical books** are their own kind of book: they open in the same tome window as spellbooks (pages, contents, ribbons, Scriptorium), in an apothecary look with copper fittings and green ink, and recipe pages take the colour, sigil and marginalia of their College's wind. They hold recipes only, 12 by default (the GM sets any number in the book's edit mode). An alchemical book works straight from the inventory: it isn't held in the hands and can't be equipped. They have their own inventory section "Alchemical books", an entry in the Create Item dialog, and the workshop's "new book" button makes one.
+- Books holding only recipes become alchemical books automatically when the world loads (once, by the GM), with their contents and no entry limit. Books with spells and recipes stay spellbooks. The generated recipe books in the compendium are rebuilt as alchemical books.
+- Writing a recipe into a full book from the workshop shows why it doesn't fit.
+
 ## 1.8.0
 - **Alchemical ingredients get their own inventory section** (after the system’s Ingredient section), like the tomes from Grimoires. New entries: **Alchemical ingredient** in the Create Item dialog and **Make into alchemical ingredient** in a trapping’s sheet header (an item named like a built-in ingredient is linked to it, so brewing finds it). The section’s **+** opens the ingredients compendium. Without the module they stay ordinary trappings.
 - **Laboratory set by the GM** (world setting, on by default): each character's laboratory (poor, standard, fine) is set by the GM in the workshop and used for every brew; players see it but can't change it. When off, the player picks it per brew as before.

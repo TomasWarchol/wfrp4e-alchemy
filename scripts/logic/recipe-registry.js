@@ -10,7 +10,7 @@
 
 import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from '../config.js';
 import { ALCHEMY_RECIPES } from '../data/recipes.js';
-import { bookAccess, addEntryToBook, entriesOfType, isGrimoire, languageLabel, openEntries, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
+import { bookAccess, bookRoom, addEntryToBook, entriesOfType, isGrimoire, languageLabel, openEntries, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
 import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
 import { memoryState } from './rules.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
@@ -461,7 +461,13 @@ export class RecipeRegistry {
     }
     const recipe = this.getRecipeById(recipeId);
     if (!isGrimoire(bookItem) || !recipe) return false;
-    const added = await addEntryToBook(bookItem, recipeEntry(recipe.id, recipe), (a, b) => a.data.recipeId === b.data.recipeId);
+    const entry = recipeEntry(recipe.id, recipe);
+    const noRoom = bookRoom(bookItem, entry);
+    if (noRoom) {
+      ui.notifications.warn(game.i18n.format(`GOLD_ALCHEMY.Notifications.BookNoRoom.${noRoom}`, { book: bookItem.name, total: readBook(bookItem)?.slots ?? "" }));
+      return false;
+    }
+    const added = await addEntryToBook(bookItem, entry, (a, b) => a.data.recipeId === b.data.recipeId);
     if (!added) return false;
     ui.notifications.info(game.i18n.format('GOLD_ALCHEMY.Notifications.RecipeAddedToBook', {
       recipe: game.i18n.localize(recipe.name),

@@ -3,6 +3,7 @@
     "DisasterEffects": {"Wounds": "The alchemist loses {wounds} Wounds.", "Poisoned": "The alchemist fails the Endurance test and is Poisoned.", "Resisted": "The alchemist withstands the fumes.", "LabDamaged": "The laboratory is damaged and is now {lab}."},
     "Quality": {"Label": "Quality", "good": "good", "excellent": "excellent"},
     "Inventory": {"Section":"Alchemical ingredients","CreateType":"Alchemical ingredient","NewIngredient":"New ingredient","Make":"Make into alchemical ingredient","Made":"{name} is now an alchemical ingredient.","OpenCompendium":"Open the ingredients compendium (drag ingredients onto the sheet)"},
+    "AlchemyBook": {"Label":"Alchemical book","New":"Alchemical book","Section":"Alchemical books"},
     "Workbench": {
       "Cauldrons": "Cauldrons",
       "CauldronsHint": "Each brew in progress takes a cauldron; a fine laboratory has two.",
@@ -110,6 +111,7 @@
       "NoThrowTarget": "Target a token with the T key before throwing the potion."
     },
     "Notifications": {
+      "BookNoRoom": {"kind":"{book} can’t hold recipes.","whole":"{book} holds a ritual and has no room for anything else.","slots":"{book} is full ({total} entries).","pages":"{book} has no free pages left."},
       "SelectCharacter": "Select a character to open the Alchemy Workshop.",
       "BrewSuccess": "Successfully brewed {qty} of potion: {potion}",
       "BrewStarted": "Brewing started. Ready: {date}. Requires at least 3 hours of work each day.",
@@ -946,7 +948,7 @@
       "FilterUnknown": "Unknown (GM)",
       "Books": "books",
       "KnownFromMemory": "You know this recipe from memory.",
-      "KnownFromBook": "Available from held grimoire",
+      "KnownFromBook": "Available from a book",
       "AlsoInBooks": "Also available from books",
       "NotKnown": "Character does not know this recipe yet. Find a grimoire or learn the formula!",
       "Memorize": "Memorize Recipe",

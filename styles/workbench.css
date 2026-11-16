@@ -7,6 +7,14 @@
 @font-face { font-family: "AL Caslon"; src: url("../../../systems/wfrp4e/fonts/ACaslonPro-Regular.otf") format("opentype"); font-display: swap; }
 @font-face { font-family: "AL Caslon"; font-style: italic; src: url("../../../systems/wfrp4e/fonts/ACaslonPro-Italic.otf") format("opentype"); font-display: swap; }
 
+/* Polskie litery: Nodesto i Caslon Antique ich nie mają (przeglądarka wstawiałaby glify z innego kroju),
+   więc w polskiej wersji (Foundry ustawia <html lang>) nagłówki i tytuły piszemy krojami z pełnym
+   alfabetem: Grenze Gotisch i Almendra (licencja SIL OFL, pliki w assets/fonts Grimoires/Underworld). */
+@font-face { font-family: "WFRP Grenze Gotisch"; src: url("../../wfrp4e-grimoires/assets/fonts/GrenzeGotisch-PL.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "WFRP Almendra"; src: url("../../wfrp4e-grimoires/assets/fonts/Almendra-Regular.ttf") format("truetype"); font-display: swap; }
+:root { --al-font-display: "AL Nodesto", "Nodesto Caps Condensed"; --al-font-title: "AL Caslon Antique", "Caslon Antique"; }
+:root:lang(pl) { --al-font-display: "WFRP Grenze Gotisch"; --al-font-title: "WFRP Almendra"; }
+
 /* ─── Paleta ─── */
 .gold-alchemy-app.al-workbench {
   --al-wood: #2e1d12;
@@ -18,8 +26,8 @@
   --al-brass: #c9a24b;
   --al-brass-deep: #7d5e1f;
   --al-gold-text: #f0dca6;
-  --al-display: "AL Nodesto", "Nodesto Caps Condensed", var(--font-header, serif);
-  --al-title: "AL Caslon Antique", "Caslon Antique", serif;
+  --al-display: var(--al-font-display), var(--font-header, serif);
+  --al-title: var(--al-font-title), serif;
   --al-body: "AL Caslon", "Adobe Caslon Pro", var(--font-body, serif);
   --al-parchment: url("../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp");
   --al-accent: #2a3550;
@@ -307,12 +315,12 @@ body.al-workbench-chat .gold-alchemy-card.al-card.is-failed {
   box-shadow: inset 0 0 22px rgba(70, 30, 5, 0.45), inset 0 0 4px rgba(30, 10, 0, 0.6);
 }
 body.al-workbench-chat .gold-alchemy-card.al-card .card-header { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--al-accent); }
-body.al-workbench-chat .gold-alchemy-card.al-card .card-header h3 { margin: 0; border: none; font-family: "AL Caslon Antique", serif; font-weight: bold; color: #2a1d12; }
+body.al-workbench-chat .gold-alchemy-card.al-card .card-header h3 { margin: 0; border: none; font-family: var(--al-font-title), serif; font-weight: bold; color: #2a1d12; }
 body.al-workbench-chat .gold-alchemy-card.al-card .card-header h3 i { display: none; }
 body.al-workbench-chat .gold-alchemy-card.al-card .al-chat-mark { display: inline-block; flex: 0 0 26px; width: 26px; height: 26px; color: var(--al-accent); vertical-align: middle; margin-right: 4px; }
 body.al-workbench-chat .gold-alchemy-card.al-card .al-chat-seal { position: absolute; top: -6px; right: -4px; width: 34px; height: 34px; color: #2f5d1e; transform: rotate(-10deg); filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)); }
 body.al-workbench-chat .gold-alchemy-card.al-card svg.al-icon { width: 100%; height: 100%; fill: currentColor; vertical-align: top; }
-body.al-workbench-chat .gold-alchemy-card.al-card strong { font-family: "AL Nodesto", serif; font-weight: normal; letter-spacing: 0.04em; color: var(--al-accent); }
+body.al-workbench-chat .gold-alchemy-card.al-card strong { font-family: var(--al-font-display), serif; font-weight: normal; letter-spacing: 0.04em; color: var(--al-accent); }
 body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .card-content { display: flex; align-items: center; gap: 6px; }
 body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .al-chat-mark { color: #7a0f0f; }
 
@@ -322,7 +330,7 @@ body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .al-chat-mark { colo
   background: #f1e4c3 url("../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp");
   font-family: "AL Caslon", "Adobe Caslon Pro", serif;
 }
-.gold-alchemy-editor.al-workbench :is(label, legend, h3, h4) { color: #2a1d12; font-family: "AL Nodesto", serif; font-weight: normal; letter-spacing: 0.04em; }
+.gold-alchemy-editor.al-workbench :is(label, legend, h3, h4) { color: #2a1d12; font-family: var(--al-font-display), serif; font-weight: normal; letter-spacing: 0.04em; }
 .gold-alchemy-editor.al-workbench :is(input[type="text"], input[type="number"], select, textarea) {
   color: #2a1d12;
   background: rgba(255, 250, 235, 0.75);
@@ -330,10 +338,25 @@ body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .al-chat-mark { colo
   border-bottom: 1px solid #5c4530;
   border-radius: 0;
 }
-.gold-alchemy-editor.al-workbench .input-recipe-name { font-family: "AL Caslon Antique", serif; font-size: 1.4rem; font-weight: bold; }
-.gold-alchemy-editor.al-workbench button { font-family: "AL Nodesto", serif; letter-spacing: 0.04em; color: #2a1d12; background: rgba(255, 250, 235, 0.6); border: 1px solid #5c4530; }
+.gold-alchemy-editor.al-workbench .input-recipe-name { font-family: var(--al-font-title), serif; font-size: 1.4rem; font-weight: bold; }
+.gold-alchemy-editor.al-workbench button { font-family: var(--al-font-display), serif; letter-spacing: 0.04em; color: #2a1d12; background: rgba(255, 250, 235, 0.6); border: 1px solid #5c4530; }
 .gold-alchemy-editor.al-workbench button[type="submit"] { color: #fbeccd; background: linear-gradient(180deg, #b8460f, #7a240a); border-color: #4a1606; }
 .gold-alchemy-editor.al-workbench :is(input, select, textarea, button):focus-visible { outline: 2px solid #c9a24b; outline-offset: 1px; }
 
 /* Kotły laboratorium (warzenia w toku / liczba kotłów) */
 .gold-alchemy-app.al-workbench .al-cauldrons { display: inline-flex; align-items: center; gap: 4px; font-family: var(--al-display); color: var(--al-ink-soft); }
+
+/* ---------- Księga alchemiczna w oknie Grimoires (data-kind="alchemy") ---------- */
+/* Receptariusz: miedź i patyna zamiast złota, papier aptekarskiego rejestru, zielony atrament receptur */
+.wfrp4e-grimoires.gr-illuminated[data-kind="alchemy"] {
+  --gr-paper: #ece2c4;
+  --gr-paper-deep: #d8cb9c;
+  --gr-ink: #1f2a22;
+  --gr-ink-soft: #4a5646;
+  --gr-brass: #b87333;
+  --gr-brass-deep: #3f6b5c;
+}
+.wfrp4e-grimoires.gr-illuminated[data-kind="alchemy"] [data-lore="recipe"],
+.wfrp4e-grimoires.gr-illuminated[data-kind="alchemy"][data-lore="recipe"],
+.wfrp4e-grimoires.gr-illuminated [data-lore="recipe"],
+.wfrp4e-grimoires.gr-illuminated[data-lore="recipe"] { --lore-ink: #2f5d50; --lore-wash: rgba(47, 93, 80, 0.1); }

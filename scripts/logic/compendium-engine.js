@@ -140,7 +140,7 @@ export class CompendiumEngine {
   /** Podnieś, gdy zmieniają się efekty mikstur – wygenerowane wpisy kompendium zostaną odbudowane. */
   static POTIONS_DATA_VERSION = 3;
   /** Podnieś, gdy zmienia się format zwojów i ksiąg – wygenerowane wpisy zostaną przepisane. */
-  static RECIPES_DATA_VERSION = 1;
+  static RECIPES_DATA_VERSION = 2;
 
   /** Update module-owned compendium entries while keeping anything added by a GM. */
   static async syncPack(pack, itemsData, getDataKey, getDocumentKey, force = false) {

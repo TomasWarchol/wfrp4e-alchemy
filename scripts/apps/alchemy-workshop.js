@@ -18,6 +18,7 @@ import { RecipeEditorApp } from './recipe-editor.js';
 import { ALCHEMY_IMAGE_FALLBACKS, resolveAlchemyImage } from '../data/image-compatibility.js';
 import { registry } from '../../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
 import { createBook, openBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
+import { ALCHEMY_BOOK_KIND } from '../logic/recipe-book-data.js';
 import { useWorkbench } from '../ui.js';
 import { workbenchContext } from './workbench-view.js';
 import { cauldronCount, getPendingBrews } from '../logic/pending-brews.js';
@@ -361,7 +362,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
   }
 
   static async _onCreateRecipeBook() {
-    if (game.user.isGM) await createBook(this.actor);
+    if (game.user.isGM) await createBook(this.actor, ALCHEMY_BOOK_KIND);
   }
 
   static async _onSaveActorAlchemySettings(event, target) {

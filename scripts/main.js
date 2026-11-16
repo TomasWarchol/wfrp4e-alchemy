@@ -17,11 +17,12 @@ import { ALCHEMY_RECIPES } from './data/recipes.js';
 import { CompendiumEngine } from './logic/compendium-engine.js';
 import { RecipeRegistry } from './logic/recipe-registry.js';
 import { registry, registerSheetButton } from '../../wfrp4e-companion-lib/scripts/companion-lib.mjs';
-import { isBook, registerCopyCost, registerEntryType } from '../../wfrp4e-grimoires/scripts/public.mjs';
+import { isBook, readBook, registerBookKind, registerCopyCost, registerEntryType, writeBook } from '../../wfrp4e-grimoires/scripts/public.mjs';
 import { recipeEntryType } from './logic/recipe-entry-type.js';
-import { legacyBookUpdate } from './logic/recipe-book-data.js';
+import { ALCHEMY_BOOK_KIND, alchemyBookKind, isRecipeOnlyBook, legacyBookUpdate } from './logic/recipe-book-data.js';
 
 registerEntryType(recipeEntryType);
+registerBookKind(alchemyBookKind);
 
 // Przepisywanie wymaga atramentu: zaklęcia i receptury magiczne, po jednym na stronę
 const INK = { key: 'AlchemicalInk', name: 'GOLD_ALCHEMY.Ingredients.AlchemicalInk' };
@@ -169,6 +170,13 @@ Hooks.once('init', () => {
     default: 0
   });
 
+  game.settings.register(MODULE_ID, 'alchemyBooksMigrated', {
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register(MODULE_ID, 'booksMigrated', {
     scope: 'world',
     config: false,
@@ -204,6 +212,7 @@ Hooks.once('ready', async () => {
   syncChatStyle();
   await CompendiumEngine.initializeCompendiums();
   await migrateRecipeBooks();
+  await migrateAlchemyBooks();
 
   game.alchemy = {
     CapacityEngine,
@@ -331,6 +340,30 @@ async function migrateRecipeBooks() {
     if (updates.length) await actor.updateEmbeddedDocuments('Item', updates);
   }
   await game.settings.set(MODULE_ID, 'booksMigrated', true);
+}
+
+/**
+ * Jednorazowo (aktywny MG): księgi z samymi recepturami stają się księgami alchemicznymi – własny dział
+ * w ekwipunku, działają z samego ekwipunku. Księgi z zaklęciami i recepturami zostają księgami zaklęć.
+ * Pojemność się nie zmienia (dotychczasowe księgi receptur nie miały limitu).
+ */
+async function migrateAlchemyBooks() {
+  if (game.user !== game.users.activeGM || game.settings.get(MODULE_ID, 'alchemyBooksMigrated')) return;
+  const updatesFor = items => [...items].flatMap(item => {
+    const book = readBook(item);
+    return isRecipeOnlyBook(book) ? [{ _id: item.id, ...writeBook({ ...book, kind: ALCHEMY_BOOK_KIND }) }] : [];
+  });
+  const worldItems = updatesFor(game.items);
+  if (worldItems.length) await Item.updateDocuments(worldItems);
+  const tokenActors = game.scenes.contents.flatMap(scene => scene.tokens.contents.filter(token => !token.actorLink && token.actor).map(token => token.actor));
+  let count = worldItems.length;
+  for (const actor of [...game.actors, ...tokenActors]) {
+    const updates = updatesFor(actor.items);
+    count += updates.length;
+    if (updates.length) await actor.updateEmbeddedDocuments('Item', updates);
+  }
+  await game.settings.set(MODULE_ID, 'alchemyBooksMigrated', true);
+  if (count) console.log(`${MODULE_ID} | ${count} recipe books became alchemical books`);
 }
 
 // Przedmioty w starym formacie, które trafiają do świata później (np. z importu)

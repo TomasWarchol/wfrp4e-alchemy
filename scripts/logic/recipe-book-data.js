@@ -13,6 +13,36 @@ export const RECIPE_TYPE = 'recipe';
 const NO_LANGUAGE = 'reikspiel';
 const COVER = '#2f5d50';
 
+/** Rodzaj księgi w silniku Grimoires: księga alchemiczna. */
+export const ALCHEMY_BOOK_KIND = 'alchemy';
+/** Ile receptur mieści nowa księga alchemiczna (MG zmienia to w trybie edycji księgi). */
+export const ALCHEMY_BOOK_SLOTS = 12;
+
+/**
+ * Księga alchemiczna: to samo okno co księga zaklęć, ale tylko na receptury, z większą pojemnością
+ * i bez trzymania w rękach – wystarczy, że postać ma ją w ekwipunku.
+ */
+export const alchemyBookKind = {
+  id: ALCHEMY_BOOK_KIND,
+  labelKey: 'GOLD_ALCHEMY.AlchemyBook.Label',
+  newNameKey: 'GOLD_ALCHEMY.AlchemyBook.New',
+  sectionKey: 'GOLD_ALCHEMY.AlchemyBook.Section',
+  accepts: [RECIPE_TYPE],
+  held: false,
+  img: 'icons/sundries/books/book-worn-brown-grey.webp',
+  icon: 'fa-flask',
+  defaults: {
+    cover: COVER,
+    language: NO_LANGUAGE,
+    slots: ALCHEMY_BOOK_SLOTS,
+    requirements: { readWrite: false, language: false, lore: false, carried: false }
+  }
+};
+
+/** Czy księga (dane z readBook) zawiera wyłącznie receptury – taka staje się księgą alchemiczną. */
+export const isRecipeOnlyBook = (book) => Boolean(book) && book.form === 'book' && !book.kind
+  && book.entries.length > 0 && book.entries.every((entry) => entry.type === RECIPE_TYPE);
+
 /** Wpis receptury. @param {object|null} recipe  dane z rejestru (migawka nazwy i obrazka) */
 export function recipeEntry(recipeId, recipe = null) {
   return {
@@ -30,8 +60,9 @@ function alchemyBook(form, { entries, language = '', carried = false }) {
     cover: COVER,
     language: language ? languageKey(language) : NO_LANGUAGE,
     requirements: { readWrite: false, language: Boolean(language), lore: false, carried },
-    // Limit 4 zapisów dotyczy ksiąg zaklęć; księga receptur mieści tyle, ile ma wpisów
+    // Limit 4 zapisów dotyczy ksiąg zaklęć; gotowa księga receptur mieści tyle, ile ma wpisów
     slots: null,
+    kind: form === FORM_BOOK ? ALCHEMY_BOOK_KIND : null,
     entries
   };
 }

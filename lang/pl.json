@@ -3,6 +3,7 @@
     "DisasterEffects": {"Wounds": "Alchemik traci {wounds} Ran.", "Poisoned": "Alchemik nie zdaje Testu Odporności i zostaje Zatruty.", "Resisted": "Alchemik wytrzymuje opary.", "LabDamaged": "Laboratorium jest uszkodzone i teraz jest: {lab}."},
     "Quality": {"Label": "Jakość", "good": "dobra", "excellent": "wyborna"},
     "Inventory": {"Section":"Składniki alchemiczne","CreateType":"Składnik alchemiczny","NewIngredient":"Nowy składnik","Make":"Zamień w składnik alchemiczny","Made":"{name} jest teraz składnikiem alchemicznym.","OpenCompendium":"Otwórz kompendium składników (przeciągnij składniki na kartę)"},
+    "AlchemyBook": {"Label":"Księga alchemiczna","New":"Księga alchemiczna","Section":"Księgi alchemiczne"},
     "Workbench": {
       "Cauldrons": "Kotły",
       "CauldronsHint": "Każde warzenie w toku zajmuje kocioł; dobre laboratorium ma dwa.",
@@ -110,6 +111,7 @@
       "NoThrowTarget": "Wskaż cel klawiszem T na tokenie, zanim rzucisz miksturę."
     },
     "Notifications": {
+      "BookNoRoom": {"kind":"W księdze {book} nie można zapisywać receptur.","whole":"{book} zawiera rytuał i nie ma miejsca na nic więcej.","slots":"{book} jest pełna (zapisy: {total}).","pages":"W księdze {book} nie ma wolnych stron."},
       "SelectCharacter": "Wybierz postać, aby otworzyć Warsztat Alchemiczny.",
       "BrewSuccess": "Pomyślnie uwarzono {qty} szt. mikstury: {potion}",
       "BrewStarted": "Rozpoczęto warzenie. Gotowe: {date}. Wymaga co najmniej 3 godzin pracy dziennie.",

@@ -34,7 +34,7 @@ Foundry doinstaluje też wymaganą bibliotekę **WFRP4e – Companion Library** 
 
 * **Warsztat Alchemiczny** dla postaci: receptury według Kolegiów i rzemiosł, wymagane składniki, umiejętność testu, czas przygotowania, liczba dawek i cena.
 * **Punkty Więzi**: każda magiczna mikstura zajmuje część Więzi alchemika, dopóki istnieje. Przekazanie mikstury sojusznikowi nie zrywa Więzi; zużycie lub rozwiązanie mikstury zwraca punkty.
-* **Pamięć receptur**: alchemik pamięta ograniczoną liczbę receptur; kolejne dają **księgi** w ekwipunku, które korzystają z tego samego okna i warunków czytania co księgi zaklęć i mogą zawierać zaklęcia razem z recepturami. Otwarcie **zwoju receptury** pozwala ją zapamiętać, co zużywa zwój.
+* **Pamięć receptur**: alchemik pamięta ograniczoną liczbę receptur; kolejne dają **księgi alchemiczne** w ekwipunku: osobny dział i rodzaj księgi, w tym samym oknie co księgi zaklęć, domyślnie na 12 receptur (MG może to zmienić). Księga alchemiczna działa, gdy po prostu jest w ekwipunku – nie trzyma się jej w rękach i nie zakłada. Księgi zaklęć nadal mogą zawierać receptury obok zaklęć. Otwarcie **zwoju receptury** pozwala ją zapamiętać, co zużywa zwój.
 * **Test warzenia** z modyfikatorami widocznymi w oknie testu WFRP4e; wynik i mikstura trafiają na czat i do ekwipunku.
 * **Efekty mikstur** oparte na skryptach efektów WFRP4e: stany, pancerz, premie do cech i umiejętności, leczenie; mikstury bojowe można **rzucić** w cel z menu kontekstowego przedmiotu.
 * **Psucie się** świeckich preparatów z upływem sezonów.

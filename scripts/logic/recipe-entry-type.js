@@ -7,6 +7,7 @@ import { registry } from '../../../wfrp4e-companion-lib/scripts/companion-lib.mj
 import { MODULE_ID } from '../config.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
+import { WIND_LORE, recipeTradition, recipeWind } from '../ui.js';
 
 const loc = key => game.i18n.localize(`GOLD_ALCHEMY.${key}`);
 const recipeOf = entry => RecipeRegistry.getRecipeById(entry.data.recipeId);
@@ -43,6 +44,14 @@ export const recipeEntryType = {
   },
 
   same: (a, b) => a.data.recipeId === b.data.recipeId,
+
+  /** Motyw strony w księdze: wiatr Kolegium receptury, pozostałe tradycje jako magia bez szkoły. */
+  theme(entry) {
+    const recipe = recipeOf(entry);
+    if (!recipe) return 'arcane';
+    const wind = recipeWind(recipe);
+    return wind ? WIND_LORE[wind] ?? 'arcane' : recipeTradition(recipe) === 'colleges' ? 'arcane' : 'recipe';
+  },
 
   pages(entry) {
     const recipe = recipeOf(entry);

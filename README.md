@@ -34,7 +34,7 @@ Foundry also installs the required **WFRP4e – Companion Library** (`wfrp4e-com
 
 * **Alchemical Workshop** per character: recipes grouped by College and craft, required ingredients, test skill, creation time, number of doses and price.
 * **Tether points**: each magical potion keeps a share of the alchemist's tether while it exists. Giving a potion to an ally keeps the tether; when the potion is used or dissolved, the points return.
-* **Recipe memory**: the alchemist remembers a limited number of recipes; more come from **books** in the inventory, which use the same window and reading requirements as spellbooks and can hold spells and recipes together. Opening a **recipe scroll** lets the character memorise it, which uses up the scroll.
+* **Recipe memory**: the alchemist remembers a limited number of recipes; more come from **alchemical books** in the inventory: their own section and kind of book, in the same window as spellbooks, holding 12 recipes by default (the GM can change it). An alchemical book works just by being in the inventory; it isn't held or equipped. Spellbooks can still hold recipes next to spells. Opening a **recipe scroll** lets the character memorise it, which uses up the scroll.
 * **Brewing test** with modifiers shown in the WFRP4e test dialog; the result and the brewed potion go to the chat and the inventory.
 * **Potion effects** built on WFRP4e effect scripts: conditions, armour, characteristic and skill bonuses, healing; combat potions can be **thrown** at a target from the item's context menu.
 * **Spoilage** of mundane preparations over the seasons.
