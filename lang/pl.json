@@ -125,6 +125,8 @@
       "DigestiveTonicRestored": "Tonik trawienny ukoił dolegliwości żołądkowe i usunął stan Zatrucie!",
       "FortuneRestored": "Odnawiasz 1 Punkt Szczęścia!",
       "FortuneFull": "Twoje Szczęście jest już pełne.",
+      "AuguryVision": "Wizja: MG zdradza prawdopodobny rozwój wydarzeń albo motywy kluczowej postaci.",
+      "AuguryMisleading": "Wizja jest mętna – MG może podać mylące, nawet groźne odpowiedzi.",
       "AlkahestApplied": "Al-kahest wywołał gwałtowne oparzenia chemiczne (5 poziomów Podpalenia)!",
       "SmellingSalts": "Sole trzeźwiące przywróciły przytomność!",
       "MorrSalve": "Balsam z Morzyca uleczył {wounds} ran!",
@@ -205,6 +207,7 @@
       "ThrownStunned": "{target}: Ogłuszenie ×{value}.",
       "ResistMandrake": "Odporność: ekstrakt z mandragory",
       "ResistForget": "Opanowanie: eliksir zapomnienia",
+      "AuguryTest": "Wróżbiarstwo: Mikstura Losu",
       "MagicalReplaced": "Wiatry się ścierają – przestaje działać: {names}.",
       "DurationRolled": "{effect}: czas działania {duration}.",
       "ResistMarvelous": "Opanowanie: Mistrzowska Mikstura Medyczna",
@@ -399,7 +402,7 @@
       "LucidityTonic": {
         "Name": "Eliksir Bezsenności",
         "Desc": "Mocny tonik pobudzający usuwający senność i zmęczenie.",
-        "Effect": "+1 PS do testów Inteligencji i Siły Woli (bez rzucania zaklęć i Splatania Magii) na 3k10 godzin; potem 3 Stany Zmęczenie."
+        "Effect": "+1 PS do wszystkich testów opartych na Inteligencji i Sile Woli i brak Stanów Zmęczenie na 3k10 godzin; potem 3 Stany Zmęczenie."
       },
       "DebauchFriend": {
         "Name": "Przyjaciel Opoja",
@@ -465,7 +468,7 @@
       "Fortune": {
         "Name": "Mikstura Losu",
         "Desc": "Wyciąg z rzadkich ziół naginający sploty przeznaczenia.",
-        "Effect": "Natychmiast +1 Punkt Szczęścia (nie ponad Przeznaczenie)."
+        "Effect": "Pijący wykonuje Łatwy (+40) Test Wróżbiarstwa (Inteligencji, gdy nie ma tej umiejętności). Sukces: MG zdradza prawdopodobny rozwój wydarzeń albo motywy kluczowej postaci; porażka: wizja zwodzi."
       },
       "Invisibility": {
         "Name": "Mikstura Niewidzialności",
@@ -475,7 +478,7 @@
       "NectarVitality": {
         "Name": "Nektar Witalności",
         "Desc": "Gęsty, złocisty wywar stymulujący komórki ciała do natychmiastowej naprawy.",
-        "Effect": "Regeneracja na 1k10 minut: w walce 1 Rana na początku każdej rundy, poza walką Rany wracają przez cały czas działania."
+        "Effect": "Cecha Stworzenia Regeneracja na 1k10 minut: na początku każdej rundy pijący odzyskuje 1k10 Ran (przy 0 Ran – 1 Ranę na 8+)."
       },
       "AqshyLiquidFire": {
         "Name": "Płynny Ogień Aqshy",

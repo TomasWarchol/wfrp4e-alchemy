@@ -247,13 +247,8 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
-            "trigger": "startRound",
-            "script": "const wounds = this.actor.system.status.wounds;\nif (wounds.value > 0 && wounds.value < wounds.max) await this.actor.modifyWounds(1);"
-          },
-          {
-            "label": "@effect.name",
             "trigger": "immediate",
-            "script": "const inCombat = game.combat?.combatants?.some(c => c.actor?.id === this.actor.id);\nif (!inCombat) {\n  const wounds = this.actor.system.status.wounds;\n  const rounds = Math.round((Number(this.effect.duration?.value) || 60) / 6);\n  await this.actor.modifyWounds(Math.max(0, Math.min(wounds.max - wounds.value, rounds)));\n}"
+            "script": "const specs = [[\"Compendium.wfrp4e-core.items.SfUUdOGjdYpr3KSR\", \"Regenerate\", \"trait\", null, \"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
           }
         ]
       },
@@ -2493,9 +2488,14 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.slBonus += 1;",
             "options": {
-              "activateScript": "const m = !!args.spell || [\"Channelling\", \"Splatanie Magii\", \"Language (Magick)\", \"Język (Magiczny)\", \"Język (Magii)\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); }); return !m && [\"int\", \"wp\"].includes(args.characteristic);",
-              "hideScript": "const m = !!args.spell || [\"Channelling\", \"Splatanie Magii\", \"Language (Magick)\", \"Język (Magiczny)\", \"Język (Magii)\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); }); return m || ![\"int\", \"wp\"].includes(args.characteristic);"
+              "activateScript": "return [\"int\", \"wp\"].includes(args.characteristic);",
+              "hideScript": "return ![\"int\", \"wp\"].includes(args.characteristic);"
             }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"fatigued\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           },
           {
             "label": "@effect.name",

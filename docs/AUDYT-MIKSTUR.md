@@ -385,7 +385,12 @@ Inne pary do przejrzenia:
 5. **Stany z czasem (P7).** **Zrobione 2026-11-20**, sprawdzone w DEV-test: Cordelia, Krople Snu, Mandragora. Krok receptury `add` przyjmuje teraz `duration`.
    - Przy okazji naprawione: skrypty blokujące stan w 12 miksturach dawały czerwone błędy przy każdym nałożeniu stanu (podwójne usuwanie).
 6. **Nałóg (P4).** **Zrobione 2026-11-20**, sprawdzone w DEV-test. Zasada domowa z ustawieniem świata `addiction` (domyślnie włączona), kod w `scripts/logic/addiction.js`, pole `addictive` w 6 recepturach.
-7. **Przegląd balansu (P8)** po sprawdzeniu wartości z WoM.
+7. **Przegląd balansu (P8).** Wartości sprawdzone w oficjalnym module *Wiatrów Magii* w Foundry 2026-11-21. Decyzja Tomka:
+   - **A. Zgodność z WoM: zrobione**, sprawdzone w DEV-test. Mikstura Losu daje teraz Test Wróżbiarstwa, Nektar Witalności cechę Regeneracja, a Eliksir Bezsenności działa jak w książce.
+   - **B. Wzmocnienie mikstur magicznych: odrzucone.** Na przykład Krzepa S+30/Wt+20, Odporność na Magię w Napoju Osłony, 4×BWt w Kroplach Wiecznej Wiosny.
+   - **C. Przycięcie zwykłych mikstur: odrzucone.** Na przykład Czernidło +10, premie „na chorobę” tylko do włączenia.
+   - Mikstura Wzmocnienia jest zgodna z książką (+2 do BS i BWt, +2 PS do testów S i Wt), więc to, że przewyższa Krzepę, wynika z podręcznika.
+   - Przy okazji naprawione: cechy i talenty z mikstur (Latanie, Szał Bojowy, Strach, Regeneracja…) nie znikały po wygaśnięciu, bo skrypt „immediate” działał przed nadaniem id efektu.
 
 Decyzji wymagają:
 - wzór testu obronnego w P1;

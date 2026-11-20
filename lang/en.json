@@ -125,6 +125,8 @@
       "DigestiveTonicRestored": "Digestive tonic soothed stomach ailments and removed Poisoned condition!",
       "FortuneRestored": "You regain 1 Fortune point!",
       "FortuneFull": "Your Fortune is already at maximum.",
+      "AuguryVision": "A vision: the GM reveals the likely course of events or the motives of a key character.",
+      "AuguryMisleading": "The vision is muddled – the GM may give misleading, even dangerous answers.",
       "AlkahestApplied": "Al-kahest inflicted severe chemical burns (5 Ablaze conditions)!",
       "SmellingSalts": "Smelling salts restored consciousness!",
       "MorrSalve": "Salve of Morr healed {wounds} wounds!",
@@ -205,6 +207,7 @@
       "ThrownStunned": "{target}: Stunned ×{value}.",
       "ResistMandrake": "Endurance: mandrake extract",
       "ResistForget": "Cool: draught of forgetfulness",
+      "AuguryTest": "Augury: Potion of Fortune",
       "MagicalReplaced": "The Winds clash – no longer active: {names}.",
       "DurationRolled": "{effect}: duration {duration}.",
       "ResistMarvelous": "Cool: Marvelous Medicinal Mixture",
@@ -399,7 +402,7 @@
       "LucidityTonic": {
         "Name": "Lucidity Tonic",
         "Desc": "A potent stimulant banishing exhaustion and sluggishness.",
-        "Effect": "+1 SL to Intelligence and Willpower Tests (not Casting or Channelling) for 3d10 hours; afterwards 3 Fatigued Conditions."
+        "Effect": "+1 SL to all Intelligence- and Willpower-based Tests and no Fatigued Conditions for 3d10 hours; afterwards 3 Fatigued Conditions."
       },
       "DebauchFriend": {
         "Name": "Debauch's Friend",
@@ -465,7 +468,7 @@
       "Fortune": {
         "Name": "Potion of Fortune",
         "Desc": "An extract of rare herbs bending the strands of fate.",
-        "Effect": "Immediately +1 Fortune point (not above Fate)."
+        "Effect": "The drinker makes an Easy (+40) Augury Test (Intelligence without the Skill). On a success the GM reveals the likely course of events or the motives of a key character; on a failure the vision misleads."
       },
       "Invisibility": {
         "Name": "Potion of Invisibility",
@@ -475,7 +478,7 @@
       "NectarVitality": {
         "Name": "Nectar of Vitality",
         "Desc": "A rich golden draught stimulating rapid cell repair.",
-        "Effect": "Regeneration for 1d10 minutes: in combat 1 Wound at the start of each round, out of combat Wounds return over the whole duration."
+        "Effect": "The Regenerate Creature Trait for 1d10 minutes: at the start of each round the drinker regains 1d10 Wounds (at 0 Wounds, 1 Wound on 8+)."
       },
       "AqshyLiquidFire": {
         "Name": "Liquid Flame of Aqshy",

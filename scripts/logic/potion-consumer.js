@@ -95,7 +95,9 @@ export class PotionConsumer {
         const effectsToCreate = [];
         for (const effect of item.effects) {
           const ed = applyHighestBonus(effect.toObject());
-          delete ed._id;
+          // Id nadany z góry: skrypty "immediate" działają przed utworzeniem efektu, a cechy i talenty
+          // dodane przez miksturę wiążą się z efektem przez jego id (znikają razem z nim)
+          ed._id = foundry.utils.randomID();
           ed.disabled = false;
           ed.transfer = false;
           // Foundry v14 ustawia start (czas świata, walka, runda) przy tworzeniu efektu na aktorze
@@ -112,7 +114,7 @@ export class PotionConsumer {
           }
           else effectsToCreate.push(ed);
         }
-        if (effectsToCreate.length) await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate);
+        if (effectsToCreate.length) await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate, { keepId: true });
       }
 
       if (flag.instantEffect) {
@@ -352,6 +354,16 @@ export class PotionConsumer {
     return { succeeded: !!test.succeeded, sl: Number(test.result?.SL) || 0 };
   }
 
+  /** Łatwy (+40) Test Wróżbiarstwa pijącego, a bez tej umiejętności – Inteligencji. Zwraca {succeeded} albo null. */
+  static async _auguryTest(actor) {
+    const skill = (actor.itemTypes?.skill || []).find(s => /augury|wróżb/i.test(s.name || ''));
+    const context = { fields: { difficulty: 'easy' }, title: game.i18n.localize('GOLD_ALCHEMY.Chat.AuguryTest'), skipTargets: true };
+    const test = skill ? await actor.setupSkill(skill, context) : await actor.setupCharacteristic('int', context);
+    if (!test) return null;
+    await test.roll();
+    return { succeeded: !!test.succeeded };
+  }
+
   /** Zależności kroków receptury: tłumaczenia, rzuty, testy pijącego i nazwy stanów systemu. */
   static _stepContext() {
     return {
@@ -514,13 +526,10 @@ export class PotionConsumer {
         return i18n('GOLD_ALCHEMY.Notifications.MundanePanacea');
       case 'fortuneDraught':
       case 'potionOfFortune': {
-        const curFortune = Number(drinker.system?.status?.fortune?.value) || 0;
-        const maxFate = Number(drinker.system?.status?.fate?.value) || 3;
-        if (curFortune < maxFate) {
-          await drinker.update({ 'system.status.fortune.value': curFortune + 1 });
-          return i18n('GOLD_ALCHEMY.Notifications.FortuneRestored');
-        }
-        return i18n('GOLD_ALCHEMY.Notifications.FortuneFull');
+        // Wiatry Magii: Łatwy (+40) Test Wróżbiarstwa (Inteligencja, gdy pijący nie ma tej umiejętności)
+        const result = await this._auguryTest(drinker);
+        if (!result) return '';
+        return i18n(result.succeeded ? 'GOLD_ALCHEMY.Notifications.AuguryVision' : 'GOLD_ALCHEMY.Notifications.AuguryMisleading');
       }
       case 'smellingSalts':
       case 'smellingSaltsRevive':

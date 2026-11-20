@@ -6,6 +6,11 @@
   - Anyone inside the Stinkpot at the start of their turn makes an Average (+20) Endurance Test or gains 1 Fatigued Condition. In the Plague Vapour it is a Difficult (−10) Endurance Test, and a failure reminds the GM to choose a disease. These tests roll without a dialog.
   - A cloud lasts 1d10 rounds: in combat until the start of the round it runs out, outside combat 6 seconds of world time per round. It also goes away when the combat ends.
 - Resistance results on chat cards no longer say "the drinker", so they read right for clouds too.
+- **Three Winds of Magic potions now follow the book:**
+  - Potion of Fortune calls for an Easy (+40) Augury Test (Intelligence without the Skill); a success means the GM reveals the likely course of events, a failure gives a misleading vision. It no longer grants a Fortune point.
+  - Nectar of Vitality grants the Regenerate Creature Trait (1d10 Wounds at the start of each round) instead of 1 Wound a round.
+  - Lucidity Tonic gives +1 SL to all Intelligence- and Willpower-based Tests again, spells and Channelling included, and blocks Fatigued while it lasts.
+- Fixed: Traits and Talents granted by a potion now disappear when the potion wears off. This covers Flight, Frenzy, Fear, Night Vision, Second Sight, Acute Sense, Distracting and Regenerate. Before, they stayed on the character for good.
 
 ## 1.10.0
 - **80 new original recipes** (120 of the module's own in total, available without any sourcebook): 23 for the Colleges, each true to its Wind, 5 general magical, 14 mundane alchemy (thrown jars, tar and lime bombs, oils and pastes), 14 apothecary and 14 herbal remedies, and 10 forbidden brews. Mundane alchemy, apothecary and herbalism now work without the official modules.
