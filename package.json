@@ -4,9 +4,12 @@
   "type": "module",
   "description": "Narzędzia deweloperskie modułu. Nie trafiają do module.zip – moduł działa bez kroku budowania.",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "sheet:export": "node tools/alchemy-sheet.mjs export",
+    "sheet:import": "node tools/alchemy-sheet.mjs import"
   },
   "devDependencies": {
+    "exceljs": "^4.4.0",
     "vitest": "^5.1.0"
   }
 }

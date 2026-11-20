@@ -21,13 +21,13 @@ export const ALCHEMY_RECIPES = [
         "key": "AethyrCrystal",
         "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       },
       {
         "key": "GoldDust",
         "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.DraughtOfPower.Desc",
@@ -76,13 +76,13 @@ export const ALCHEMY_RECIPES = [
         "key": "GriffinDown",
         "name": "GOLD_ALCHEMY.Ingredients.GriffinDown",
         "quantity": 1,
-        "costZK": 4.0
+        "costZK": 4
       },
       {
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 2,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Flight.Desc",
@@ -136,7 +136,7 @@ export const ALCHEMY_RECIPES = [
         "key": "GoldDust",
         "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Fortune.Desc",
@@ -168,13 +168,13 @@ export const ALCHEMY_RECIPES = [
         "key": "Mercury",
         "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       },
       {
         "key": "GriffinDown",
         "name": "GOLD_ALCHEMY.Ingredients.GriffinDown",
         "quantity": 1,
-        "costZK": 4.0
+        "costZK": 4
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Invisibility.Desc",
@@ -222,19 +222,19 @@ export const ALCHEMY_RECIPES = [
         "key": "BoarGland",
         "name": "GOLD_ALCHEMY.Ingredients.BoarGland",
         "quantity": 1,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "GoldDust",
         "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       },
       {
         "key": "SpringDew",
         "name": "GOLD_ALCHEMY.Ingredients.SpringDew",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.NectarVitality.Desc",
@@ -287,7 +287,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WeaveEssence.Desc",
@@ -372,7 +372,7 @@ export const ALCHEMY_RECIPES = [
         "key": "SalamanderEssence",
         "name": "GOLD_ALCHEMY.Ingredients.SalamanderEssence",
         "quantity": 1,
-        "costZK": 4.0
+        "costZK": 4
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AqshyBlazingHeart.Desc",
@@ -478,7 +478,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BullRoot",
         "name": "GOLD_ALCHEMY.Ingredients.BullRoot",
         "quantity": 1,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "CinnabarDust",
@@ -535,7 +535,7 @@ export const ALCHEMY_RECIPES = [
         "key": "MeteoricSilver",
         "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
         "quantity": 1,
-        "costZK": 6.0
+        "costZK": 6
       },
       {
         "key": "PureWater",
@@ -590,7 +590,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrAstromancerSight.Desc",
@@ -644,13 +644,13 @@ export const ALCHEMY_RECIPES = [
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       },
       {
         "key": "Mercury",
         "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrLightningReflex.Desc",
@@ -701,7 +701,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrStormTonic.Desc",
@@ -741,7 +741,7 @@ export const ALCHEMY_RECIPES = [
         "key": "IronFilings",
         "name": "GOLD_ALCHEMY.Ingredients.GoldIronFilings",
         "quantity": 1,
-        "costZK": 2.0
+        "costZK": 2
       },
       {
         "key": "Sulfur",
@@ -759,7 +759,7 @@ export const ALCHEMY_RECIPES = [
         "key": "LeadSediment",
         "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
         "quantity": 1,
-        "costZK": 1.0
+        "costZK": 1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.IronSkin.Desc",
@@ -808,13 +808,13 @@ export const ALCHEMY_RECIPES = [
         "key": "GoldDust",
         "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       },
       {
         "key": "Mercury",
         "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.LiquidGold.Desc",
@@ -854,13 +854,13 @@ export const ALCHEMY_RECIPES = [
         "key": "Mercury",
         "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       },
       {
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       },
       {
         "key": "LavenderOil",
@@ -916,7 +916,7 @@ export const ALCHEMY_RECIPES = [
         "key": "LeadSediment",
         "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
         "quantity": 2,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "AmmoniaSalts",
@@ -967,7 +967,7 @@ export const ALCHEMY_RECIPES = [
         "key": "AquaRegia",
         "name": "GOLD_ALCHEMY.Ingredients.DragonAcid",
         "quantity": 2,
-        "costZK": 4.0
+        "costZK": 4
       },
       {
         "key": "Sulfur",
@@ -1000,13 +1000,13 @@ export const ALCHEMY_RECIPES = [
         "key": "MeteoricSilver",
         "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
         "quantity": 1,
-        "costZK": 6.0
+        "costZK": 6
       },
       {
         "key": "MagneticNeedle",
         "name": "GOLD_ALCHEMY.Ingredients.MagneticNeedle",
         "quantity": 1,
-        "costZK": 2.0
+        "costZK": 2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.MeteoricCompass.Desc",
@@ -1209,7 +1209,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Ironbark",
         "name": "GOLD_ALCHEMY.Ingredients.Ironbark",
         "quantity": 1,
-        "costZK": 2.0
+        "costZK": 2
       },
       {
         "key": "Beeswax",
@@ -1319,7 +1319,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BullRoot",
         "name": "GOLD_ALCHEMY.Ingredients.BullRoot",
         "quantity": 1,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "BeastFangs",
@@ -1376,7 +1376,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BoarGland",
         "name": "GOLD_ALCHEMY.Ingredients.BoarGland",
         "quantity": 1,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "BadgerFat",
@@ -1484,13 +1484,13 @@ export const ALCHEMY_RECIPES = [
         "key": "AethyrCrystal",
         "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       },
       {
         "key": "CrystalPrism",
         "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
         "quantity": 1,
-        "costZK": 4.0
+        "costZK": 4
       },
       {
         "key": "PureWater",
@@ -2307,7 +2307,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BullRoot",
         "name": "GOLD_ALCHEMY.Ingredients.BullRoot",
         "quantity": 6,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "BearClaw",
@@ -2534,7 +2534,7 @@ export const ALCHEMY_RECIPES = [
         "key": "GoldDust",
         "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
         "quantity": 1,
-        "costZK": 5.0
+        "costZK": 5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.NectarBeauty.Desc",
@@ -2587,7 +2587,7 @@ export const ALCHEMY_RECIPES = [
         "key": "VeracityRoot",
         "name": "GOLD_ALCHEMY.Ingredients.VeracityRoot",
         "quantity": 6,
-        "costZK": 2.0
+        "costZK": 2
       },
       {
         "key": "PureAlcohol",
@@ -2652,7 +2652,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BoarGland",
         "name": "GOLD_ALCHEMY.Ingredients.BoarGland",
         "quantity": 8,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "BadgerFat",
@@ -3082,7 +3082,7 @@ export const ALCHEMY_RECIPES = [
         "key": "BoarGland",
         "name": "GOLD_ALCHEMY.Ingredients.BoarGland",
         "quantity": 10,
-        "costZK": 1.0
+        "costZK": 1
       },
       {
         "key": "RockOil",
@@ -3399,8 +3399,7 @@ export const ALCHEMY_RECIPES = [
     },
     "volatility": "extreme",
     "creationTimeDays": 7
-  }
-,
+  },
   {
     "id": "potion-reactionary-restorative",
     "key": "ReactionaryRestorative",
@@ -3461,8 +3460,7 @@ export const ALCHEMY_RECIPES = [
     "creationTimeDays": 7,
     "listPriceSS": 20,
     "availability": "scarce"
-  }
-,
+  },
   {
     "id": "potion-focusing-philtre",
     "key": "FocusingPhiltre",
@@ -3527,8 +3525,7 @@ export const ALCHEMY_RECIPES = [
     "creationTimeDays": 7,
     "listPriceSS": 5,
     "availability": "scarce"
-  }
-,
+  },
   {
     "id": "potion-tonic-sight",
     "key": "TonicSight",
@@ -3546,7 +3543,7 @@ export const ALCHEMY_RECIPES = [
         "key": "EaglesEye",
         "name": "GOLD_ALCHEMY.Ingredients.EaglesEye",
         "quantity": 1,
-        "costZK": 2.0
+        "costZK": 2
       },
       {
         "key": "PureWater",
@@ -3584,8 +3581,7 @@ export const ALCHEMY_RECIPES = [
     "creationTimeDays": 7,
     "listPriceSS": 10,
     "availability": "scarce"
-  }
-,
+  },
   {
     "id": "potion-cordelia-restorative",
     "key": "CordeliaRestorative",
@@ -3625,8 +3621,7 @@ export const ALCHEMY_RECIPES = [
     "creationTimeDays": 7,
     "listPriceSS": 15,
     "availability": "scarce"
-  }
-,
+  },
   {
     "id": "potion-troll-acid",
     "key": "TrollAcid",
@@ -3660,8 +3655,7 @@ export const ALCHEMY_RECIPES = [
     "creationTimeDays": 2,
     "listPriceSS": 60,
     "availability": "rare"
-  }
-,
+  },
   {
     "id": "potion-vein-powder",
     "key": "VeinPowder",
@@ -3731,7 +3725,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Mercury",
         "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 3.0
+        "costZK": 3
       },
       {
         "key": "SageLeaves",

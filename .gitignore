@@ -13,3 +13,7 @@ module.zip
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Arkusz generowany z danych modułu (npm run sheet:export)
+docs/alchemia.xlsx
+~$*.xlsx
