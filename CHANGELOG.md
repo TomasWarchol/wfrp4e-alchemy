@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.1
+- **Sourcebook content only with its official module.** Recipes and ingredients from official books (Core Rulebook, Winds of Magic, Starter Set, The Horned Rat, Up in Arms, Zoo) appear only while that book's official Foundry module is active. The *Strict Source Module Filtering* setting is gone (filtering is always on) and translation modules (`…-pl`) no longer stand in for the content module.
+- Recipes from inactive books are hidden everywhere, not only in the workshop list: in books and scrolls they show as missing, the API's `recipes` lists only available ones, and the generated recipe books in the compendium leave them out (a book left empty is not created).
+- Ingredients used only by recipes from inactive books are left out of the ingredients compendium and the recipe editor.
+- Releases always ship empty compendium databases; the module fills them in the world.
+
 ## 1.9.0
 - Polish letters in the workbench look: when Foundry runs in Polish, headings and titles use Grenze Gotisch and Almendra (shipped with Grimoires) instead of Nodesto Caps and Caslon Antique, which lack Polish letters.
 - **Requires WFRP4e – Grimoires 0.8+.**

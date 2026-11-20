@@ -4,8 +4,8 @@
  */
 
 import { recipeBookFlags, recipeEntry, recipeScrollFlags } from './recipe-book-data.js';
-import { MODULE_ID, isSourceModuleActive } from '../config.js';
-import { ALCHEMY_INGREDIENTS, createIngredientItemData } from '../data/ingredients.js';
+import { MODULE_ID } from '../config.js';
+import { createIngredientItemData } from '../data/ingredients.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 import { buildPotionEffectData } from './effect-data.js';
@@ -126,7 +126,9 @@ export function createRecipeBookItemData(name, img, recipeIds, description) {
     },
     flags: {
       [MODULE_ID]: {
-        isRecipeBook: true
+        isRecipeBook: true,
+        // Klucz z zawartością: zmiana składu (np. wyłączony podręcznik) wymienia księgę w kompendium
+        bookKey: `${name}|${recipeIds.join(',')}`
       },
       ...recipeBookFlags(recipeIds.map(id => recipeEntry(id, RecipeRegistry.getRecipeById(id))), { carried: game.settings.get(MODULE_ID, 'requireEquippedBooks') === true })
     }
@@ -238,7 +240,7 @@ export class CompendiumEngine {
       return;
     }
 
-    const activeIngredients = ALCHEMY_INGREDIENTS.filter(ing => isSourceModuleActive(ing.sourceModule));
+    const activeIngredients = RecipeRegistry.getActiveIngredients();
     console.log(`${MODULE_ID} | Seeding ${activeIngredients.length} ingredients into ${this.INGREDIENTS_PACK}...`);
     const itemsData = activeIngredients.map(ing => createIngredientItemData(ing, 1));
     await this.syncPack(
@@ -307,27 +309,29 @@ export class CompendiumEngine {
     // 1. Indywidualne zwoje receptur
     const scrolls = activeRecipes.map(r => createRecipeScrollItemData(r));
 
-    // 2. Startowe Księgi Receptur (Grimuary)
+    // 2. Startowe Księgi Receptur (Grimuary): tylko receptury z włączonych podręczników, puste księgi odpadają
+    const book = (name, img, recipeIds, description) => ({ name, img, recipeIds: recipeIds.filter(id => RecipeRegistry.getRecipeById(id)), description });
     const grimoires = [
-      createRecipeBookItemData(
+      book(
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Chamon.Name'),
         'icons/sundries/books/book-embossed-gold.webp',
         ['potion-iron-skin', 'potion-liquid-gold', 'potion-quicksilver-speed', 'potion-lead-fortitude', 'potion-chamon-quicksilver-mind', 'potion-alkahest', 'potion-meteoric-compass'],
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Chamon.Desc')
       ),
-      createRecipeBookItemData(
+      book(
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Apothecary.Name'),
         'icons/sundries/books/book-embossed-bound-leather-green.webp',
         ['potion-healing-draught', 'potion-vitality-draught', 'potion-digestive-tonic', 'potion-mundane-panacea', 'potion-soul-balm', 'potion-morr-salve', 'potion-mandrake-extract', 'potion-antitoxin-broad', 'potion-panacea-universalis'],
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Apothecary.Desc')
       ),
-      createRecipeBookItemData(
+      book(
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Field.Name'),
         'icons/sundries/books/book-embossed-red.webp',
         ['potion-leonardo-powder', 'potion-flash-powder', 'potion-smoke-pellet', 'potion-smelling-salts', 'potion-quick-glue', 'potion-vitriol-acid', 'potion-phosphor-fire'],
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Field.Desc')
       )
-    ];
+    ].filter(data => data.recipeIds.length)
+      .map(data => createRecipeBookItemData(data.name, data.img, data.recipeIds, data.description));
 
     const allData = [...scrolls, ...grimoires];
     await this.syncPack(
@@ -335,11 +339,11 @@ export class CompendiumEngine {
       allData,
       data => {
         const flags = data.flags?.[MODULE_ID] || {};
-        return flags.recipeId || (flags.isRecipeBook ? `book:${data.name}` : null);
+        return flags.recipeId || (flags.isRecipeBook ? `book:${flags.bookKey}` : null);
       },
       document => {
         const flags = document.flags?.[MODULE_ID] || {};
-        return flags.recipeId || (flags.isRecipeBook ? `book:${document.name}` : null);
+        return flags.recipeId || (flags.isRecipeBook ? `book:${flags.bookKey ?? document.name}` : null);
       },
       force || dataVersionStale
     );

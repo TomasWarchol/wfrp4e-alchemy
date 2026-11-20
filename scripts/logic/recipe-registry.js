@@ -15,6 +15,7 @@ import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
 import { memoryState } from './rules.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
+import { ingredientAvailable } from './sources.js';
 
 export class RecipeRegistry {
   static _allRecipesCache = null;
@@ -140,12 +141,21 @@ export class RecipeRegistry {
   }
 
   /**
-   * Pobiera pojedynczą recepturę po identyfikatorze
+   * Pobiera pojedynczą recepturę po identyfikatorze – tylko z podręczników włączonych w świecie.
+   * Receptura z wyłączonego podręcznika jest traktowana jak nieistniejąca (księgi pokazują ją jako brakującą).
    * @param {string} recipeId
+   * @param {{includeUnavailable?: boolean}} [options]  true tylko do zwrotu własnych przedmiotów gracza
    * @returns {object|null}
    */
-  static getRecipeById(recipeId) {
-    return this.getAllRecipes().find(r => r.id === recipeId || r.key === recipeId) || null;
+  static getRecipeById(recipeId, { includeUnavailable = false } = {}) {
+    const recipe = this.getAllRecipes().find(r => r.id === recipeId || r.key === recipeId) || null;
+    if (!recipe || includeUnavailable) return recipe;
+    return isSourceModuleActive(recipe.sourceModule) ? recipe : null;
+  }
+
+  /** Składniki do pokazania: bez tych z wyłączonych podręczników i tych, które służą tylko ich recepturom. */
+  static getActiveIngredients() {
+    return ALCHEMY_INGREDIENTS.filter(ing => ingredientAvailable(ing, ALCHEMY_RECIPES, id => isSourceModuleActive(id)));
   }
 
   /* -------------------------------------------- */

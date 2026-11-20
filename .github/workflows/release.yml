@@ -28,6 +28,28 @@ jobs:
              module.json > module.tmp.json
           mv module.tmp.json module.json
 
+      # Kompendia wypełnia moduł w świecie, tylko treściami z włączonych podręczników.
+      # Wydanie zawsze wysyła puste bazy, żeby lokalnie wygenerowane wpisy (także z oficjalnych
+      # modułów) nigdy nie trafiły do module.zip, nawet gdy ktoś je przypadkiem zacommituje.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Ship empty compendiums
+        run: |
+          rm -rf packs
+          mkdir packs
+          npm install --no-save --no-package-lock classic-level@1.4.1
+          node --input-type=module -e '
+            import { ClassicLevel } from "classic-level";
+            for (const name of process.argv.slice(1)) {
+              const db = new ClassicLevel(`packs/${name}`);
+              await db.open();
+              for await (const _ of db.keys()) throw new Error(`packs/${name} is not empty`);
+              await db.close();
+            }' $(jq -r '.packs[].name' module.json)
+          ls -R packs
+
       - name: Build module.zip
         run: |
           zip -r module.zip . \

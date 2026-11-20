@@ -88,7 +88,7 @@ export class RecipeEditorApp extends HandlebarsApplicationMixin(ApplicationV2) {
       { value: 'deactivate', label: game.i18n.localize('GOLD_ALCHEMY.Editor.ExpiryDeactivate') }
     ];
 
-    const availableIngredients = ALCHEMY_INGREDIENTS.map(ing => ({
+    const availableIngredients = RecipeRegistry.getActiveIngredients().map(ing => ({
       key: ing.key,
       name: game.i18n ? game.i18n.localize(ing.name) : ing.name
     }));

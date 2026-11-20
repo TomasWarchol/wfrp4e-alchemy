@@ -26,7 +26,7 @@ Foundry also installs the required **WFRP4e – Companion Library** (`wfrp4e-com
 * Foundry VTT v14 and the WFRP4e system 10.0+.
 * **WFRP4e – Companion Library** (`wfrp4e-companion-lib`).
 * **WFRP4e – Grimoires** (`wfrp4e-grimoires`) 0.6+.
-* Optional: Simple Calendar (otherwise Foundry's calendar is used), the official WFRP4e content modules (extra ingredients and recipes appear when their modules are active).
+* Optional: Simple Calendar (otherwise Foundry's calendar is used), the official WFRP4e content modules. Recipes and ingredients from a sourcebook (Core Rulebook, Winds of Magic, Starter Set and others) appear only while that book's official Foundry module is active in the world; a translation module alone does not count. Without them the module offers only its own recipes.
 
 ---
 

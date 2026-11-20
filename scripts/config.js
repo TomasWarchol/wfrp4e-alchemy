@@ -2,6 +2,8 @@
  * Konfiguracja i stałe dla modułu WFRP4e - Alchemia Starego Świata
  */
 
+import { sourceAvailable } from './logic/sources.js';
+
 export const MODULE_ID = 'wfrp4e-alchemy';
 
 export const ALCHEMY_CONFIG = {
@@ -74,61 +76,18 @@ export const ALCHEMY_CONFIG = {
   },
 
   SETTINGS: {
-    STRICT_MODULE_FILTER: 'strictModuleFilter',
     CUSTOM_RECIPES: 'customRecipes',
     REQUIRE_DISCOVERY: 'requireDiscovery'
   }
 };
 
 /**
- * Sprawdza czy moduł źródłowy dla danej receptury/składnika jest aktywny w Foundry VTT.
- * Jeśli sourceModule jest niezdefiniowany lub 'wfrp4e-alchemy', zwraca true (zasób uniwersalny/podstawowy).
- * Sprawdza aktywność modułów źródłowych (zarówno wersji EN, jak i oficjalnych/społecznościowych PL).
- * Jeśli w opcjach wyłączono ścisłe filtrowanie podręczników, zwraca true.
+ * Czy treść z podręcznika `sourceModule` może się pokazać: tylko przy włączonym oficjalnym module
+ * tego podręcznika. Własne treści (brak źródła albo 'wfrp4e-alchemy') są dostępne zawsze.
+ * Bez wyłącznika w ustawieniach i bez zamienników (moduł tłumaczenia nie zastępuje modułu z treścią).
  * @param {string|undefined|null} sourceModule
  * @returns {boolean}
  */
 export function isSourceModuleActive(sourceModule) {
-  if (!sourceModule || sourceModule === 'wfrp4e-alchemy') return true;
-  if (typeof game === 'undefined' || !game.modules) return true;
-
-  // Możliwość wyłączenia filtrowania podręczników w opcjach modułu przez MG
-  try {
-    if (game.settings && game.settings.settings?.has(`${MODULE_ID}.${ALCHEMY_CONFIG.SETTINGS.STRICT_MODULE_FILTER}`)) {
-      if (game.settings.get(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.STRICT_MODULE_FILTER) === false) {
-        return true;
-      }
-    }
-  } catch (_) {}
-
-  // Weryfikacja podręcznika głównego (wersja oryginalna, PL lub robocza deweloperska)
-  if (sourceModule === 'wfrp4e-core') {
-    return Boolean(
-      game.modules.get('wfrp4e-core')?.active ||
-      game.modules.get('wfrp4e-core-pl')?.active ||
-      game.modules.get('wfrp4e-core-pl-dev')?.active
-    );
-  }
-
-  // Weryfikacja Wiatrów Magii
-  if (sourceModule === 'wfrp4e-wom') {
-    return Boolean(
-      game.modules.get('wfrp4e-wom')?.active ||
-      game.modules.get('wfrp4e-wom-pl')?.active
-    );
-  }
-
-  // Weryfikacja Zestawu Startowego
-  if (sourceModule === 'wfrp4e-starter-set') {
-    return Boolean(
-      game.modules.get('wfrp4e-starter-set')?.active ||
-      game.modules.get('wfrp4e-starter-set-pl')?.active
-    );
-  }
-
-  // Ogólna weryfikacja dla pozostałych podręczników (np. horned-rat, dotr, ua1, zoo)
-  return Boolean(
-    game.modules.get(sourceModule)?.active ||
-    game.modules.get(`${sourceModule}-pl`)?.active
-  );
+  return sourceAvailable(sourceModule, (id) => game.modules.get(id)?.active === true);
 }

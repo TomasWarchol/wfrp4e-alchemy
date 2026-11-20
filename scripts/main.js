@@ -58,15 +58,6 @@ Hooks.once('init', () => {
   registerInventory();
 
   // Rejestracja ustawień modułu
-  game.settings.register(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.STRICT_MODULE_FILTER, {
-    name: 'GOLD_ALCHEMY.Settings.StrictModuleFilter',
-    hint: 'GOLD_ALCHEMY.Settings.StrictModuleFilterHint',
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: true
-  });
-
   game.settings.register(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.REQUIRE_DISCOVERY, {
     name: 'GOLD_ALCHEMY.Settings.RequireDiscovery',
     hint: 'GOLD_ALCHEMY.Settings.RequireDiscoveryHint',
@@ -229,8 +220,9 @@ Hooks.once('ready', async () => {
     get activeRecipes() {
       return RecipeRegistry.getActiveRecipes();
     },
+    /** Receptury z włączonych podręczników (to samo co activeRecipes). */
     get recipes() {
-      return RecipeRegistry.getAllRecipes();
+      return RecipeRegistry.getActiveRecipes();
     },
     openWorkshop: (actor) => {
       const targetActor = actor || game.user.character || canvas.tokens?.controlled?.[0]?.actor || Array.from(game.actors?.values() || []).find(a => a.isOwner);

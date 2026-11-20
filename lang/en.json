@@ -1046,8 +1046,6 @@
       "WorkshopStyleHint": "Workbench: the alchemy workshop looks like an alchemist's laboratory with a recipe book, a workbench and the tether chain. Classic: the previous look.",
       "WorkshopStyleWorkbench": "Workbench",
       "WorkshopStyleClassic": "Classic",
-      "StrictModuleFilter": "Strict Source Module Filtering",
-      "StrictModuleFilterHint": "Hides recipes from official books whose modules are not active in the world.",
       "RequireDiscovery": "Recipe Discovery & Grimoire System",
       "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it.",
       "CopyNeedsInk": "Copying needs Alchemical Ink",

@@ -1046,8 +1046,6 @@
       "WorkshopStyleHint": "Pracownia: warsztat wygląda jak pracownia alchemika z receptariuszem, stołem roboczym i łańcuchem Więzi. Klasyczny: dotychczasowy wygląd.",
       "WorkshopStyleWorkbench": "Pracownia",
       "WorkshopStyleClassic": "Klasyczny",
-      "StrictModuleFilter": "Ścisłe filtrowanie podręczników",
-      "StrictModuleFilterHint": "Ukrywa receptury z podręczników, których moduły nie są włączone w świecie gry.",
       "RequireDiscovery": "System Odkrywania Receptur i Ksiąg",
       "RequireDiscoveryHint": "Wymaga, aby postać znała recepturę na pamięć lub posiadała księgę receptur w ekwipunku, by móc z niej warzyć.",
       "CopyNeedsInk": "Przepisywanie wymaga atramentu alchemicznego",

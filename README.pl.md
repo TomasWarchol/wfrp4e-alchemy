@@ -26,7 +26,7 @@ Foundry doinstaluje też wymaganą bibliotekę **WFRP4e – Companion Library** 
 * Foundry VTT v14 i system WFRP4e 10.0+.
 * **WFRP4e – Companion Library** (`wfrp4e-companion-lib`).
 * **WFRP4e – Grimoires** (`wfrp4e-grimoires`) 0.6+.
-* Opcjonalnie: Simple Calendar (bez niego moduł korzysta z kalendarza Foundry) oraz oficjalne moduły z treścią WFRP4e (dodatkowe składniki i receptury pojawiają się, gdy ich moduły są aktywne).
+* Opcjonalnie: Simple Calendar (bez niego moduł korzysta z kalendarza Foundry) oraz oficjalne moduły z treścią WFRP4e. Receptury i składniki z podręcznika (Podręcznik Główny, Wiatry Magii, Zestaw Startowy i inne) pojawiają się tylko wtedy, gdy oficjalny moduł Foundry tego podręcznika jest włączony w świecie; sam moduł tłumaczenia się nie liczy. Bez nich moduł oferuje tylko własne receptury.
 
 ---
 

@@ -534,7 +534,7 @@ export class BrewingEngine {
     if (!pending) return false;
     await setPendingBrews(actor, brews.filter((b) => b !== pending));
     // Zarezerwowane składniki wracają z kotła do ekwipunku
-    const recipe = pending?.reserved ? RecipeRegistry.getRecipeById(pending.recipeId) : null;
+    const recipe = pending?.reserved ? RecipeRegistry.getRecipeById(pending.recipeId, { includeUnavailable: true }) : null;
     if (recipe) {
       const byKey = new Map(ALCHEMY_INGREDIENTS.map((ing) => [ing.key, ing]));
       const items = (recipe.ingredients || []).map((ing) => byKey.has(ing.key)
