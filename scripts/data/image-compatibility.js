@@ -35,6 +35,8 @@ const IMAGE_REPLACEMENTS = {
   'icons/consumables/food/jar-honey-amber.webp': 'icons/consumables/food/honey-beehive-brown.webp',
   'icons/consumables/plants/flower-yellow-stem.webp': 'icons/commodities/flowers/lily-yellow.webp',
   'icons/consumables/plants/lotus-silver-white.webp': 'icons/commodities/flowers/lotus-white.webp',
+  'icons/consumables/plants/plant-buds-black-purple.webp': 'icons/commodities/flowers/buds-black-red.webp',
+  'icons/consumables/plants/plant-stem-purple.webp': 'icons/consumables/plants/milkweed-stem-serrated-leaves-green.webp',
   'icons/consumables/plants/root-ginger-tan.webp': 'icons/consumables/vegetable/root-ginger-brown.webp',
   'icons/consumables/potions/bottle-bulb-corked-amber.webp': 'icons/consumables/potions/bottle-bulb-corked-green.webp',
   'icons/consumables/potions/bottle-bulb-corked-blue.webp': 'icons/consumables/potions/bottle-bulb-corked-labeled-blue.webp',

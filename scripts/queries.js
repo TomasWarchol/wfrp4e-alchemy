@@ -28,7 +28,7 @@ export class AlchemyQueries {
   }
 
   /** Wykonywane u MG: rzucający musi należeć do pytającego użytkownika. */
-  static async _onApplyThrown({ effectId, sl = 0, throwerUuid, targetUuids } = {}, requester) {
+  static async _onApplyThrown({ effectId, recipeId = null, sl = 0, throwerUuid, targetUuids } = {}, requester) {
     if (!game.user.isGM) return [];
     const { PotionConsumer } = await import('./logic/potion-consumer.js');
     if (!PotionConsumer.THROWN_EFFECTS.has(effectId)) return [];
@@ -39,7 +39,7 @@ export class AlchemyQueries {
     for (const uuid of (targetUuids || []).slice(0, 20)) {
       const doc = await fromUuid(uuid);
       const actor = doc?.actor ?? (doc?.documentName === 'Actor' ? doc : null);
-      if (actor) lines.push(await PotionConsumer.applyThrownToActor(effectId, actor, Math.min(6, Math.max(0, Number(sl) || 0))));
+      if (actor) lines.push(await PotionConsumer.applyThrownToActor(effectId, actor, Math.min(6, Math.max(0, Number(sl) || 0)), recipeId));
     }
     return lines.filter(Boolean);
   }

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.10.0
+- **80 new original recipes** (120 of the module's own in total, available without any sourcebook): 23 for the Colleges, each true to its Wind, 5 general magical, 14 mundane alchemy (thrown jars, tar and lime bombs, oils and pastes), 14 apothecary and 14 herbal remedies, and 10 forbidden brews. Mundane alchemy, apothecary and herbalism now work without the official modules.
+- Remedies behave like Old World medicine: several have side effects (a festering wrap, a burning salve, addiction).
+- Forbidden brews are either **illegal** (poisons and drugs: side effects and the law, no Corruption) or **heretical** (made with warpstone: they risk Corruption). Descriptions say who brews each potion and whether it is legal.
+- **26 new ingredients** (common herbs, apothecary and workshop materials such as alum, and a few forbidden ones).
+- New recipes describe their effects as data: healing, removing and adding Conditions, a resistance test of the drinker, Fortune, Resolve and Corruption, and for thrown potions Conditions and damage that grow with SL. Lasting effects use characteristic changes, test bonuses, armour and Condition immunity.
+- The potions sheet shows each potion's fixed duration and a summary of what it does in play.
+- Fixed: missing icons for Valerian and Deadly Nightshade.
+- Fixed: Hollow Heart Elixir lost its 2 Fatigued Conditions at once; they now come when the elixir wears off.
+- Fixed: Clarity Drops now remove Surprised, as their description says.
+- Fixed: Wraithstep Draught lasts 1d10 rounds (it was always 10).
+- Fixed: test bonuses for named skills no longer catch similar names ("Charm" no longer helps Charm Animal).
+- Mundane potions no longer help Casting or Channelling: Lucidity Tonic, Focusing Philtre and Soul Balm skip spell tests.
+- Draught of Forgetfulness describes the Cool Test it actually uses.
+
 ## 1.9.1
 - **Sourcebook content only with its official module.** Recipes and ingredients from official books (Core Rulebook, Winds of Magic, Starter Set, The Horned Rat, Ubersreik Adventures I, Imperial Zoo) appear only while that book's official Foundry module is active. The *Strict Source Module Filtering* setting is gone (filtering is always on) and translation modules (`…-pl`) no longer stand in for the content module.
 - Recipes from inactive books are hidden everywhere, not only in the workshop list: in books and scrolls they show as missing, the API's `recipes` lists only available ones, and the generated recipe books in the compendium leave them out (a book left empty is not created).

@@ -397,7 +397,7 @@
       "LucidityTonic": {
         "Name": "Eliksir Bezsenności",
         "Desc": "Mocny tonik pobudzający usuwający senność i zmęczenie.",
-        "Effect": "+1 PS do testów Inteligencji i Siły Woli na 3k10 godzin; potem 3 Stany Zmęczenie."
+        "Effect": "+1 PS do testów Inteligencji i Siły Woli (bez rzucania zaklęć i Splatania Magii) na 3k10 godzin; potem 3 Stany Zmęczenie."
       },
       "DebauchFriend": {
         "Name": "Przyjaciel Opoja",
@@ -653,7 +653,7 @@
       "Forgetfulness": {
         "Name": "Eliksir Zapomnienia",
         "Desc": "Wywar usuwający z pamięci ostatnie wspomnienia.",
-        "Effect": "Wymazuje wspomnienia z ostatnich 24 godzin (obrona SW -10)."
+        "Effect": "Wymazuje wspomnienia z ostatnich 24 godzin; Trudny (−10) Test Opanowania chroni przed skutkiem."
       },
       "SoothingDraught": {
         "Name": "Eliksir Udobruchający",
@@ -708,7 +708,7 @@
       "FocusingPhiltre": {
         "Name": "Ekstrakt Skupienia",
         "Desc": "Czysty wywar ze Srebrzystego Lotosu i krystalicznej wody wyostrzający percepcję i zdolności analityczne.",
-        "Effect": "+20 do testów Inteligencji i Odporności na 1k10 godzin; potem 1 Stan Zmęczenie."
+        "Effect": "+20 do testów Inteligencji (bez rzucania zaklęć) i Odporności na 1k10 godzin; potem 1 Stan Zmęczenie."
       },
       "TonicSight": {
         "Name": "Tonik Niewidywanych Widoków",
@@ -734,6 +734,406 @@
         "Effect": "+1 PS do testów opartych na Inteligencji przez 1 godzinę.",
         "Name": "Eliksir Rtęciowego Umysłu",
         "Desc": "Kropla oczyszczonej rtęci rozpuszczona w szałwiowym destylacie. Złoci Magistrowie piją go nad księgami i tyglami – myśl staje się szybka i chłodna jak płynny metal."
+      },
+      "AqshyHearthfire": {
+        "Name": "Tonik Ognia Paleniska",
+        "Desc": "Rozgrzewający czerwony likier, w którym Wiatr Ognia żarzy się w trzewiach przez najzimniejszą noc.",
+        "Effect": "Usuwa 1 Stan Zmęczenie; +20 do Testów Odporności na 8 godzin (z myślą o mrozie i niepogodzie, rozstrzyga MG)."
+      },
+      "AqshyFlameOfCourage": {
+        "Name": "Płomień Odwagi",
+        "Desc": "Piekący haust, który wypala strach z serca i zostawia tylko upartą złość.",
+        "Effect": "Usuwa wszystkie Stany Panika; +20 do Testów Opanowania na 1 godzinę."
+      },
+      "AqshyFurnaceBlood": {
+        "Name": "Krew Pieca",
+        "Desc": "Krew pijącego płynie gorąca jak palenisko kuźni; płomienie spływają po skórze jak woda.",
+        "Effect": "+10 S i +10 Wt na 10 minut; pijący nie może otrzymać ani utrzymać Stanu Podpalenie."
+      },
+      "AzyrSkywardEye": {
+        "Name": "Oko Niebios",
+        "Desc": "Niebiescy magistrowie warzą go dla zwiadowców i strzelców: przez chwilę pijący widzi pole jak jastrząb spod chmur.",
+        "Effect": "+20 do Testów Percepcji (wzrok) i +10 US na 1k10 × 10 minut."
+      },
+      "AzyrAugury": {
+        "Name": "Wywar Augura",
+        "Desc": "Warzony pod czystym niebem; przez godzinę pijący dostrzega drobne znaki zapowiadające każde zdarzenie.",
+        "Effect": "+1 PS do Testów Percepcji i Intuicji na 1 godzinę."
+      },
+      "AzyrStarCompass": {
+        "Name": "Wywar Gwiezdnego Kompasu",
+        "Desc": "Chłodny płyn w gwiezdne cętki, dzięki któremu pijący czuje obrót nieba nawet spod chmur.",
+        "Effect": "+20 do Testów Nawigacji i Sztuki Przetrwania na 8 godzin; pijący zawsze wie, gdzie jest północ."
+      },
+      "ChamonAssayersEye": {
+        "Name": "Oko Probierza",
+        "Desc": "Kropla rtęci zabarwiona Chamonem: każdy metal i kamień zdradza oczom i palcom pijącego swoją prawdziwą naturę.",
+        "Effect": "+30 do Testów Wyceny na 1 godzinę; pijący dotykiem odróżnia prawdziwy metal, klejnoty i stopy od podróbek (MG)."
+      },
+      "ChamonLeadenWard": {
+        "Name": "Ołowiana Osłona",
+        "Desc": "Ciężki szary eliksir; skóra nabiera matowego, metalicznego połysku, a umysł upartej wagi.",
+        "Effect": "+1 PP na wszystkich lokacjach (sumuje się ze zbroją) i +10 SW na 1 godzinę."
+      },
+      "GhyranBloomBalm": {
+        "Name": "Balsam Rozkwitu",
+        "Desc": "Zielony balsam pachnący wiosennym deszczem; rozdarte ciało zrasta się jak nowa kora na zranionym drzewie.",
+        "Effect": "Leczy 2 × BWt Ran i usuwa 1 Stan Krwawienie. Jedna mikstura lecznicza na spotkanie."
+      },
+      "GhyranGreenward": {
+        "Name": "Napar Zielonej Straży",
+        "Desc": "Magia życia zalewa krew i wypala każdy jad, zanim zdąży się zagnieździć.",
+        "Effect": "Przez 1 godzinę pijący nie może otrzymać ani utrzymać Stanu Zatrucie."
+      },
+      "GhyranOaksPatience": {
+        "Name": "Cierpliwość Dębu",
+        "Desc": "Pijący staje się powolny i zakorzeniony jak stary dąb – i niemal równie trudny do powalenia.",
+        "Effect": "+20 Wt i −10 Zw na 1 godzinę."
+      },
+      "GhurStagLeap": {
+        "Name": "Skok Jelenia",
+        "Desc": "Piżmowy brązowy wywar; nogi pijącego przypominają sobie dziki bieg przez puszczę.",
+        "Effect": "+20 do Testów Atletyki, Wspinaczki i Pływania na 1 godzinę."
+      },
+      "GhurBoarhide": {
+        "Name": "Eliksir Skóry Odyńca",
+        "Desc": "Skóra grubieje w szczeciniastą skórę, a pijący parska jak osaczony odyniec.",
+        "Effect": "+1 PP na wszystkich lokacjach (sumuje się ze zbroją) i +10 Wt na 10 minut."
+      },
+      "GhurPackHowl": {
+        "Name": "Tonik Wycia Watahy",
+        "Desc": "Zwierzęta rozpoznają w pijącym jednego ze swoich – ludzie rozpoznają w nim bestię.",
+        "Effect": "+20 do Testów Zastraszania i Oswajania na 2 godziny."
+      },
+      "HyshDawnlight": {
+        "Name": "Tonik Brzasku",
+        "Desc": "Przejrzysty płyn z zamkniętym okruchem porannego światła; ciemność i oślepienie przestają kąsać.",
+        "Effect": "Usuwa wszystkie Stany Oślepienie; przez 1 godzinę pijący nie może otrzymać ani utrzymać Stanu Oślepienie."
+      },
+      "HyshLanternEyes": {
+        "Name": "Oczy Latarni",
+        "Desc": "Oczy pijącego łagodnie świecą; ukryte rzeczy, fałszywe twarze i iluzje leżą przed nim jak na dłoni.",
+        "Effect": "+20 do Testów Percepcji na 1 godzinę; MG może pozwolić przejrzeć zwykłe przebrania i drobne iluzje."
+      },
+      "HyshBanishingPhial": {
+        "Name": "Fiolka Wygnania",
+        "Desc": "Rzucana fiolka skoncentrowanego Hysh, która rozbłyska palącą bielą.",
+        "Effect": "Rzucana: każdy trafiony cel otrzymuje 4 + PS obrażeń z pominięciem pancerza i 1 Stan Oślepienie; demony i nieumarli mogą ucierpieć bardziej (MG)."
+      },
+      "ShyishMorrsQuiet": {
+        "Name": "Cisza Morra",
+        "Desc": "Zimny, nieruchomy wywar; ciosy i wstrząsy spływają po umyśle pogrążonym w ciszy Morra.",
+        "Effect": "Usuwa wszystkie Stany Oszołomienie; przez 10 minut pijący nie może otrzymać ani utrzymać Stanu Oszołomienie."
+      },
+      "ShyishMementoMori": {
+        "Name": "Memento Mori",
+        "Desc": "Zakon Ametystu naucza, że śmierć nie jest ani okrutna, ani straszna. Przez godzinę pijący naprawdę w to wierzy.",
+        "Effect": "+10 SW na 1 godzinę; pijący nie może otrzymać ani utrzymać Stanu Panika."
+      },
+      "ShyishSoulLantern": {
+        "Name": "Latarnia Dusz",
+        "Desc": "Blady blask rozpala się za oczami pijącego, umacniając duszę wobec tego, co jest za zasłoną.",
+        "Effect": "+20 do testów opartych na SW na 1 godzinę; pijący widzi duchy i zjawy (MG)."
+      },
+      "UlguThiefsFingers": {
+        "Name": "Olej Cienistych Palców",
+        "Desc": "Agenci Szarego Zakonu wcierają go w opuszki palców; dłonie rozmywają się na skraju wzroku, a zamki szepczą swoje sekrety. Poza Zakonem samo posiadanie go jest wystarczającym dowodem włamania.",
+        "Effect": "+20 do Testów Zwinnych Palców i Otwierania Zamków na 2 godziny."
+      },
+      "UlguShadowcloak": {
+        "Name": "Wywar Płaszcza Mroku",
+        "Desc": "Zarys pijącego strzępi się w szarą mgłę Ulgu; spojrzenia prześlizgują się po nim bez zauważenia.",
+        "Effect": "+30 do Testów Skradania i +10 Zw na 1k10 × 10 minut."
+      },
+      "UlguBewilderingDust": {
+        "Name": "Pył Zamętu",
+        "Desc": "Rzucany woreczek szarego pyłu, który rozprasza myśli jak spłoszone wrony.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 Stan Oszołomienie."
+      },
+      "AethyricSalts": {
+        "Name": "Sole Aethyru",
+        "Desc": "Ostre kryształki wąchane przed rytuałem, wyrabiane przez magistrów wszystkich Kolegiów; Wiatry zdają się bliższe i łatwiejsze do uchwycenia.",
+        "Effect": "+10 do Testów Splatania Magii na 1 godzinę."
+      },
+      "WardingDraught": {
+        "Name": "Napój Osłony",
+        "Desc": "Gorzka osłona przed wrogimi czarami, wydawana przez Kolegia łowcom czarownic i templariuszom; wola pijącego twardnieje jak hartowane szkło.",
+        "Effect": "+20 do testów opartych na SW na 10 minut (także opierania się zaklęciom)."
+      },
+      "QuietmindElixir": {
+        "Name": "Eliksir Cichego Umysłu",
+        "Desc": "Pachnący lawendą eliksir uciszający bezładne myśli, które psują inkantacje.",
+        "Effect": "+10 do Testów Języka (Magiczny) na 1 godzinę."
+      },
+      "AethyricSteadiness": {
+        "Name": "Aethyryczna Równowaga",
+        "Desc": "Warzona dla magów bitewnych: Wiatry płyną przez pijącego, nie wyczerpując ciała ani umysłu.",
+        "Effect": "Usuwa wszystkie Stany Zmęczenie; przez 1 godzinę pijący nie może otrzymać ani utrzymać Stanu Zmęczenie."
+      },
+      "WispPhial": {
+        "Name": "Fiolka Błędnego Ognika",
+        "Desc": "Sztuczka uczniów Jadeitowego Zakonu sprzedawana nocnym podróżnym; pijący jarzy się bladozielonym blaskiem, oświetlając drogę – i ogłaszając swoją obecność wszystkim wokół.",
+        "Effect": "Przez 1 godzinę pijący świeci w promieniu 10 m; −30 do Testów Skradania."
+      },
+      "ThunderJar": {
+        "Name": "Gromowy Dzban",
+        "Desc": "Gliniany dzban nabity prochem i żwirem; więcej huku niż szkody, ale huk jest straszliwy.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 obrażenia i 1 + PS Stanów Ogłuszenie."
+      },
+      "TarBomb": {
+        "Name": "Smolista Bomba",
+        "Desc": "Cienkościenny garnek gorącej, lepkiej smoły, która skleja kończyny i przykleja buty do podłogi.",
+        "Effect": "Rzucana: każdy trafiony cel otrzymuje 1 + PS Stanów Pochwycenie."
+      },
+      "QuicklimePouch": {
+        "Name": "Woreczek Wapna",
+        "Desc": "Papierowy woreczek palonego wapna – broń rzezimieszka, okrutna i skuteczna.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie."
+      },
+      "Stinkpot": {
+        "Name": "Smrodzielnik",
+        "Desc": "Zapieczętowany garnek zgniłej siarki i czosnkowej papki, używany do wykurzania piwnic i rozpędzania tłumów.",
+        "Effect": "Rzucany: cuchnąca chmura (promień 6 m) na 1k10 rund; każdy w środku co rundę zdaje Przeciętny (+20) Test Odporności albo otrzymuje 1 Stan Zmęczenie (MG)."
+      },
+      "Nightblack": {
+        "Name": "Czernidło Nocne",
+        "Desc": "Tłusta pasta z sadzy na twarz, dłonie i sprzączki; bezużyteczna za dnia, bezcenna nocą.",
+        "Effect": "+20 do Testów Skradania w ciemności na 4 godziny."
+      },
+      "KeenEdgeOil": {
+        "Name": "Olej Ostrej Klingi",
+        "Desc": "Olej z drobnym ścierniwem wcierany w ostrze osełką; krawędź na jakiś czas wgryza się głębiej.",
+        "Effect": "+10 do Testów Broni Białej na 1 godzinę (tylko naoliwioną bronią)."
+      },
+      "SteadyhandDrops": {
+        "Name": "Krople Pewnej Ręki",
+        "Desc": "Gorzkie krople ukochane przez kuszników; ręka przestaje drżeć, a język kwaśnieje.",
+        "Effect": "+10 US i −5 Ogd na 1 godzinę."
+      },
+      "FireproofSalve": {
+        "Name": "Maść Ognioodporna",
+        "Desc": "Smar z ałunu i wosku, którym puszkarze z Nuln smarują rękawy i rękawice; płomienie z trudem się go imają.",
+        "Effect": "Przez 1 godzinę pijący traci 1 Stan Podpalenie na początku każdej rundy."
+      },
+      "MinersPowder": {
+        "Name": "Ładunek Górniczy",
+        "Desc": "Natłuszczony ładunek prochu do rozsadzania skał – i, niestety, ludzi. W większości miast noszenie go wymaga pozwolenia.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 6 + PS obrażeń i Stan Powalenie."
+      },
+      "GlowwormPhial": {
+        "Name": "Fiolka Świetlika",
+        "Desc": "Wstrząśnięta fiolka świeci równym zielonym światłem przez całą noc – lampa, od której nie zajmie się słoma.",
+        "Effect": "Po wstrząśnięciu daje słabe światło w promieniu 6 m przez 8 godzin (bez płomienia)."
+      },
+      "EtchingAcid": {
+        "Name": "Kwas Trawiący",
+        "Desc": "Szklana flaszka kwasu grawerskiego; na skórze syczy i przeżera każdy pancerz.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 3 + PS obrażeń z pominięciem pancerza."
+      },
+      "ClimbersResin": {
+        "Name": "Żywica Wspinacza",
+        "Desc": "Lepka bursztynowa żywica na dłonie i podeszwy, trzymająca się kamienia jak łapa jaszczurki.",
+        "Effect": "+20 do Testów Wspinaczki na 2 godziny."
+      },
+      "SneezingPowder": {
+        "Name": "Proszek Kichający",
+        "Desc": "Mielona gorczyca z wapnem w papierowym zawiniątku – psikus żartownisia, który rozstrzygnął niejedną karczemną bójkę.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 Stan Oszołomienie."
+      },
+      "SympatheticInk": {
+        "Name": "Atrament Sympatyczny",
+        "Desc": "Atrament, który schnie niewidoczny i ciemnieje dopiero, gdy papier ogrzeje się nad świecą.",
+        "Effect": "Pismo po wyschnięciu staje się niewidoczne i pojawia się po podgrzaniu; dostrzeżenie go wymaga Trudnego (−20) Testu Percepcji."
+      },
+      "WillowbarkPowder": {
+        "Name": "Proszek z Kory Wierzby",
+        "Desc": "Gorzki szary proszek zażywany z wodą na bóle, obrzęki i gorączkę.",
+        "Effect": "Usuwa 1 Stan Zmęczenie; na pusty żołądek gryzie – Łatwy (+40) Test Odporności albo 1 Stan Zatrucie."
+      },
+      "YarrowPoultice": {
+        "Name": "Okład z Krwawnika",
+        "Desc": "Ubity tampon z krwawnika i wosku, który tamuje nawet paskudne cięcie.",
+        "Effect": "Usuwa do 2 Stanów Krwawienie."
+      },
+      "Feverbreaker": {
+        "Name": "Napar Przeciwgorączkowy",
+        "Desc": "Słodko-gorzki syrop, który każdy aptekarz trzyma na sezon kaszlu.",
+        "Effect": "+20 do Testów Odporności na 1 dzień (z myślą o chorobach i gorączce, rozstrzyga MG)."
+      },
+      "WakerootTea": {
+        "Name": "Napar Czuwania",
+        "Desc": "Mocny arabski kaveh z miętą; trzyma strażnika na nogach całą noc – i czyni go bardzo drażliwym.",
+        "Effect": "Usuwa 1 Stan Zmęczenie; pijący może czuwać całą noc bez kar, ale ma −10 Ogd na 8 godzin."
+      },
+      "ChamomileCalmative": {
+        "Name": "Uspokajacz Rumiankowy",
+        "Desc": "Łagodny złoty napar, który stępia ostrze przerażenia – i refleksu.",
+        "Effect": "Usuwa 1 Stan Panika; −10 I na 1 godzinę."
+      },
+      "SteadyScalpel": {
+        "Name": "Nalewka Pewnego Skalpela",
+        "Desc": "Chirurdzy biorą łyżkę przed cięciem: dłoń się uspokaja, a żołądek przestaje się przewracać.",
+        "Effect": "+20 do Testów Leczenia na 1 godzinę."
+      },
+      "ColtsfootSyrup": {
+        "Name": "Syrop z Podbiału",
+        "Desc": "Gęsty brązowy syrop, który rozluźnia pierś i oczyszcza płuca z trujących oparów.",
+        "Effect": "Usuwa 1 Stan Zatrucie."
+      },
+      "SlumberDrops": {
+        "Name": "Krople Snu",
+        "Desc": "Medycy kupują je jawnie; truciciele – z tej samej półki. Kilka kropli w winie przynosi głęboki sen bez snów.",
+        "Effect": "Trudny (−20) Test Odporności: porażka – pijący otrzymuje Stan Utrata Przytomności (śpi 1k10 godzin, MG); sukces – otrzymuje 1 Stan Zmęczenie."
+      },
+      "EyebrightWash": {
+        "Name": "Przemywanie Świetlikiem",
+        "Desc": "Chłodny płyn do oczu o różanym zapachu, który usuwa dym, piasek i olśnienie.",
+        "Effect": "Usuwa wszystkie Stany Oślepienie; +10 do Testów Percepcji na 1 godzinę."
+      },
+      "BoneknitSalve": {
+        "Name": "Maść Zrostowa",
+        "Desc": "Tłusta maść z żywokostu wcierana w siniaki i pęknięte kości.",
+        "Effect": "Leczy 1k10 Ran; maść pali jak ogień – Przeciętny (+20) Test Odporności albo 1 Stan Zmęczenie. Jedna mikstura lecznicza na spotkanie."
+      },
+      "GarlicTincture": {
+        "Name": "Nalewka Czosnkowa",
+        "Desc": "Chłopskie lekarstwo w najuczciwszej postaci: działa, a wszyscy wiedzą, że je wziąłeś.",
+        "Effect": "+1 PS do Testów Odporności na 8 godzin; zapach jest nie do pomylenia (MG może nałożyć −10 do Charyzmy)."
+      },
+      "PoppyTincture": {
+        "Name": "Nalewka Makowa",
+        "Desc": "Ostateczność medyka przeciw bólowi. Zbyt wiele dawek i pacjent nie chce przestać.",
+        "Effect": "Usuwa do 2 Stanów Zmęczenie; −10 I i −10 Int na 2 godziny. Częste używanie może uzależnić (MG)."
+      },
+      "MustardPlaster": {
+        "Name": "Okład Gorczyczny",
+        "Desc": "Piekący żółty okład na piersi; wypędza chłód i wzmacnia wolę przetrwania.",
+        "Effect": "+10 Wt na 4 godziny."
+      },
+      "CalmingOil": {
+        "Name": "Olejek Spokoju",
+        "Desc": "Kropla na każdą skroń i świat zwalnia do znośnego tempa.",
+        "Effect": "+20 do Testów Opanowania na 2 godziny."
+      },
+      "WayfarersTea": {
+        "Name": "Herbata Wędrowca",
+        "Desc": "Żywiczna herbata na szlak, która wyostrza wędrowcy wyczucie terenu.",
+        "Effect": "+20 do Testów Sztuki Przetrwania i Tropienia na 8 godzin."
+      },
+      "NettleWrap": {
+        "Name": "Okład z Pokrzywy",
+        "Desc": "Parzące liście ciasno owinięte na ranie – boli, a potem przestaje krwawić.",
+        "Effect": "Usuwa 1 Stan Krwawienie; brudny okład ropieje – Łatwy (+40) Test Odporności albo 1 Stan Zatrucie."
+      },
+      "MintBreath": {
+        "Name": "Liście Świeżego Oddechu",
+        "Desc": "Żute przed audiencją albo zalotami – mała przewaga, za to przyjemna.",
+        "Effect": "+10 do Testów Charyzmy i Plotkowania na 2 godziny."
+      },
+      "WormwoodBitters": {
+        "Name": "Gorzkówka Piołunowa",
+        "Desc": "Tak gorzka, że wyciska łzy; oczyszcza trzewia i zostawia minę jak na pogrzebie.",
+        "Effect": "Usuwa 1 Stan Zatrucie; −10 Ogd na 1 godzinę."
+      },
+      "ElderflowerSyrup": {
+        "Name": "Syrop z Czarnego Bzu",
+        "Desc": "Wonny syrop dla podróżnych i ozdrowieńców.",
+        "Effect": "Usuwa 1 Stan Zmęczenie; +5 Wt na 1 dzień."
+      },
+      "JuniperSmudge": {
+        "Name": "Okadzanie Jałowcem",
+        "Desc": "Jałowiec i szałwia tlące się w izbie chorego; pacjent wdycha dym, a powietrze wydaje się czystsze.",
+        "Effect": "+10 do Testów Odporności na 1 dzień (z myślą o chorobach, rozstrzyga MG)."
+      },
+      "SunwortDraught": {
+        "Name": "Napar z Dziurawca",
+        "Desc": "Czerwonozłoty napar, który rozprasza czarne nastroje i trzyma koszmary z dala.",
+        "Effect": "Usuwa 1 Stan Panika; +10 SW na 4 godziny."
+      },
+      "MugwortDreamTea": {
+        "Name": "Senna Herbatka z Bylicy",
+        "Desc": "Warzą ją wiejskie znachorki, a łowcy czarownic nazywają czarostwem. Sny są wyraziste, a pijący budzi się z niezwykłymi przeczuciami.",
+        "Effect": "+10 do Testów Intuicji przez 8 godzin po przebudzeniu."
+      },
+      "FoxgloveDrops": {
+        "Name": "Krople Naparstnicy",
+        "Desc": "Środek na serce odmierzany kroplami; mądry zielarz ostrzega, że granica między lekiem a trucizną jest cienka.",
+        "Effect": "Trudny (−20) Test Odporności: sukces – usuwa Stan Utrata Przytomności i 1 Stan Oszołomienie; porażka – pijący otrzymuje 2 Stany Zatrucie."
+      },
+      "HoneySalve": {
+        "Name": "Maść Miodowa",
+        "Desc": "Miód, wosk i babka – najstarsza maść na rany z reiklandzkiej wsi.",
+        "Effect": "Leczy 1k5 Ran. Jedna mikstura lecznicza na spotkanie."
+      },
+      "ThistleDraught": {
+        "Name": "Napar z Ostropestu",
+        "Desc": "Pity przed ucztą, by wątroba – i głowa – działały jak należy.",
+        "Effect": "+20 do Testów Mocnej Głowy na 4 godziny."
+      },
+      "SleepwellTea": {
+        "Name": "Herbatka Dobrego Snu",
+        "Desc": "Parzona o zmierzchu; pijący śpi twardo i budzi się wypoczęty nawet po ciężkim dniu.",
+        "Effect": "Usuwa 1 Stan Zmęczenie; po przespanej nocy MG może usunąć wszystkie Stany Zmęczenie."
+      },
+      "PlantainPoultice": {
+        "Name": "Okład z Babki na Ukąszenia",
+        "Desc": "Przeżuta babka i leśne ziele przyciśnięte do ukąszenia, by wyciągnąć jad.",
+        "Effect": "Przeciętny (+20) Test Odporności: sukces – usuwa wszystkie Stany Zatrucie, porażka – usuwa 1."
+      },
+      "ThornbarkRub": {
+        "Name": "Maść z Ciernistej Kory",
+        "Desc": "Piekąca maść, po której skóra jest zaczerwieniona, sztywna i zaskakująco odporna na siniaki.",
+        "Effect": "+10 Wt i −10 Zw na 1 godzinę."
+      },
+      "BloodrageDraught": {
+        "Name": "Wywar Krwawego Szału",
+        "Desc": "Warzony z lulka w ukrytych piwnicach obozów najemników i zakazany w każdej prowincji. Działa. Płaci za to serce.",
+        "Effect": "+20 WW, +10 S i Cecha Szał Bojowy na 10 minut. Trudny (−10) Test Odporności albo 2 Stany Zmęczenie; częste używanie uzależnia (MG). Nielegalny."
+      },
+      "Gravewine": {
+        "Name": "Wino Grobowe",
+        "Desc": "Ciemne wino nasycone mchem z obrabowanych trumien. Za samo okradanie grobów warzyciel trafia na szubienicę; kapłani Morra chcieliby jednak najpierw z nim porozmawiać.",
+        "Effect": "+20 Wt i −20 Ogd na 1 godzinę; nie może otrzymać ani utrzymać Stanu Zmęczenie. Wymagający (+0) Test Odporności albo 1 Stan Zatrucie. Nielegalne."
+      },
+      "BlackVial": {
+        "Name": "Czarna Fiolka",
+        "Desc": "Cienka czarna fiolka, która rozpryskuje się w obłok duszącego jadu. Za jej posiadanie w większości miast grozi stryczek.",
+        "Effect": "Rzucana: każdy trafiony cel otrzymuje 1 + PS Stanów Zatrucie. Nielegalna."
+      },
+      "WillbreakerDraught": {
+        "Name": "Wywar Łamacza Woli",
+        "Desc": "Wywar śledczych, podawany w winie. Opór pijącego topnieje jak wosk.",
+        "Effect": "−20 SW na 1 godzinę (ofiarę znacznie łatwiej przesłuchać, oczarować albo zastraszyć). Nielegalny – choć niektórzy łowcy czarownic i tak go noszą."
+      },
+      "WitchEyeDrops": {
+        "Name": "Krople Oka Wiedźmy",
+        "Desc": "Szczypta spaczenia w oczach rozdziera zasłonę między pijącym a surowymi Wiatrami – i wpuszcza wraz z nimi Dhar. Herezja: za posiadanie grozi stos.",
+        "Effect": "+20 do Testów Splatania Magii na 1 godzinę. Trudny (−20) Test Odporności albo 1 Punkt Zepsucia."
+      },
+      "NightmareDust": {
+        "Name": "Pył Koszmarów",
+        "Desc": "Lulek i skrzydło nietoperza starte na szary proszek; kto go wdycha, widzi, jak najgorsze lęki wychodzą z cienia. Broń złodziei i kultystów zarazem.",
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Panika. Nielegalny."
+      },
+      "TurncoatSalve": {
+        "Name": "Maść Zmiennolicego",
+        "Desc": "Spaczeń w wosku: rozsmarowana na twarzy pozwala ugniatać ciało jak ciasto na podobieństwo kogoś innego. Przy każdym użyciu uśmiecha się Zmieniający Drogi. Herezja.",
+        "Effect": "+30 do Testów Występów i Charyzmy przy podszywaniu się pod kogoś na 1k10 godzin. Wymagający (+0) Test Odporności albo 1 Punkt Zepsucia."
+      },
+      "HollowHeart": {
+        "Name": "Eliksir Pustego Serca",
+        "Desc": "Trucizna pojedynkowiczów: serce zwalnia niemal do bezruchu, strach i wyczerpanie odpadają – i wracają naraz. Zakazany, i słusznie.",
+        "Effect": "+20 Wt na 10 minut; nie może otrzymać ani utrzymać Stanów Panika i Zmęczenie. Gdy eliksir wygaśnie, pijący otrzymuje 2 Stany Zmęczenie. Trudny (−20) Test Odporności albo 2 Stany Zatrucie. Nielegalny."
+      },
+      "PlagueVapour": {
+        "Name": "Opar Zarazy",
+        "Desc": "Zapieczętowane gliniane jajo miazmatu z grobowej zgnilizny. Prawo wiesza jego warzycieli; łowcy czarownic, podejrzewając Pana Zarazy, palą ich – zwykle razem z domem.",
+        "Effect": "Rzucany: chorobliwa chmura (promień 6 m) na 1k10 rund; każdy w środku zdaje Trudny (−10) Test Odporności albo zapada na chorobę wybraną przez MG."
+      },
+      "SoulburnTonic": {
+        "Name": "Tonik Spalonej Duszy",
+        "Desc": "Spaczeń rozpuszczony w spirytusie z lulka: spala odrobinę duszy jak paliwo, a pijący czuje się niepowstrzymany – na razie. Herezja.",
+        "Effect": "Odzyskuje 1 Punkt Determinacji (najwyżej do Odporności Psychicznej) i otrzymuje 1 Punkt Zepsucia."
       }
     },
     "Ingredients": {
@@ -821,7 +1221,33 @@
       "EaglesEye": "Orle Oko (Ziele)",
       "Valerian": "Korzeń kozłka lekarskiego",
       "Nightshade": "Jagody wilczej jagody",
-      "AlchemicalInk": "Atrament alchemiczny"
+      "AlchemicalInk": "Atrament alchemiczny",
+      "Yarrow": "Krwawnik",
+      "Chamomile": "Kwiat rumianku",
+      "WillowBark": "Kora wierzby",
+      "JuniperBerries": "Jagody jałowca",
+      "Wormwood": "Piołun",
+      "Mugwort": "Bylica",
+      "ElderFlower": "Kwiat czarnego bzu",
+      "Foxglove": "Naparstnica",
+      "PoppyMilk": "Mleczko makowe",
+      "Garlic": "Główki czosnku",
+      "WildHoney": "Miód leśny",
+      "WineVinegar": "Ocet winny",
+      "Quicklime": "Wapno palone",
+      "WoodTar": "Smoła drzewna",
+      "Lampblack": "Sadza lampowa",
+      "MustardSeed": "Ziarno gorczycy",
+      "Coltsfoot": "Podbiał",
+      "Eyebright": "Świetlik łąkowy",
+      "MilkThistle": "Ostropest",
+      "Plantain": "Babka lancetowata",
+      "Hypericum": "Dziurawiec",
+      "Alum": "Ałun",
+      "BoneAsh": "Popiół kostny",
+      "GraveMoss": "Mech cmentarny",
+      "BatWing": "Skrzydło nietoperza",
+      "Henbane": "Lulek czarny"
     },
     "IngredientsDesc": {
       "GoldIronFilings": "Drobno zmielone opiłki metalicznego żelaza zmieszane z płatkami złota, używane w transmutacji Chamonu.",
@@ -908,7 +1334,33 @@
       "EaglesEye": "Leśne ziele o żółtych kwiatach rozszerzające percepcję wzrokową.",
       "Valerian": "Korzeń o uspokajających właściwościach, zbierany i suszony przez zielarzy.",
       "Nightshade": "Trujące jagody wilczej jagody, używane w małych dawkach do sporządzania silnych preparatów.",
-      "AlchemicalInk": "Atrament nasycony odczynnikami, który utrwala magiczne formuły i nie blaknie."
+      "AlchemicalInk": "Atrament nasycony odczynnikami, który utrwala magiczne formuły i nie blaknie.",
+      "Yarrow": "Pierzaste liście i białe baldachy kwiatów, przykładane do ran przez żołnierzy i pasterzy.",
+      "Chamomile": "Drobne, podobne do stokrotek kwiaty suszone na uspokajające napary i okłady.",
+      "WillowBark": "Gorzkie paski kory białej wierzby, żute na bóle i gorączkę.",
+      "JuniperBerries": "Ciemnoniebieskie jagody o ostrym, żywicznym zapachu, palone dla oczyszczenia izb chorych.",
+      "Wormwood": "Srebrzyste, bardzo gorzkie ziele wypędzające robaki i złe humory.",
+      "Mugwort": "Przydrożne ziele, które wiejscy znachorzy wkładają pod poduszkę dla wyrazistych snów.",
+      "ElderFlower": "Kremowe baldachy kwiatów zbierane wczesnym latem na syropy i leki na gorączkę.",
+      "Foxglove": "Wysokie fioletowe dzwonki, które pobudzają słabnące serce – i zatrzymują zdrowe.",
+      "PoppyMilk": "Zaschnięty sok z niedojrzałych makówek, ceniony i budzący lęk u medyków.",
+      "Garlic": "Ostre główki jedzone na surowo przeciw chorobom, robakom i – jak mówią chłopi – gorszym rzeczom.",
+      "WildHoney": "Ciemny miód leśny, który nie psuje się latami i koi zarówno gardło, jak i rany.",
+      "WineVinegar": "Skwaśniałe wino do przemywania ran, nalewek ziołowych i trawienia metalu.",
+      "Quicklime": "Wypalony wapień, który wrze w zetknięciu z wodą i parzy oczy.",
+      "WoodTar": "Gęsta czarna smoła wytapiana z sosnowych pni, do lin, kadłubów i dachów.",
+      "Lampblack": "Drobna sadza zeskrobana z kominów lamp, podstawa atramentów i czernideł.",
+      "MustardSeed": "Ostre żółte ziarna mielone na okłady wyciągające chłód i zastoje.",
+      "Coltsfoot": "Liście w kształcie serca gotowane na syropy na charczące piersi.",
+      "Eyebright": "Drobny łąkowy kwiat, którego wywar oczyszcza zmęczone i piekące oczy.",
+      "MilkThistle": "Kolczasty fioletowy oset, którego nasiona wzmacniają wątrobę doświadczoną trunkami.",
+      "Plantain": "Skromny przydrożny chwast, przeżuwany i kładziony na użądlenia i ukąszenia.",
+      "Hypericum": "Jaskrawożółte kwiaty, które po zgnieceniu puszczają czerwony olej, przyjmowane na przygnębienie i koszmary.",
+      "Alum": "Przezroczyste, ściągające kryształy używane przez farbiarzy, garbarzy i cyrulików – oraz by tkanina wolniej się paliła.",
+      "BoneAsh": "Szary popiół ze spalonych kości. Lepiej nie pytać, skąd pochodziły kości.",
+      "GraveMoss": "Blady mech zeskrobany z wnętrza starych trumien.",
+      "BatWing": "Suszone błoniaste skrzydła, stały punkt każdej listy dowodów łowcy czarownic.",
+      "Henbane": "Cuchnąca psianka, która przynosi kolejno szał, wizje i śmierć."
     },
     "Colleges": {
       "AllColleges": "Wszystkie Kolegia",
@@ -1123,6 +1575,21 @@
         "Workshop": "Otwórz Warsztat"
       },
       "FlawRecipe": "-1 PS przy warzeniu z tej księgi."
+    },
+    "Steps": {
+      "Healed": "Leczy {wounds} Ran.",
+      "Removed": "Usuwa stan: {condition}.",
+      "Added": "Otrzymuje {value} × {condition}.",
+      "Fortune": "Odzyskuje 1 Punkt Szczęścia.",
+      "FortuneFull": "Szczęście jest już pełne.",
+      "Resolve": "Odzyskuje 1 Punkt Determinacji.",
+      "ResolveFull": "Determinacja jest już pełna.",
+      "Corruption": "Otrzymuje Punkty Zepsucia: {value}.",
+      "TestPassed": "Pijący się opiera.",
+      "TestFailed": "Pijący nie zdołał się oprzeć.",
+      "TestTitle": "Opór wobec mikstury",
+      "ThrownCondition": "{target}: {value} × {condition}.",
+      "ThrownDamage": "{target}: {damage} obrażeń. {details}"
     }
   }
 }

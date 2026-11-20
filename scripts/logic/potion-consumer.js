@@ -7,6 +7,7 @@ import { SpoilageEngine } from './spoilage-engine.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { CalendarIntegration } from '../calendar-integration.js';
 import { AlchemyQueries } from '../queries.js';
+import { RECIPE_CLOUD, RECIPE_DRINK, RECIPE_THROWN, runDrinkSteps, runThrownSteps, stepsHeal } from './potion-steps.js';
 
 /** Mikstury bojowe: rzuca się je we wskazane tokeny zamiast pić. */
 const THROWN_EFFECTS = new Set([
@@ -19,11 +20,13 @@ const THROWN_EFFECTS = new Set([
   'flashPowderBlast',
   'hyshSunFlash',
   'smokePelletCloud',
-  'ulguShadowMist'
+  'ulguShadowMist',
+  RECIPE_THROWN,
+  RECIPE_CLOUD
 ]);
 
 /** Chmury tworzone w miejscu upadku – nie wymagają celu ani testu trafienia. */
-const CLOUD_EFFECTS = new Set(['smokePelletCloud', 'ulguShadowMist']);
+const CLOUD_EFFECTS = new Set(['smokePelletCloud', 'ulguShadowMist', RECIPE_CLOUD]);
 
 /** Mikstury leczące rany: najwyżej jedna na starcie (zasada Mikstury Leczniczej z podręcznika). */
 const HEALING_EFFECTS = new Set([
@@ -103,7 +106,7 @@ export class PotionConsumer {
       }
 
       if (flag.instantEffect) {
-        const line = await this.handleInstantEffect(flag.instantEffect, drinker);
+        const line = await this.handleInstantEffect(flag.instantEffect, drinker, flag.recipeId);
         if (line) effectLines.push(line);
       }
     }
@@ -198,6 +201,7 @@ export class PotionConsumer {
     } else {
       const results = await AlchemyQueries.applyThrownEffect({
         effectId,
+        recipeId: flag.recipeId,
         sl: hit.sl,
         throwerUuid: thrower.uuid,
         targetUuids: targets.map(token => token.document.uuid)
@@ -284,14 +288,36 @@ export class PotionConsumer {
     return { succeeded: !!test.succeeded, sl: Number(test.result?.SL) || 0 };
   }
 
+  /** Zależności kroków receptury: tłumaczenia, rzuty, testy pijącego i nazwy stanów systemu. */
+  static _stepContext() {
+    return {
+      i18n: (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key)),
+      roll: async (formula) => (await (new Roll(formula)).evaluate()).total,
+      test: (actor, skillKey, difficulty) => this._drinkerTest(actor, skillKey, difficulty, game.i18n.localize('GOLD_ALCHEMY.Steps.TestTitle')),
+      conditionLabel: (key) => game.i18n.localize(game.wfrp4e?.config?.conditions?.[key] ?? key),
+      damageTypes: game.wfrp4e?.config?.DAMAGE_TYPE || { NORMAL: 0, IGNORE_AP: 1 }
+    };
+  }
+
   /**
    * Natychmiastowy efekt wypitej mikstury. Zwraca linię do karty czatu.
    */
-  static async handleInstantEffect(effectId, drinker) {
+  static async handleInstantEffect(effectId, drinker, recipeId = null) {
     if (!drinker) return '';
 
     const tb = Number(drinker.system?.characteristics?.t?.bonus) || 3;
     const i18n = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key));
+
+    // Kroki opisane w recepturze (nowe receptury bez własnego kodu)
+    if (effectId === RECIPE_DRINK) {
+      const steps = RecipeRegistry.getRecipeById(recipeId, { includeUnavailable: true })?.instantSteps;
+      if (stepsHeal(steps)) {
+        if (this._healingLimitActive(drinker)) return i18n('GOLD_ALCHEMY.Notifications.HealingLimit');
+        await this._markHealing(drinker);
+      }
+      const lines = await runDrinkSteps(steps, drinker, this._stepContext());
+      return lines.join(' ');
+    }
 
     // Jedna mikstura lecznicza na spotkanie
     if (HEALING_EFFECTS.has(effectId)) {
@@ -432,8 +458,12 @@ export class PotionConsumer {
    * Skutek rzuconej mikstury na jednym celu (wykonywane u MG). Zwraca linię do karty czatu.
    * Ogień i kwasy działają jak Podpalacz z podręcznika: 1 + PS poziomów Podpalenia (magiczne o 1 więcej).
    */
-  static async applyThrownToActor(effectId, actor, sl = 0) {
+  static async applyThrownToActor(effectId, actor, sl = 0, recipeId = null) {
     if (!actor) return '';
+    if (effectId === RECIPE_THROWN) {
+      const steps = RecipeRegistry.getRecipeById(recipeId, { includeUnavailable: true })?.thrownSteps;
+      return (await runThrownSteps(steps, actor, Math.max(0, Number(sl) || 0), this._stepContext())).join(' ');
+    }
     const name = actor.prototypeToken?.name || actor.name;
     const bonus = Math.max(0, Number(sl) || 0);
     const damageTypes = game.wfrp4e?.config?.DAMAGE_TYPE || { NORMAL: 0, IGNORE_AP: 1 };

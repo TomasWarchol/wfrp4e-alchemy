@@ -76,6 +76,8 @@ export const RECIPE_COLUMNS = [
   { id: 'durationFormula', header: 'Czas działania – kości', width: 9, duration: 'formula', optional: true },
   { id: 'durationUnit', header: 'Czas działania – jednostka', width: 11, duration: 'unit', list: 'unit', optional: true },
   { id: 'durationMinusTB', header: 'Czas działania minus BWt', width: 9, duration: 'minusTB', list: 'yesNo', optional: true },
+  { id: 'fixedDuration', header: 'Czas działania (stały)', width: 11 },
+  { id: 'mechanics', header: 'Mechanika w grze (podsumowanie)', width: 60, wrap: true },
   { id: 'instantEffect', header: 'Efekt natychmiastowy (kod)', width: 18 },
   { id: 'hasScript', header: 'Ma skrypt efektu', width: 8 },
   { id: 'img', header: 'Obrazek', width: 40, prop: 'img' },
@@ -112,6 +114,68 @@ export const INGREDIENT_COLUMNS = [
   { id: 'descEn', header: 'Opis EN', width: 60, lang: ['en', 'description'], wrap: true }
 ];
 
+const CHAR = { ws: 'WW', bs: 'US', s: 'S', t: 'Wt', i: 'I', ag: 'Zw', dex: 'Zr', int: 'Int', wp: 'SW', fel: 'Ogd' };
+
+/** Czas w sekundach jako tekst (stały czas działania efektu). */
+export function durationText(seconds) {
+  const s = Number(seconds) || 0;
+  if (!s) return '';
+  if (s % 86400 === 0) return `${s / 86400} d`;
+  if (s % 3600 === 0) return `${s / 3600} godz.`;
+  return `${Math.round(s / 60)} min`;
+}
+
+function describeSteps(steps) {
+  return (steps || []).map((step) => {
+    if (step.heal !== undefined) return `leczy ${String(step.heal).replace('tb', '×BWt')} Ran`;
+    if (step.remove) return `usuwa ${step.value === 'all' ? 'wszystkie' : step.value ?? 1} × ${step.remove}`;
+    if (step.add) return `${step.value ?? 1}${step.perSL ? ' + PS' : ''} × ${step.add}`;
+    if (step.damage) return `${step.damage}${step.perSL ? ' + PS' : ''} obrażeń${step.ignoreAP ? ' (bez pancerza)' : ''}`;
+    if (step.fortune) return `+${step.fortune} Szczęście`;
+    if (step.resolve) return `+${step.resolve} Determinacja`;
+    if (step.corruption) return `+${step.corruption} Zepsucie`;
+    if (step.test) return `test ${step.test} (${step.difficulty}): sukces → ${describeSteps(step.pass) || 'nic'}; porażka → ${describeSteps(step.fail) || 'nic'}`;
+    return '';
+  }).filter(Boolean).join(', ');
+}
+
+/** Krótki opis tego, co mikstura robi w grze (z danych efektu, nie z tekstu). */
+export function describeMechanics(recipe) {
+  const parts = [];
+  const ae = recipe.activeEffect;
+  const changes = (ae?.system?.changes || ae?.changes || [])
+    .map((c) => {
+      const m = /characteristics\.(\w+)\.modifier/.exec(c.key);
+      const v = Number(c.value);
+      return m ? `${v > 0 ? '+' : ''}${v} ${CHAR[m[1]] ?? m[1]}` : c.key;
+    });
+  if (changes.length) parts.push(changes.join(', '));
+  for (const s of ae?.system?.scriptData || []) {
+    if (s.trigger === 'dialog') {
+      const names = /\[(.*?)\]/.exec(s.options?.activateScript || s.options?.hideScript || '')?.[1]?.replace(/"/g, '') ?? '';
+      const bonus = /slBonus \+= (\d+)/.exec(s.script) ? `+${/slBonus \+= (\d+)/.exec(s.script)[1]} PS` : `${/modifier \+= (-?\d+)/.exec(s.script)?.[1] ?? '?'}`;
+      parts.push(`${bonus.startsWith('-') || bonus.includes('PS') ? bonus : `+${bonus}`} do testów: ${names}`);
+    } else if (s.trigger === 'APCalc') parts.push(`+${/value \+= (\d+)/.exec(s.script)?.[1] ?? '?'} PP`);
+    else if (s.trigger === 'update' && /hasCondition\("(\w+)"\)/.test(s.script)) parts.push(`odporność na ${/hasCondition\("(\w+)"\)/.exec(s.script)[1]}`);
+    else if (s.trigger === 'startRound' && /removeCondition/.test(s.script)) parts.push(`co rundę −1 × ${/hasCondition\("(\w+)"\)/.exec(s.script)?.[1]}`);
+    else if (s.trigger === 'startRound') parts.push('co rundę +1 Rana');
+    else if (s.trigger === 'immediate') {
+      // Skrypt nadania cech/talentów: const specs = [[uuid, nazwa, typ, specjalizacja, dopisek], ...];
+      let granted = 'przedmioty';
+      try { granted = JSON.parse(/const specs = (\[.*?\]\]);/s.exec(s.script)[1]).map((spec) => spec[1] + (spec[3] !== null ? ` (${spec[3]})` : '')).join(', '); } catch { /* inny skrypt */ }
+      parts.push(`daje: ${granted}`);
+    }
+    else if (s.trigger === 'prepareItem') parts.push('zmienia zaklęcia (skrypt)');
+    else parts.push(`skrypt (${s.trigger})`);
+  }
+  if (ae?.flags?.[OWN]?.deathWard) parts.push('raz przeżywa z 1 Raną');
+  if (recipe.instantSteps) parts.push(`wypicie: ${describeSteps(recipe.instantSteps)}`);
+  if (recipe.thrownSteps) parts.push(`rzut: ${describeSteps(recipe.thrownSteps)}`);
+  if (recipe.instantEffect === 'recipeCloud') parts.push('rzut: chmura na 1k10 rund (skutki – MG)');
+  else if (recipe.instantEffect && !recipe.instantEffect.startsWith('recipe')) parts.push(`efekt w kodzie: ${recipe.instantEffect}`);
+  return parts.join('; ') || 'tylko opis (rozstrzyga MG)';
+}
+
 const priceText = (ss) => {
   const gc = Math.floor(ss / 20);
   return `${gc ? `${gc} zk ` : ''}${ss % 20} s`;
@@ -143,6 +207,8 @@ export function buildRows({ recipes, ingredients, lang, normalize }) {
       durationFormula: roll?.formula ?? '',
       durationUnit: roll ? unitName(roll) : '',
       durationMinusTB: roll ? (roll.minusTB ? 'tak' : 'nie') : '',
+      fixedDuration: durationText(recipe.activeEffect?.duration?.seconds),
+      mechanics: describeMechanics(recipe),
       instantEffect: recipe.instantEffect ?? '',
       hasScript: recipe.activeEffect?.system?.scriptData?.length ? 'tak' : 'nie'
     };

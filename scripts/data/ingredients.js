@@ -674,6 +674,266 @@ export const ALCHEMY_INGREDIENTS = [
     price: { gc: 2, ss: 0, bp: 0 },
     encumbrance: 0.1,
     availability: 'rare'
+  },
+  {
+    key: 'Yarrow',
+    name: 'GOLD_ALCHEMY.Ingredients.Yarrow',
+    category: 'herbal',
+    img: 'icons/consumables/plants/herb-tied-bundle-yellow-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Yarrow',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Chamomile',
+    name: 'GOLD_ALCHEMY.Ingredients.Chamomile',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/daisy-white.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Chamomile',
+    price: { gc: 0, ss: 4, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'WillowBark',
+    name: 'GOLD_ALCHEMY.Ingredients.WillowBark',
+    category: 'herbal',
+    img: 'icons/consumables/plants/dried-bundle-stems-sticks-roots-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.WillowBark',
+    price: { gc: 0, ss: 5, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'JuniperBerries',
+    name: 'GOLD_ALCHEMY.Ingredients.JuniperBerries',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/buds-black.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.JuniperBerries',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Wormwood',
+    name: 'GOLD_ALCHEMY.Ingredients.Wormwood',
+    category: 'herbal',
+    img: 'icons/consumables/plants/tearthumb-dried-halberd-leaf-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Wormwood',
+    price: { gc: 0, ss: 8, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Mugwort',
+    name: 'GOLD_ALCHEMY.Ingredients.Mugwort',
+    category: 'herbal',
+    img: 'icons/consumables/plants/dried-herb-bundle-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Mugwort',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'ElderFlower',
+    name: 'GOLD_ALCHEMY.Ingredients.ElderFlower',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/flowers-cherry-white.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.ElderFlower',
+    price: { gc: 0, ss: 5, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Foxglove',
+    name: 'GOLD_ALCHEMY.Ingredients.Foxglove',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/lily-bloom-purple.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Foxglove',
+    price: { gc: 0, ss: 18, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'PoppyMilk',
+    name: 'GOLD_ALCHEMY.Ingredients.PoppyMilk',
+    category: 'apothecary',
+    img: 'icons/commodities/materials/bowl-liquid-white.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.PoppyMilk',
+    price: { gc: 1, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'Garlic',
+    name: 'GOLD_ALCHEMY.Ingredients.Garlic',
+    category: 'herbal',
+    img: 'icons/consumables/vegetable/garlic-white.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Garlic',
+    price: { gc: 0, ss: 2, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'WildHoney',
+    name: 'GOLD_ALCHEMY.Ingredients.WildHoney',
+    category: 'apothecary',
+    img: 'icons/consumables/food/honey-beehive-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.WildHoney',
+    price: { gc: 0, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'WineVinegar',
+    name: 'GOLD_ALCHEMY.Ingredients.WineVinegar',
+    category: 'mundane',
+    img: 'icons/commodities/materials/pottery-jug.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.WineVinegar',
+    price: { gc: 0, ss: 4, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Quicklime',
+    name: 'GOLD_ALCHEMY.Ingredients.Quicklime',
+    category: 'mundane',
+    img: 'icons/commodities/materials/powder-grey.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Quicklime',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'WoodTar',
+    name: 'GOLD_ALCHEMY.Ingredients.WoodTar',
+    category: 'mundane',
+    img: 'icons/commodities/materials/slime-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.WoodTar',
+    price: { gc: 0, ss: 8, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Lampblack',
+    name: 'GOLD_ALCHEMY.Ingredients.Lampblack',
+    category: 'mundane',
+    img: 'icons/commodities/materials/powder-black.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Lampblack',
+    price: { gc: 0, ss: 3, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'MustardSeed',
+    name: 'GOLD_ALCHEMY.Ingredients.MustardSeed',
+    category: 'apothecary',
+    img: 'icons/consumables/plants/sprout-seed-yellow-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.MustardSeed',
+    price: { gc: 0, ss: 4, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Coltsfoot',
+    name: 'GOLD_ALCHEMY.Ingredients.Coltsfoot',
+    category: 'herbal',
+    img: 'icons/consumables/plants/heart-cordate-leaf-yellow-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Coltsfoot',
+    price: { gc: 0, ss: 5, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Eyebright',
+    name: 'GOLD_ALCHEMY.Ingredients.Eyebright',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/daisy-white-teal.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Eyebright',
+    price: { gc: 0, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'MilkThistle',
+    name: 'GOLD_ALCHEMY.Ingredients.MilkThistle',
+    category: 'herbal',
+    img: 'icons/consumables/plants/thorned-stem-vine-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.MilkThistle',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Plantain',
+    name: 'GOLD_ALCHEMY.Ingredients.Plantain',
+    category: 'herbal',
+    img: 'icons/consumables/plants/grass-leaves-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Plantain',
+    price: { gc: 0, ss: 3, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Hypericum',
+    name: 'GOLD_ALCHEMY.Ingredients.Hypericum',
+    category: 'herbal',
+    img: 'icons/commodities/flowers/lily-yellow.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Hypericum',
+    price: { gc: 0, ss: 8, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Alum',
+    name: 'GOLD_ALCHEMY.Ingredients.Alum',
+    category: 'mundane',
+    img: 'icons/commodities/materials/glass-cube.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Alum',
+    price: { gc: 0, ss: 6, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'BoneAsh',
+    name: 'GOLD_ALCHEMY.Ingredients.BoneAsh',
+    category: 'forbidden',
+    img: 'icons/commodities/bones/bone-fragments-grey.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.BoneAsh',
+    price: { gc: 0, ss: 15, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'GraveMoss',
+    name: 'GOLD_ALCHEMY.Ingredients.GraveMoss',
+    category: 'forbidden',
+    img: 'icons/consumables/plants/fern-broad-leaf-damaged-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.GraveMoss',
+    price: { gc: 1, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'rare'
+  },
+  {
+    key: 'BatWing',
+    name: 'GOLD_ALCHEMY.Ingredients.BatWing',
+    category: 'forbidden',
+    img: 'icons/commodities/biological/wing-bat-pink.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.BatWing',
+    price: { gc: 0, ss: 18, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'Henbane',
+    name: 'GOLD_ALCHEMY.Ingredients.Henbane',
+    category: 'forbidden',
+    img: 'icons/consumables/plants/thorned-dried-stem-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Henbane',
+    price: { gc: 1, ss: 5, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'rare'
   }
 ];
 
