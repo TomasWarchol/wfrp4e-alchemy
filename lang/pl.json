@@ -108,7 +108,8 @@
       "BrewNotReady": "Warzenie będzie gotowe: {date}.",
       "WorkshopUnavailable": "Warsztat Alchemiczny nie jest udostępniony tej postaci przez MG.",
       "ThrowNotDrink": "Tej mikstury się nie pije – rzuć ją w cel (prawy przycisk → Rzuć miksturę).",
-      "NoThrowTarget": "Wskaż cel klawiszem T na tokenie, zanim rzucisz miksturę."
+      "NoThrowTarget": "Wskaż cel klawiszem T na tokenie, zanim rzucisz miksturę.",
+      "ThrowOutOfRange": "Za daleko: najdalej rzucisz na {range} (trzykrotność Bonusu Siły)."
     },
     "Notifications": {
       "BookNoRoom": {"kind":"W księdze {book} nie można zapisywać receptur.","whole":"{book} zawiera rytuał i nie ma miejsca na nic więcej.","slots":"{book} jest pełna (zapisy: {total}).","pages":"W księdze {book} nie ma wolnych stron."},
@@ -191,6 +192,7 @@
       "Throws": "{thrower} rzuca: {potion}",
       "ThrowTargets": "Cele",
       "ThrowTest": "Rzut miksturą: {potion}",
+      "EffectRefreshed": "{effect}: ta sama mikstura jeszcze raz – czas działania liczy się od nowa, premie się nie dublują.",
       "ThrowMissed": "Chybienie! Flakon roztrzaskuje się obok celu – MG decyduje, gdzie upadł i kogo zahaczył.",
       "ThrowFizzled": "Zepsuta mikstura rozbija się bez żadnego efektu.",
       "CloudCreated": "Chmura spowija obszar na {rounds} rund i daje całkowitą osłonę w swoim zasięgu.",
@@ -295,7 +297,7 @@
       "VitriolAcid": {
         "Name": "Kwas Witriolowy",
         "Desc": "Żrący kwas mineralny wypalający zbroje i ciała.",
-        "Effect": "Rzucany jak Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie (oparzenia kwasem)."
+        "Effect": "Rzucany jak Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie (oparzenia kwasem). Wybuch 2."
       },
       "LeonardPowder": {
         "Name": "Oślepiający Proszek Błyskowy",
@@ -306,7 +308,7 @@
       "PhosphorFire": {
         "Name": "Ogień Fosforowy",
         "Desc": "Samozapalna mieszanina chemiczna rozlewająca się płomieniem.",
-        "Effect": "Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie."
+        "Effect": "Podpalacz: każdy trafiony cel otrzymuje 1 + PS Stanów Podpalenie. Wybuch 4: trafia wszystkich w promieniu 4 m od celu."
       },
       "SmellingSalts": {
         "Name": "Sole Trzeźwiące",
@@ -376,7 +378,7 @@
       "Alkahest": {
         "Name": "Al-kahest (Uniwersalny Rozpuszczalnik)",
         "Desc": "Najpotężniejsza substancja trawiąca, rozpuszczająca kamień, stal i ciało.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie (oparzenia chemiczne). Wypala dziurę w kamieniu lub stali."
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie (oparzenia chemiczne). Wypala dziurę w kamieniu lub stali. Wybuch 2."
       },
       "CompassMeteoric": {
         "Name": "Kompas z Meteorytowego Srebra",
@@ -478,7 +480,7 @@
       "AqshyLiquidFire": {
         "Name": "Płynny Ogień Aqshy",
         "Desc": "Flakon miotany zawierający skondensowany żar Czerwonego Wiatru.",
-        "Effect": "Rzucany jak Podpalacz, ale magiczny: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie."
+        "Effect": "Rzucany jak Podpalacz, ale magiczny: każdy trafiony cel otrzymuje 2 + PS Stanów Podpalenie. Wybuch 4: trafia wszystkich w promieniu 4 m od celu."
       },
       "AqshyBlazingHeart": {
         "Name": "Eliksir Berserkerskiego Żaru",
@@ -573,7 +575,7 @@
       "HyshSunsWrath": {
         "Name": "Flakon Słonecznego Blasku",
         "Desc": "Flakon miotany eksplodujący oślepiającym blaskiem Białego Wiatru.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie; demony i nieumarli – dodatkowe obrażenia według MG."
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie, chyba że zda Wymagający (+0) Test Uniku; demony i nieumarli – dodatkowe obrażenia według MG. Wybuch 3."
       },
       "HyshLucidityDraught": {
         "Name": "Napar Czystego Umysłu",
@@ -628,7 +630,7 @@
       "FlashPowder": {
         "Name": "Oślepiający Proszek Błyskowy",
         "Desc": "Mieszanka wybuchowa dająca oślepiający błysk światła.",
-        "Effect": "Oślepia wszystkie istoty w promieniu 3 metrów na 1 rundę."
+        "Effect": "Rzucany: każdy w promieniu 3 m od celu otrzymuje 1 Stan Oślepienie, chyba że zda Wymagający (+0) Test Uniku."
       },
       "QuickGlue": {
         "Name": "Alchemiczny Klej Szybkoschnący",
@@ -698,7 +700,7 @@
       "SkavenBrew": {
         "Name": "Skaveński Wywar Spaczeniowy",
         "Desc": "Zdeprawowany wywar klanu Moulder nasycony czystym spaczeniem.",
-        "Effect": "+30 S i +30 Wt na 2k10 − BWt rund; potem Wymagający (+0) Test Odporności – porażka: Zatrucie i Krwawienie (−6 PS: także Podpalenie)."
+        "Effect": "+30 S i +30 Wt na 2k10 − BWt rund; potem Wymagający (+0) Test Odporności – porażka: Zatrucie i Krwawienie (−6 PS: także Podpalenie). Uzależnia: Bardzo Trudny (−20) Test Opanowania po każdej dawce."
       },
       "ReactionaryRestorative": {
         "Name": "Ripostny Odwar",
@@ -818,7 +820,7 @@
       "HyshBanishingPhial": {
         "Name": "Fiolka Wygnania",
         "Desc": "Rzucana fiolka skoncentrowanego Hysh, która rozbłyska palącą bielą.",
-        "Effect": "Rzucana: każdy trafiony cel otrzymuje 4 + PS obrażeń z pominięciem pancerza i 1 Stan Oślepienie; demony i nieumarli mogą ucierpieć bardziej (MG)."
+        "Effect": "Rzucana: każdy trafiony cel otrzymuje 4 + PS obrażeń z pominięciem pancerza i 1 Stan Oślepienie, chyba że zda Wymagający (+0) Test Uniku; demony i nieumarli mogą ucierpieć bardziej (MG)."
       },
       "ShyishMorrsQuiet": {
         "Name": "Cisza Morra",
@@ -848,7 +850,7 @@
       "UlguBewilderingDust": {
         "Name": "Pył Zamętu",
         "Desc": "Rzucany woreczek szarego pyłu, który rozprasza myśli jak spłoszone wrony.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 Stan Oszołomienie."
+        "Effect": "Rzucany: każdy w promieniu 2 m od celu otrzymuje 1 Stan Oszołomienie, chyba że zda Wymagający (+0) Test Odporności."
       },
       "AethyricSalts": {
         "Name": "Sole Aethyru",
@@ -878,7 +880,7 @@
       "ThunderJar": {
         "Name": "Gromowy Dzban",
         "Desc": "Gliniany dzban nabity prochem i żwirem; więcej huku niż szkody, ale huk jest straszliwy.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 obrażenia i 1 + PS Stanów Ogłuszenie."
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 2 obrażenia i 1 + PS Stanów Ogłuszenie, chyba że zda Wymagający (+0) Test Odporności. Wybuch 3."
       },
       "TarBomb": {
         "Name": "Smolista Bomba",
@@ -888,7 +890,7 @@
       "QuicklimePouch": {
         "Name": "Woreczek Wapna",
         "Desc": "Papierowy woreczek palonego wapna – broń rzezimieszka, okrutna i skuteczna.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie."
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Oślepienie, chyba że zda Wymagający (+0) Test Uniku. Wybuch 2."
       },
       "Stinkpot": {
         "Name": "Smrodzielnik",
@@ -918,7 +920,7 @@
       "MinersPowder": {
         "Name": "Ładunek Górniczy",
         "Desc": "Natłuszczony ładunek prochu do rozsadzania skał – i, niestety, ludzi. W większości miast noszenie go wymaga pozwolenia.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 6 + PS obrażeń i Stan Powalenie."
+        "Effect": "Rzucany: każdy trafiony cel otrzymuje 6 + PS obrażeń i Stan Powalenie. Wybuch 5, jak Bomba."
       },
       "GlowwormPhial": {
         "Name": "Fiolka Świetlika",
@@ -938,7 +940,7 @@
       "SneezingPowder": {
         "Name": "Proszek Kichający",
         "Desc": "Mielona gorczyca z wapnem w papierowym zawiniątku – psikus żartownisia, który rozstrzygnął niejedną karczemną bójkę.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 Stan Oszołomienie."
+        "Effect": "Rzucany: każdy w promieniu 2 m od celu otrzymuje 1 Stan Oszołomienie, chyba że zda Wymagający (+0) Test Odporności."
       },
       "SympatheticInk": {
         "Name": "Atrament Sympatyczny",
@@ -1003,7 +1005,7 @@
       "PoppyTincture": {
         "Name": "Nalewka Makowa",
         "Desc": "Ostateczność medyka przeciw bólowi. Zbyt wiele dawek i pacjent nie chce przestać.",
-        "Effect": "Usuwa do 2 Stanów Zmęczenie; −10 I i −10 Int na 2 godziny. Częste używanie może uzależnić (MG)."
+        "Effect": "Usuwa do 2 Stanów Zmęczenie; −10 I i −10 Int na 2 godziny. Uzależnia: Wymagający (+0) Test Opanowania po każdej dawce."
       },
       "MustardPlaster": {
         "Name": "Okład Gorczyczny",
@@ -1088,17 +1090,17 @@
       "BloodrageDraught": {
         "Name": "Wywar Krwawego Szału",
         "Desc": "Warzony z lulka w ukrytych piwnicach obozów najemników i zakazany w każdej prowincji. Działa. Płaci za to serce.",
-        "Effect": "+20 WW, +10 S i Cecha Szał Bojowy na 10 minut. Trudny (−10) Test Odporności albo 2 Stany Zmęczenie; częste używanie uzależnia (MG). Nielegalny."
+        "Effect": "+20 WW, +10 S i Cecha Szał Bojowy na 10 minut. Trudny (−10) Test Odporności albo 2 Stany Zmęczenie; uzależnia: Trudny (−10) Test Opanowania po każdej dawce. Nielegalny."
       },
       "Gravewine": {
         "Name": "Wino Grobowe",
         "Desc": "Ciemne wino nasycone mchem z obrabowanych trumien. Za samo okradanie grobów warzyciel trafia na szubienicę; kapłani Morra chcieliby jednak najpierw z nim porozmawiać.",
-        "Effect": "+20 Wt i −20 Ogd na 1 godzinę; nie może otrzymać ani utrzymać Stanu Zmęczenie. Wymagający (+0) Test Odporności albo 1 Stan Zatrucie. Nielegalne."
+        "Effect": "+20 Wt i −20 Ogd na 1 godzinę; nie może otrzymać ani utrzymać Stanu Zmęczenie. Wymagający (+0) Test Odporności albo 1 Stan Zatrucie. Uzależnia: Wymagający (+0) Test Opanowania po każdej dawce. Nielegalne."
       },
       "BlackVial": {
         "Name": "Czarna Fiolka",
         "Desc": "Cienka czarna fiolka, która rozpryskuje się w obłok duszącego jadu. Za jej posiadanie w większości miast grozi stryczek.",
-        "Effect": "Rzucana: każdy trafiony cel otrzymuje 1 + PS Stanów Zatrucie. Nielegalna."
+        "Effect": "Rzucana w jeden cel: otrzymuje 1 + PS Stanów Zatrucie, chyba że zda Wymagający (+0) Test Odporności. Nielegalna."
       },
       "WillbreakerDraught": {
         "Name": "Wywar Łamacza Woli",
@@ -1108,12 +1110,12 @@
       "WitchEyeDrops": {
         "Name": "Krople Oka Wiedźmy",
         "Desc": "Szczypta spaczenia w oczach rozdziera zasłonę między pijącym a surowymi Wiatrami – i wpuszcza wraz z nimi Dhar. Herezja: za posiadanie grozi stos.",
-        "Effect": "+20 do Testów Splatania Magii na 1 godzinę. Trudny (−20) Test Odporności albo 1 Punkt Zepsucia."
+        "Effect": "+20 do Testów Splatania Magii na 1 godzinę. Trudny (−20) Test Odporności albo 1 Punkt Zepsucia. Uzależnia: Trudny (−10) Test Opanowania po każdej dawce."
       },
       "NightmareDust": {
         "Name": "Pył Koszmarów",
         "Desc": "Lulek i skrzydło nietoperza starte na szary proszek; kto go wdycha, widzi, jak najgorsze lęki wychodzą z cienia. Broń złodziei i kultystów zarazem.",
-        "Effect": "Rzucany: każdy trafiony cel otrzymuje 1 + PS Stanów Panika. Nielegalny."
+        "Effect": "Rzucany: każdy w promieniu 2 m od celu otrzymuje 1 + PS Stanów Panika, chyba że zda Wymagający (+0) Test Opanowania. Nielegalny."
       },
       "TurncoatSalve": {
         "Name": "Maść Zmiennolicego",
@@ -1133,7 +1135,7 @@
       "SoulburnTonic": {
         "Name": "Tonik Spalonej Duszy",
         "Desc": "Spaczeń rozpuszczony w spirytusie z lulka: spala odrobinę duszy jak paliwo, a pijący czuje się niepowstrzymany – na razie. Herezja.",
-        "Effect": "Odzyskuje 1 Punkt Determinacji (najwyżej do Odporności Psychicznej) i otrzymuje 1 Punkt Zepsucia."
+        "Effect": "Odzyskuje 1 Punkt Determinacji (najwyżej do Odporności Psychicznej) i otrzymuje 1 Punkt Zepsucia. Uzależnia: Bardzo Trudny (−20) Test Opanowania po każdej dawce."
       }
     },
     "Ingredients": {
@@ -1482,6 +1484,8 @@
     "RecipeScrollTitle": "Receptura: {name}",
     "Settings": {
       "AutomateDisasters": "Skutki katastrof przy warzeniu",
+      "Addiction": "Nałóg (zasada domowa)",
+      "AddictionHint": "Mikstury uzależniające (Nalewka Makowa, Wywar Krwawego Szału i część zakazanych) wymagają po każdej dawce Testu Opanowania, −10 za każdą dawkę tej samej mikstury w ostatnich 7 dniach. Porażka daje Nałóg: −10 do wszystkich testów w czasie głodu (ponad doba bez dawki), co rano bez dawki Test Siły Woli albo 1 Stan Zmęczenie, a trzy udane poranki z rzędu kończą Nałóg.",
       "AutomateDisastersHint": "Przy pechu katastrofa działa: rany od oparzeń i wybuchów, Test Odporności na opary (porażka: Zatrucie), a przy laboratorium ustawianym przez MG wybuch albo pożar obniża laboratorium o jeden poziom.",
       "QualityFromSL": "Jakość mikstury z PS",
       "QualityFromSLHint": "2–3 PS dają dobrą miksturę (świecka: +1 dawka), 4+ PS wyborną (świecka: dodatkowe dawki równe PS; magiczna: 1 pkt Więzi mniej na dawkę, najmniej 1).",
@@ -1580,6 +1584,14 @@
       },
       "FlawRecipe": "-1 PS przy warzeniu z tej księgi."
     },
+    "Addiction": {
+      "Name": "Nałóg: {potion}",
+      "TestTitle": "nałóg ({potion})",
+      "Resisted": "Pijący panuje nad sobą – bez nałogu.",
+      "Gained": "Pijący popada w nałóg ({potion}): −10 do wszystkich testów w czasie głodu (ponad doba bez dawki).",
+      "Sated": "Dawka zaspokaja głód ({potion}).",
+      "Recovered": "{name} mija: trzy poranki bez ulegania."
+    },
     "Steps": {
       "Healed": "Leczy {wounds} Ran.",
       "Removed": "Usuwa stan: {condition}.",
@@ -1595,7 +1607,9 @@
       "ThrownCondition": "{target}: {value} × {condition}.",
       "ThrownDamage": "{target}: {damage} obrażeń. {details}",
       "TimedName": "{condition} (na czas)",
-      "TimedFor": "Trwa {duration}."
+      "TimedFor": "Trwa {duration}.",
+      "ThrownResisted": "{target} się broni: bez stanu {condition}.",
+      "ResistTitle": "obrona przed miksturą"
     }
   }
 }

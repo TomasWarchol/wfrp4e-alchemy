@@ -8,6 +8,9 @@ import { RecipeRegistry } from './recipe-registry.js';
 import { CalendarIntegration } from '../calendar-integration.js';
 import { AlchemyQueries } from '../queries.js';
 import { RECIPE_CLOUD, RECIPE_DRINK, RECIPE_THROWN, runDrinkSteps, runThrownSteps, stepsHeal, timedConditionEffect } from './potion-steps.js';
+import { applyHighestBonus } from './effect-data.js';
+import { blastTargets, throwRangeBand } from './throwing.js';
+import { AddictionEngine } from './addiction.js';
 
 /** Mikstury bojowe: rzuca się je we wskazane tokeny zamiast pić. */
 const THROWN_EFFECTS = new Set([
@@ -91,24 +94,36 @@ export class PotionConsumer {
         }
         const effectsToCreate = [];
         for (const effect of item.effects) {
-          const ed = effect.toObject();
+          const ed = applyHighestBonus(effect.toObject());
           delete ed._id;
           ed.disabled = false;
           ed.transfer = false;
           // Foundry v14 ustawia start (czas świata, walka, runda) przy tworzeniu efektu na aktorze
           delete ed.start;
           if (magical) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.magicalPotion`, true);
+          if (flag.recipeId) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.recipeId`, flag.recipeId);
           const rolled = await this._rollDuration(ed, drinker);
           if (rolled) effectLines.push(rolled);
-          effectsToCreate.push(ed);
+          // Ta sama mikstura wypita ponownie odnawia czas działania zamiast dublować premie
+          const same = flag.recipeId && drinker.effects.find(e => e.getFlag?.(MODULE_ID, 'recipeId') === flag.recipeId && e.name === ed.name);
+          if (same) {
+            await this._refreshEffect(same, ed.duration);
+            effectLines.push(game.i18n.format('GOLD_ALCHEMY.Chat.EffectRefreshed', { effect: ed.name }));
+          }
+          else effectsToCreate.push(ed);
         }
-        await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate);
+        if (effectsToCreate.length) await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate);
       }
 
       if (flag.instantEffect) {
         const line = await this.handleInstantEffect(flag.instantEffect, drinker, flag.recipeId);
         if (line) effectLines.push(line);
       }
+
+      // Nałóg (zasada domowa): test po dawce mikstury uzależniającej, dawka zaspokaja głód
+      const recipe = flag.recipeId ? RecipeRegistry.getRecipeById(flag.recipeId, { includeUnavailable: true }) : null;
+      const addictionLine = await AddictionEngine.afterDose(drinker, recipe, item.name);
+      if (addictionLine) effectLines.push(addictionLine);
     }
 
     await this._useDose(item, qty);
@@ -138,6 +153,14 @@ export class PotionConsumer {
       speaker: ChatMessage.getSpeaker({ actor: drinker }),
       content: chatHtml
     });
+  }
+
+  /** Odnawia czas działania efektu: liczy się od teraz, z nowym (wylosowanym) czasem. */
+  static async _refreshEffect(effect, duration) {
+    const combat = game.combat;
+    const update = { start: { time: game.time.worldTime, combat: combat?.id ?? null, round: combat?.round ?? null, turn: combat?.turn ?? null } };
+    if (duration?.value) update.duration = { value: duration.value, units: duration.units };
+    await effect.update(update);
   }
 
   /**
@@ -177,13 +200,29 @@ export class PotionConsumer {
     }
 
     const isCloud = CLOUD_EFFECTS.has(effectId);
-    const targets = Array.from(game.user.targets || []).filter(token => token.actor);
-    if (!isCloud && !targets.length) {
+    // Rzut w jeden cel (pierwszy namierzony); mikstury wybuchowe trafiają też żetony w promieniu wybuchu
+    const target = Array.from(game.user.targets || []).find(token => token.actor);
+    if (!isCloud && !target) {
       ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Errors.NoThrowTarget'));
       return;
     }
 
-    const hit = isCloud ? { success: true, sl: 0 } : await this._rollThrow(thrower, item.name);
+    let difficulty = 'challenging';
+    const throwerToken = thrower.getActiveTokens?.(true, false)?.find(token => token.scene === target?.scene) ?? null;
+    if (!isCloud && throwerToken) {
+      const range = Math.max(1, Number(thrower.system?.characteristics?.s?.bonus) || 1);
+      const band = throwRangeBand(this._distance(throwerToken, target), range);
+      if (!band) {
+        ui.notifications.warn(game.i18n.format('GOLD_ALCHEMY.Errors.ThrowOutOfRange', { range: range * 3 }));
+        return;
+      }
+      difficulty = band.difficulty;
+    }
+
+    const recipe = flag.recipeId ? RecipeRegistry.getRecipeById(flag.recipeId, { includeUnavailable: true }) : null;
+    const targets = isCloud ? [] : blastTargets(target, (canvas?.tokens?.placeables || []).filter(token => token.actor), recipe?.blast, (a, b) => this._distance(a, b));
+
+    const hit = isCloud ? { success: true, sl: 0 } : await this._rollThrow(thrower, item.name, difficulty);
     if (!hit) return; // Anulowano okno testu
 
     const spoilage = await SpoilageEngine.evaluatePotion(item, null, { applySideEffect: false });
@@ -227,10 +266,20 @@ export class PotionConsumer {
     });
   }
 
-  /** Test trafienia: Broń Zasięgowa (Rzucana), a bez niej Umiejętności Strzeleckie. PS decyduje o sile (jak Podpalacz). */
-  static async _rollThrow(thrower, potionName) {
-    const skill = (thrower.itemTypes?.skill || []).find(s => /rzucan|throw/i.test(s.name || ''));
-    const context = { title: game.i18n.format('GOLD_ALCHEMY.Chat.ThrowTest', { potion: potionName }), skipTargets: true };
+  /** Odległość między żetonami w jednostkach sceny (środek do środka). */
+  static _distance(a, b) {
+    if (!a || !b) return 0;
+    return canvas.grid.measurePath([a.center, b.center]).distance;
+  }
+
+  /**
+   * Test trafienia: Broń Zasięgowa (Materiały Wybuchowe albo Rzucana), a bez niej Umiejętności Strzeleckie.
+   * Trudność z progu zasięgu, PS decyduje o sile (jak Podpalacz).
+   */
+  static async _rollThrow(thrower, potionName, difficulty = 'challenging') {
+    const skills = thrower.itemTypes?.skill || [];
+    const skill = skills.find(s => /explosiv|wybuch/i.test(s.name || '')) ?? skills.find(s => /rzucan|throw/i.test(s.name || ''));
+    const context = { title: game.i18n.format('GOLD_ALCHEMY.Chat.ThrowTest', { potion: potionName }), skipTargets: true, fields: { difficulty } };
     const test = skill ? await thrower.setupSkill(skill, context) : await thrower.setupCharacteristic('bs', context);
     if (!test) return null;
     await test.roll();
@@ -296,8 +345,40 @@ export class PotionConsumer {
       test: (actor, skillKey, difficulty) => this._drinkerTest(actor, skillKey, difficulty, game.i18n.localize('GOLD_ALCHEMY.Steps.TestTitle')),
       conditionLabel: (key) => game.i18n.localize(game.wfrp4e?.config?.conditions?.[key] ?? key),
       damageTypes: game.wfrp4e?.config?.DAMAGE_TYPE || { NORMAL: 0, IGNORE_AP: 1 },
-      formatDuration: (seconds) => this._formatDuration(seconds)
+      formatDuration: (seconds) => this._formatDuration(seconds),
+      resist: (actor, skillKey, difficulty) => this._targetTest(actor, skillKey, difficulty)
     };
+  }
+
+  /**
+   * Test obronny celu rzuconej mikstury (u MG, bez okna: przy wybuchu celów może być wiele).
+   * Zwraca {succeeded, sl}; gdy testu nie da się wykonać – porażka.
+   */
+  static async _targetTest(actor, skillKey, difficulty = 'challenging') {
+    try {
+      const test = await actor.setupSkill(game.i18n.localize(skillKey), {
+        skipDialog: true,
+        skipTargets: true,
+        fields: { difficulty },
+        appendTitle: ` – ${game.i18n.localize('GOLD_ALCHEMY.Steps.ResistTitle')}`
+      });
+      if (!test) return { succeeded: false, sl: 0 };
+      await test.roll();
+      return { succeeded: !!test.succeeded, sl: Number(test.result?.SL) || 0 };
+    } catch (error) {
+      console.warn(`${MODULE_ID} | Resist test failed for ${actor?.name}`, error);
+      return { succeeded: false, sl: 0 };
+    }
+  }
+
+  /** Stan z rzuconej mikstury, przed którym cel broni się Unikiem (stare mikstury z efektem w kodzie). */
+  static async _addResistedCondition(actor, key, value, name) {
+    const result = await this._targetTest(actor, 'NAME.Dodge', 'challenging');
+    if (result.succeeded) {
+      return game.i18n.format('GOLD_ALCHEMY.Steps.ThrownResisted', { target: name, condition: game.i18n.localize(game.wfrp4e?.config?.conditions?.[key] ?? key) });
+    }
+    await actor.addCondition?.(key, value);
+    return null;
   }
 
   /** Czas w czytelnej postaci: godziny, a krótsze w minutach. */
@@ -533,11 +614,9 @@ export class PotionConsumer {
         return i18n('GOLD_ALCHEMY.Chat.ThrownTrollAcid', { damage, details: msg || '' });
       }
       case 'flashPowderBlast':
-        await actor.addCondition?.('blinded', 1);
-        return i18n('GOLD_ALCHEMY.Chat.ThrownBlinded');
+        return (await this._addResistedCondition(actor, 'blinded', 1, name)) ?? i18n('GOLD_ALCHEMY.Chat.ThrownBlinded');
       case 'hyshSunFlash':
-        await actor.addCondition?.('blinded', 1 + bonus);
-        return i18n('GOLD_ALCHEMY.Chat.ThrownSunFlash', { value: 1 + bonus });
+        return (await this._addResistedCondition(actor, 'blinded', 1 + bonus, name)) ?? i18n('GOLD_ALCHEMY.Chat.ThrownSunFlash', { value: 1 + bonus });
       default:
         return '';
     }

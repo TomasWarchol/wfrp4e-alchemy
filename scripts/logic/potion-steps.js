@@ -16,6 +16,9 @@
  * Kroki rzutu (na celu, `sl` – PS testu trafienia):
  *   { add: 'blinded', value: 1, perSL: true }          stan, +1 poziom za każdy PS
  *   { damage: 4, perSL: true, ignoreAP: false }        obrażenia
+ *   { add: 'poisoned', ..., resist: { test: 'endurance' | 'cool' | 'dodge', difficulty } }
+ *                                                      cel zdaje test (bez okna) – sukces chroni przed stanem
+ * Receptura rzucana może mieć `blast` (promień wybuchu w jednostkach sceny) – zob. throwing.js.
  *
  * Funkcje dostają zależności przez `ctx`, żeby dało się je testować bez Foundry.
  */
@@ -24,7 +27,7 @@ export const RECIPE_DRINK = 'recipe';
 export const RECIPE_THROWN = 'recipeThrown';
 export const RECIPE_CLOUD = 'recipeCloud';
 
-const TEST_SKILLS = { endurance: 'NAME.Endurance', cool: 'NAME.Cool' };
+const TEST_SKILLS = { endurance: 'NAME.Endurance', cool: 'NAME.Cool', dodge: 'NAME.Dodge' };
 
 /** Sekundy w jednostce czasu kroku. */
 const UNIT_SECONDS = { rounds: 6, minutes: 60, hours: 3600, days: 86400 };
@@ -133,6 +136,14 @@ export async function runThrownSteps(steps, actor, sl, ctx) {
   const bonus = Math.max(0, Number(sl) || 0);
   const target = actor.prototypeToken?.name || actor.name;
   for (const step of steps || []) {
+    // Test obronny celu: sukces chroni przed tym stanem (obrażenia i Podpalenie działają bez testu)
+    if (step.resist && step.add) {
+      const result = await ctx.resist?.(actor, TEST_SKILLS[step.resist.test] ?? step.resist.test, step.resist.difficulty || 'challenging');
+      if (result?.succeeded) {
+        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.ThrownResisted', { target, condition: ctx.conditionLabel(step.add) }));
+        continue;
+      }
+    }
     if (step.add) {
       const value = (Number(step.value) || 1) + (step.perSL ? bonus : 0);
       await actor.addCondition?.(step.add, value);

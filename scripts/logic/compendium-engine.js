@@ -140,7 +140,7 @@ export class CompendiumEngine {
   static POTIONS_PACK = `${MODULE_ID}.alchemy-potions`;
   static RECIPES_PACK = `${MODULE_ID}.alchemy-recipes`;
   /** Podnieś, gdy zmieniają się efekty mikstur – wygenerowane wpisy kompendium zostaną odbudowane. */
-  static POTIONS_DATA_VERSION = 3;
+  static POTIONS_DATA_VERSION = 4;
   /** Podnieś, gdy zmienia się format zwojów i ksiąg – wygenerowane wpisy zostaną przepisane. */
   static RECIPES_DATA_VERSION = 2;
 

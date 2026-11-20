@@ -27,6 +27,20 @@
   - A short timer effect removes the Condition when time runs out, or when the GM deletes it.
 - Fixed: potions that block a Condition (Greenward Draught, Furnace Blood, Dawnlight Tonic and others) no longer throw errors when that Condition is applied.
 - The chat card says "Tether expired" instead of "Chamon Tether expired" for every College.
+- **Throwing a potion hits one target, plus its blast.** It goes at the first targeted token, with range equal to your Strength Bonus, like the rulebook's Incendiary and Bomb. The system's range bands set the difficulty (Point Blank Easy … Extreme Very Hard), and anything beyond three times your Strength Bonus can't be thrown. Explosive potions have a blast that hits every token within its radius of the target: fire 4 (like an Incendiary), the Miner's Blasting Charge 5 (like a Bomb), flashes and the Thunder Jar 3, powders and acids 2. Ranged (Explosives) is used for the test when the thrower has it.
+- **Targets resist powders and poisons.** Each target rolls straight away, with no dialog; a success keeps that Condition off them, while damage and Ablaze still land.
+  - Endurance: Black Vial, Sneezing Powder, Bewildering Dust and the Thunder Jar's deafening.
+  - Cool: Nightmare Dust.
+  - Dodge: Quicklime Pouch, Flash Powder, Phial of Sun's Wrath and the Banishing Phial's blinding.
+- **Potions no longer stack:**
+  - The same potion drunk again restarts its duration instead of adding a second effect.
+  - When several potions boost the same characteristic or the same test, only the highest bonus counts; penalties still add up.
+  - This works for potions already brewed too.
+  - The potions compendium is rebuilt with the new effects.
+- **Addiction (house rule, world setting, on by default).** Addictive potions call for a Cool Test after each dose, −10 for every dose of the same potion in the last 7 days: Poppy Tincture, Gravewine, Bloodrage Draught, Witch-Eye Drops, Soulburn Tonic and the Warpstone Draught. A failure brings Addiction:
+  - −10 to all Tests while craving (over a day without a dose);
+  - a Willpower Test every morning without a dose, or 1 Fatigued Condition;
+  - three good mornings in a row end it, and a dose sates the craving but resets the count.
 
 ## 1.9.1
 - **Sourcebook content only with its official module.** Recipes and ingredients from official books (Core Rulebook, Winds of Magic, Starter Set, The Horned Rat, Ubersreik Adventures I, Imperial Zoo) appear only while that book's official Foundry module is active. The *Strict Source Module Filtering* setting is gone (filtering is always on) and translation modules (`…-pl`) no longer stand in for the content module.

@@ -108,7 +108,8 @@
       "BrewNotReady": "Brewing will be ready: {date}.",
       "WorkshopUnavailable": "The GM has not enabled the Alchemy Workshop for this character.",
       "ThrowNotDrink": "This potion is not for drinking – throw it at a target (right click → Throw Potion).",
-      "NoThrowTarget": "Target a token with the T key before throwing the potion."
+      "NoThrowTarget": "Target a token with the T key before throwing the potion.",
+      "ThrowOutOfRange": "Too far to throw: the furthest you can throw is {range} (three times your Strength Bonus)."
     },
     "Notifications": {
       "BookNoRoom": {"kind":"{book} can’t hold recipes.","whole":"{book} holds a ritual and has no room for anything else.","slots":"{book} is full ({total} entries).","pages":"{book} has no free pages left."},
@@ -191,6 +192,7 @@
       "Throws": "{thrower} throws: {potion}",
       "ThrowTargets": "Targets",
       "ThrowTest": "Throwing potion: {potion}",
+      "EffectRefreshed": "{effect}: the same potion again – its duration starts over instead of stacking.",
       "ThrowMissed": "Miss! The flask shatters near the target – the GM decides where it landed and who it caught.",
       "ThrowFizzled": "The spoiled potion shatters with no effect.",
       "CloudCreated": "A cloud covers the area for {rounds} rounds, granting full cover within it.",
@@ -295,7 +297,7 @@
       "VitriolAcid": {
         "Name": "Vitriol Acid",
         "Desc": "A corrosive mineral acid burning through armor and flesh.",
-        "Effect": "Thrown like an Incendiary: every target hit gains 1 + SL Ablaze Conditions (acid burns)."
+        "Effect": "Thrown like an Incendiary: every target hit gains 1 + SL Ablaze Conditions (acid burns). Blast 2."
       },
       "LeonardPowder": {
         "Name": "Alchemical Flash Powder",
@@ -306,7 +308,7 @@
       "PhosphorFire": {
         "Name": "Phosphor Fire",
         "Desc": "A pyrophoric incendiary liquid bursting into violent flame.",
-        "Effect": "Incendiary: every target hit gains 1 + SL Ablaze Conditions."
+        "Effect": "Incendiary: every target hit gains 1 + SL Ablaze Conditions. Blast 4: hits everyone within 4 yards of the target."
       },
       "SmellingSalts": {
         "Name": "Smelling Salts",
@@ -376,7 +378,7 @@
       "Alkahest": {
         "Name": "Alkahest (Universal Solvent)",
         "Desc": "The ultimate corrosive fluid dissolving stone, iron, and flesh.",
-        "Effect": "Thrown: every target hit gains 2 + SL Ablaze Conditions (chemical burns). Eats through stone or steel."
+        "Effect": "Thrown: every target hit gains 2 + SL Ablaze Conditions (chemical burns). Eats through stone or steel. Blast 2."
       },
       "CompassMeteoric": {
         "Name": "Compass of Meteoric Silver",
@@ -478,7 +480,7 @@
       "AqshyLiquidFire": {
         "Name": "Liquid Flame of Aqshy",
         "Desc": "A thrown phial containing the condensed heat of the Red Wind.",
-        "Effect": "Thrown like an Incendiary, but magical: every target hit gains 2 + SL Ablaze Conditions."
+        "Effect": "Thrown like an Incendiary, but magical: every target hit gains 2 + SL Ablaze Conditions. Blast 4: hits everyone within 4 yards of the target."
       },
       "AqshyBlazingHeart": {
         "Name": "Draught of the Blazing Heart",
@@ -573,7 +575,7 @@
       "HyshSunsWrath": {
         "Name": "Phial of Sun's Wrath",
         "Desc": "A thrown phial bursting into radiant sunlight.",
-        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions; Daemons and Undead suffer extra Damage at the GM's discretion."
+        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions unless they pass a Challenging (+0) Dodge Test; Daemons and Undead suffer extra Damage at the GM's discretion. Blast 3."
       },
       "HyshLucidityDraught": {
         "Name": "Hysh Lucidity Draught",
@@ -628,7 +630,7 @@
       "FlashPowder": {
         "Name": "Alchemical Flash Powder",
         "Desc": "An explosive pyrotechnic blend producing a brilliant flash of light.",
-        "Effect": "Blinds all creatures within 3 meters for 1 round."
+        "Effect": "Thrown: everyone within 3 yards of the target gains 1 Blinded Condition unless they pass a Challenging (+0) Dodge Test."
       },
       "QuickGlue": {
         "Name": "Quick-Drying Glue",
@@ -698,7 +700,7 @@
       "SkavenBrew": {
         "Name": "Warpstone Draught",
         "Desc": "A vile Clan Moulder draught infused with raw warpstone.",
-        "Effect": "+30 Strength and +30 Toughness for 2d10 − TB rounds; then a Challenging (+0) Endurance Test – on failure Poisoned and Bleeding (−6 SL: also Ablaze)."
+        "Effect": "+30 Strength and +30 Toughness for 2d10 − TB rounds; then a Challenging (+0) Endurance Test – on failure Poisoned and Bleeding (−6 SL: also Ablaze). Addictive: Hard (−20) Cool Test after each dose."
       },
       "ReactionaryRestorative": {
         "Name": "Reactionary Restorative",
@@ -818,7 +820,7 @@
       "HyshBanishingPhial": {
         "Name": "Banishing Phial",
         "Desc": "A thrown phial of concentrated Hysh that bursts in a flare of searing white.",
-        "Effect": "Thrown: every target hit takes 4 + SL damage ignoring armour and gains 1 Blinded Condition; Daemons and Undead may suffer more (GM)."
+        "Effect": "Thrown: every target hit takes 4 + SL damage ignoring armour and gains 1 Blinded Condition unless they pass a Challenging (+0) Dodge Test; Daemons and Undead may suffer more (GM)."
       },
       "ShyishMorrsQuiet": {
         "Name": "Morr's Quiet",
@@ -848,7 +850,7 @@
       "UlguBewilderingDust": {
         "Name": "Bewildering Dust",
         "Desc": "A thrown pouch of grey glitter that scatters thoughts like startled crows.",
-        "Effect": "Thrown: every target hit gains 1 Stunned Condition."
+        "Effect": "Thrown: everyone within 2 yards of the target gains 1 Stunned Condition unless they pass a Challenging (+0) Endurance Test."
       },
       "AethyricSalts": {
         "Name": "Aethyric Salts",
@@ -878,7 +880,7 @@
       "ThunderJar": {
         "Name": "Thunder Jar",
         "Desc": "A clay jar packed with powder and gravel; more noise than harm, but the noise is terrible.",
-        "Effect": "Thrown: every target hit takes 2 damage and gains 1 + SL Deafened Conditions."
+        "Effect": "Thrown: every target hit takes 2 damage and gains 1 + SL Deafened Conditions unless they pass a Challenging (+0) Endurance Test. Blast 3."
       },
       "TarBomb": {
         "Name": "Tar Bomb",
@@ -888,7 +890,7 @@
       "QuicklimePouch": {
         "Name": "Quicklime Pouch",
         "Desc": "A paper pouch of burnt lime – a cutpurse's weapon, cruel and effective.",
-        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions."
+        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions unless they pass a Challenging (+0) Dodge Test. Blast 2."
       },
       "Stinkpot": {
         "Name": "Stinkpot",
@@ -918,7 +920,7 @@
       "MinersPowder": {
         "Name": "Miner's Blasting Charge",
         "Desc": "A greased charge of blasting powder for splitting rock – and, regrettably, people. Most towns require a licence to carry one.",
-        "Effect": "Thrown: every target hit takes 6 + SL damage and is knocked Prone."
+        "Effect": "Thrown: every target hit takes 6 + SL damage and is knocked Prone. Blast 5, like a Bomb."
       },
       "GlowwormPhial": {
         "Name": "Glowworm Phial",
@@ -938,7 +940,7 @@
       "SneezingPowder": {
         "Name": "Sneezing Powder",
         "Desc": "Ground mustard and lime in a twist of paper – a prankster's jest that has won more than one tavern brawl.",
-        "Effect": "Thrown: every target hit gains 1 Stunned Condition."
+        "Effect": "Thrown: everyone within 2 yards of the target gains 1 Stunned Condition unless they pass a Challenging (+0) Endurance Test."
       },
       "SympatheticInk": {
         "Name": "Sympathetic Ink",
@@ -1003,7 +1005,7 @@
       "PoppyTincture": {
         "Name": "Poppy Tincture",
         "Desc": "A physician's last resort against pain. Too many doses and the patient never wants to stop.",
-        "Effect": "Removes up to 2 Fatigued Conditions; −10 Initiative and −10 Intelligence for 2 hours. Repeated use may lead to addiction (GM)."
+        "Effect": "Removes up to 2 Fatigued Conditions; −10 Initiative and −10 Intelligence for 2 hours. Addictive: Challenging (+0) Cool Test after each dose."
       },
       "MustardPlaster": {
         "Name": "Mustard Plaster",
@@ -1088,17 +1090,17 @@
       "BloodrageDraught": {
         "Name": "Bloodrage Draught",
         "Desc": "Brewed from henbane in the hidden cellars of mercenary camps and banned in every province. It works. The heart pays for it.",
-        "Effect": "+20 Weapon Skill, +10 Strength and the Frenzy Trait for 10 minutes. Difficult (−10) Endurance Test or gain 2 Fatigued Conditions; habitual use leads to addiction (GM). Illegal."
+        "Effect": "+20 Weapon Skill, +10 Strength and the Frenzy Trait for 10 minutes. Difficult (−10) Endurance Test or gain 2 Fatigued Conditions; addictive: Difficult (−10) Cool Test after each dose. Illegal."
       },
       "Gravewine": {
         "Name": "Gravewine",
         "Desc": "Dark wine steeped with moss from robbed coffins. Grave-robbing alone sends a brewer to the gallows; the priests of Morr would want a word first.",
-        "Effect": "+20 Toughness and −20 Fellowship for 1 hour; cannot gain or keep the Fatigued Condition. Challenging (+0) Endurance Test or gain 1 Poisoned Condition. Illegal."
+        "Effect": "+20 Toughness and −20 Fellowship for 1 hour; cannot gain or keep the Fatigued Condition. Challenging (+0) Endurance Test or gain 1 Poisoned Condition. Addictive: Challenging (+0) Cool Test after each dose. Illegal."
       },
       "BlackVial": {
         "Name": "Black Vial",
         "Desc": "A thin black vial that shatters into a cloud of choking venom. Owning one is a hanging offence in most cities.",
-        "Effect": "Thrown: every target hit gains 1 + SL Poisoned Conditions. Illegal."
+        "Effect": "Thrown at one target: it gains 1 + SL Poisoned Conditions unless it passes a Challenging (+0) Endurance Test. Illegal."
       },
       "WillbreakerDraught": {
         "Name": "Willbreaker Draught",
@@ -1108,12 +1110,12 @@
       "WitchEyeDrops": {
         "Name": "Witch-Eye Drops",
         "Desc": "A pinch of warpstone in the eyes tears open the veil between the drinker and the raw Winds – and lets in Dhar with them. Heresy: possession means the pyre.",
-        "Effect": "+20 to Channelling Tests for 1 hour. Hard (−20) Endurance Test or gain 1 Corruption point."
+        "Effect": "+20 to Channelling Tests for 1 hour. Hard (−20) Endurance Test or gain 1 Corruption point. Addictive: Difficult (−10) Cool Test after each dose."
       },
       "NightmareDust": {
         "Name": "Nightmare Dust",
         "Desc": "Henbane and bat wing ground to a grey powder; those who breathe it see their worst fears step out of the shadows. A weapon of thieves and cultists alike.",
-        "Effect": "Thrown: every target hit gains 1 + SL Broken Conditions. Illegal."
+        "Effect": "Thrown: everyone within 2 yards of the target gains 1 + SL Broken Conditions unless they pass a Challenging (+0) Cool Test. Illegal."
       },
       "TurncoatSalve": {
         "Name": "Turncoat Salve",
@@ -1133,7 +1135,7 @@
       "SoulburnTonic": {
         "Name": "Soulburn Tonic",
         "Desc": "Warpstone dissolved in henbane spirit: it burns a little of the soul as fuel, and the drinker feels unstoppable – for now. Heresy.",
-        "Effect": "Regains 1 Resolve point (not above Resilience) and gains 1 Corruption point."
+        "Effect": "Regains 1 Resolve point (not above Resilience) and gains 1 Corruption point. Addictive: Hard (−20) Cool Test after each dose."
       }
     },
     "Ingredients": {
@@ -1482,6 +1484,8 @@
     "RecipeScrollTitle": "Recipe: {name}",
     "Settings": {
       "AutomateDisasters": "Apply brewing disasters",
+      "Addiction": "Addiction (house rule)",
+      "AddictionHint": "Addictive potions (Poppy Tincture, Bloodrage Draught and some forbidden brews) call for a Cool Test after each dose, −10 for every dose of the same potion in the last 7 days. A failure brings Addiction: −10 to all Tests while craving (over a day without a dose), a Willpower Test every morning without a dose or 1 Fatigued Condition, and three good mornings in a row end it.",
       "AutomateDisastersHint": "On a fumbled brew the disaster takes effect: wounds from burns and blasts, an Endurance test against fumes (Poisoned on a failure) and, with the laboratory set by the GM, a blast or fire lowers the laboratory by one step.",
       "QualityFromSL": "Potion quality from SL",
       "QualityFromSLHint": "2–3 SL make a good potion (mundane: +1 dose), 4+ SL an excellent one (mundane: extra doses equal to the SL; magical: 1 tether point less per dose, at least 1).",
@@ -1580,6 +1584,14 @@
       },
       "FlawRecipe": "-1 SL when brewing from this book."
     },
+    "Addiction": {
+      "Name": "Addiction: {potion}",
+      "TestTitle": "addiction ({potion})",
+      "Resisted": "The drinker keeps the habit in check – no addiction.",
+      "Gained": "The drinker is now addicted to {potion}: −10 to all Tests while craving (over a day without a dose).",
+      "Sated": "The dose sates the craving for {potion}.",
+      "Recovered": "{name} is over: three mornings without giving in."
+    },
     "Steps": {
       "Healed": "Heals {wounds} Wounds.",
       "Removed": "Removes {condition}.",
@@ -1595,7 +1607,9 @@
       "ThrownCondition": "{target}: {value} × {condition}.",
       "ThrownDamage": "{target}: {damage} damage. {details}",
       "TimedName": "{condition} (timed)",
-      "TimedFor": "Lasts {duration}."
+      "TimedFor": "Lasts {duration}.",
+      "ThrownResisted": "{target} resists: no {condition}.",
+      "ResistTitle": "resisting the potion"
     }
   }
 }

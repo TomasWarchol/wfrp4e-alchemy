@@ -10,6 +10,7 @@ import { iconMarkup, registerUi, syncChatStyle, windMarkup } from './ui.js';
 import { registerInventory } from './inventory.js';
 import { BrewingEngine } from './logic/brewing-engine.js';
 import { PotionConsumer } from './logic/potion-consumer.js';
+import { AddictionEngine } from './logic/addiction.js';
 import { SpoilageEngine } from './logic/spoilage-engine.js';
 import { CalendarIntegration } from './calendar-integration.js';
 import { AlchemyWorkshopApp } from './apps/alchemy-workshop.js';
@@ -122,6 +123,17 @@ Hooks.once('init', () => {
     type: Boolean,
     default: true
   });
+
+  // Nałóg – zasada domowa dla mikstur uzależniających
+  game.settings.register(MODULE_ID, 'addiction', {
+    name: 'GOLD_ALCHEMY.Settings.Addiction',
+    hint: 'GOLD_ALCHEMY.Settings.AddictionHint',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true
+  });
+  AddictionEngine.init();
 
   game.settings.register(MODULE_ID, 'requireEquippedBooks', {
     scope: 'world',

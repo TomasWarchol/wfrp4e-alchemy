@@ -372,14 +372,19 @@ Inne pary do przejrzenia:
    - opis Eliksiru Zapomnienia;
    - filtry `startsWith`;
    - wykluczenie Splatania i Języka (Magicznego) z mikstur niemagicznych.
-2. **Test obronny celu w rzucanych miksturach (P1)** i rzut w jeden cel albo obszar `blast` (P2).
-3. **Limit kumulacji mikstur świeckich (P5).**
+2. **Test obronny celu w rzucanych miksturach (P1) i rzut w jeden cel z obszarem `blast` (P2).** **Zrobione 2026-11-20**, sprawdzone w DEV-test.
+   - Decyzja Tomka: prosty test celu, bez okna (`resist` w kroku); sukces chroni przed stanem, obrażenia i Podpalenie działają.
+   - Rzut w pierwszy namierzony cel, zasięg = Bonus Siły z progami systemu, ponad 3× zasięg nie da się rzucić.
+   - Wybuch: ogień 4, Ładunek Górniczy 5, błyski i Gromowy Dzban 3, proszki i kwasy 2. Wartości są w polu `blast` receptury.
+3. **Limit kumulacji (P5).** **Zrobione 2026-11-20**, sprawdzone w DEV-test.
+   - Decyzja Tomka: ta sama mikstura odnawia czas; z różnych mikstur do tej samej cechy albo testu liczy się najwyższa premia; kary się sumują.
+   - Dotyczy wszystkich mikstur (`applyHighestBonus` w `effect-data.js`), także flakonów uwarzonych wcześniej.
 4. **Automatyzacja flag (P6).** **Zrobione 2026-11-20**, sprawdzone w DEV-test:
    - Klepsydra, oba oleje do broni, odporność na Strach i Grozę, Maska Śmierci (Zatrucie).
    - Zostały: Kompas z Meteorytowego Srebra (+2 PS) i Zaskoczenie celu przy Niewidzialności.
 5. **Stany z czasem (P7).** **Zrobione 2026-11-20**, sprawdzone w DEV-test: Cordelia, Krople Snu, Mandragora. Krok receptury `add` przyjmuje teraz `duration`.
    - Przy okazji naprawione: skrypty blokujące stan w 12 miksturach dawały czerwone błędy przy każdym nałożeniu stanu (podwójne usuwanie).
-6. **Nałóg (P4)** jako zasada domowa z ustawieniem świata (domyślnie włączona).
+6. **Nałóg (P4).** **Zrobione 2026-11-20**, sprawdzone w DEV-test. Zasada domowa z ustawieniem świata `addiction` (domyślnie włączona), kod w `scripts/logic/addiction.js`, pole `addictive` w 6 recepturach.
 7. **Przegląd balansu (P8)** po sprawdzeniu wartości z WoM.
 
 Decyzji wymagają:

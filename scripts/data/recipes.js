@@ -345,7 +345,8 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.AqshyLiquidFire.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.AqshyLiquidFire.Effect",
     "instantEffect": "liquidFireExplosion",
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "blast": 4
   },
   {
     "id": "potion-aqshy-blazing-heart",
@@ -1014,7 +1015,8 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.Alkahest.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.Alkahest.Effect",
     "instantEffect": "alkahestAcid",
-    "volatility": "major"
+    "volatility": "major",
+    "blast": 2
   },
   {
     "id": "potion-meteoric-compass",
@@ -1576,7 +1578,8 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.HyshSunsWrath.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.HyshSunsWrath.Effect",
     "instantEffect": "hyshSunFlash",
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "blast": 3
   },
   {
     "id": "potion-hysh-lucidity-draught",
@@ -2188,7 +2191,8 @@ export const ALCHEMY_RECIPES = [
     "volatility": "moderate",
     "creationTimeDays": 2,
     "listPriceSS": 20,
-    "availability": "scarce"
+    "availability": "scarce",
+    "blast": 2
   },
   {
     "id": "potion-phosphor-fire",
@@ -2223,7 +2227,8 @@ export const ALCHEMY_RECIPES = [
     "volatility": "moderate",
     "creationTimeDays": 2,
     "listPriceSS": 20,
-    "availability": "scarce"
+    "availability": "scarce",
+    "blast": 4
   },
   {
     "id": "potion-flash-powder",
@@ -2256,7 +2261,8 @@ export const ALCHEMY_RECIPES = [
     "effectDescription": "GOLD_ALCHEMY.Recipes.FlashPowder.Effect",
     "instantEffect": "flashPowderBlast",
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "blast": 3
   },
   {
     "id": "potion-smoke-pellet",
@@ -3478,7 +3484,10 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "extreme",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "addictive": {
+      "difficulty": "hard"
+    }
   },
   {
     "id": "potion-reactionary-restorative",
@@ -4820,7 +4829,11 @@ export const ALCHEMY_RECIPES = [
       },
       {
         "add": "blinded",
-        "value": 1
+        "value": 1,
+        "resist": {
+          "test": "dodge",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "major"
@@ -5165,10 +5178,15 @@ export const ALCHEMY_RECIPES = [
     "thrownSteps": [
       {
         "add": "stunned",
-        "value": 1
+        "value": 1,
+        "resist": {
+          "test": "endurance",
+          "difficulty": "challenging"
+        }
       }
     ],
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "blast": 2
   },
   {
     "id": "potion-aethyric-salts",
@@ -5480,14 +5498,19 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "deafened",
         "value": 1,
-        "perSL": true
+        "perSL": true,
+        "resist": {
+          "test": "endurance",
+          "difficulty": "challenging"
+        }
       },
       {
         "damage": 2
       }
     ],
     "volatility": "major",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "blast": 3
   },
   {
     "id": "potion-tar-bomb",
@@ -5563,11 +5586,16 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "blinded",
         "value": 1,
-        "perSL": true
+        "perSL": true,
+        "resist": {
+          "test": "dodge",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "blast": 2
   },
   {
     "id": "potion-stinkpot",
@@ -5873,7 +5901,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "extreme",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "blast": 5
   },
   {
     "id": "potion-glowworm-phial",
@@ -6033,11 +6062,16 @@ export const ALCHEMY_RECIPES = [
     "thrownSteps": [
       {
         "add": "stunned",
-        "value": 1
+        "value": 1,
+        "resist": {
+          "test": "endurance",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "blast": 2
   },
   {
     "id": "potion-sympathetic-ink",
@@ -6718,7 +6752,10 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "major",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "addictive": {
+      "difficulty": "challenging"
+    }
   },
   {
     "id": "potion-mustard-plaster",
@@ -7628,7 +7665,10 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "extreme",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "addictive": {
+      "difficulty": "difficult"
+    }
   },
   {
     "id": "potion-gravewine",
@@ -7708,7 +7748,10 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "major",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "addictive": {
+      "difficulty": "challenging"
+    }
   },
   {
     "id": "potion-black-vial",
@@ -7750,7 +7793,11 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "poisoned",
         "value": 1,
-        "perSL": true
+        "perSL": true,
+        "resist": {
+          "test": "endurance",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "major",
@@ -7880,7 +7927,10 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "extreme",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "addictive": {
+      "difficulty": "difficult"
+    }
   },
   {
     "id": "potion-nightmare-dust",
@@ -7922,12 +7972,17 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "broken",
         "value": 1,
-        "perSL": true
+        "perSL": true,
+        "resist": {
+          "test": "cool",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "major",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "blast": 2
   },
   {
     "id": "potion-turncoat-salve",
@@ -8178,6 +8233,9 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "extreme",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "addictive": {
+      "difficulty": "hard"
+    }
   }
 ];
