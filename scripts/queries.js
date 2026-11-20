@@ -9,6 +9,7 @@ import { registerQuery, queryGM, notifyUsers } from '../../wfrp4e-companion-lib/
 const REFUND_NOTIFY = `${MODULE_ID}.refundNotify`;
 const SEVER_TETHER = `${MODULE_ID}.severTether`;
 const APPLY_THROWN = `${MODULE_ID}.applyThrown`;
+const CREATE_CLOUD = `${MODULE_ID}.createCloud`;
 
 export class AlchemyQueries {
   /** Rejestracja handlerów – wołać w hooku "init". */
@@ -16,6 +17,28 @@ export class AlchemyQueries {
     registerQuery(REFUND_NOTIFY, data => this._onRefundNotify(data));
     registerQuery(SEVER_TETHER, (data, { user }) => this._onSeverTether(data, user));
     registerQuery(APPLY_THROWN, (data, { user }) => this._onApplyThrown(data, user));
+    registerQuery(CREATE_CLOUD, (data, { user }) => this._onCreateCloud(data, user));
+  }
+
+  /**
+   * Tworzy chmurę rzuconej mikstury (region sceny tworzy MG). Zwraca liczbę rund albo 0.
+   */
+  static async createCloud(data) {
+    if (game.user.isGM) return this._onCreateCloud(data, game.user);
+    return Number(await queryGM(CREATE_CLOUD, data)) || 0;
+  }
+
+  /** Wykonywane u MG: rzucający musi należeć do pytającego użytkownika. */
+  static async _onCreateCloud({ recipeId, sceneId, x, y, level = null, name, throwerUuid } = {}, requester) {
+    if (!game.user.isGM) return 0;
+    const thrower = await fromUuid(throwerUuid);
+    if (!requester || !thrower || (!requester.isGM && !thrower.testUserPermission(requester, 'OWNER'))) return 0;
+    const { RecipeRegistry } = await import('./logic/recipe-registry.js');
+    const { CloudEngine } = await import('./logic/clouds.js');
+    const recipe = RecipeRegistry.getRecipeById(recipeId, { includeUnavailable: true });
+    const scene = game.scenes.get(sceneId);
+    if (!recipe?.cloud || !scene || !Number.isFinite(Number(x)) || !Number.isFinite(Number(y))) return 0;
+    return CloudEngine.create({ scene, recipe, name: String(name || recipe.id).slice(0, 80), x: Number(x), y: Number(y), level });
   }
 
   /**

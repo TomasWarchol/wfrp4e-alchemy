@@ -195,7 +195,7 @@
       "EffectRefreshed": "{effect}: the same potion again – its duration starts over instead of stacking.",
       "ThrowMissed": "Miss! The flask shatters near the target – the GM decides where it landed and who it caught.",
       "ThrowFizzled": "The spoiled potion shatters with no effect.",
-      "CloudCreated": "A cloud covers the area for {rounds} rounds, granting full cover within it.",
+      "CloudCreated": "A cloud covers the area for {rounds} rounds and fades on its own.",
       "ThrownAblaze": "{target}: Ablaze ×{value}.",
       "ThrownAlkahest": "{target}: chemical burns – Ablaze ×{value}.",
       "ThrownAcid": "{target}: acid burns – Ablaze ×{value}.",
@@ -318,7 +318,7 @@
       "SmokePellet": {
         "Name": "Smoke Pellet",
         "Desc": "A smoke bomb creating a choking cloud of concealment.",
-        "Effect": "A smoke cloud for 1d10 rounds: blocks sight, ranged attacks and magic missiles."
+        "Effect": "Thrown: a smoke cloud (4-yard radius) for 1d10 rounds where it lands, or at your feet without a target. Nobody can see into or through it, so ranged attacks and spells need a line of sight around it."
       },
       "MorrSalve": {
         "Name": "Morr's Salve",
@@ -610,7 +610,7 @@
       "UlguShadowMist": {
         "Name": "Shadow Mist Draught",
         "Desc": "A phial shattered on the ground creating a cloud of impenetrable shadow.",
-        "Effect": "Creates 6 m radius shadow fog for 1d10 rounds (total concealment)."
+        "Effect": "Thrown: shadow fog (6-yard radius) for 1d10 rounds where it lands, or at your feet without a target. Nobody can see into or through it (total concealment)."
       },
       "UlguPhantasmagoria": {
         "Name": "Phantasmagoria Elixir",
@@ -895,7 +895,7 @@
       "Stinkpot": {
         "Name": "Stinkpot",
         "Desc": "A sealed pot of rotten sulphur and garlic mash, used to flush out cellars and break up crowds.",
-        "Effect": "Thrown: a reeking cloud (6-yard radius) for 1d10 rounds; anyone inside must pass an Average (+20) Endurance Test each round or gain 1 Fatigued Condition (GM)."
+        "Effect": "Thrown: a reeking cloud (6-yard radius) for 1d10 rounds; anyone inside at the start of their turn must pass an Average (+20) Endurance Test or gain 1 Fatigued Condition."
       },
       "Nightblack": {
         "Name": "Nightblack",
@@ -1130,7 +1130,7 @@
       "PlagueVapour": {
         "Name": "Plague Vapour",
         "Desc": "A sealed clay egg of grave-rot miasma. The law hangs its brewers; witch hunters, suspecting the Plague Lord, burn them – usually with the house.",
-        "Effect": "Thrown: a sickly cloud (6-yard radius) for 1d10 rounds; anyone inside must pass a Difficult (−10) Endurance Test or contract a disease of the GM's choice."
+        "Effect": "Thrown: a sickly cloud (6-yard radius) for 1d10 rounds; anyone inside at the start of their turn must pass a Difficult (−10) Endurance Test or contract a disease of the GM's choice (the chat card reminds the GM)."
       },
       "SoulburnTonic": {
         "Name": "Soulburn Tonic",
@@ -1584,6 +1584,9 @@
       },
       "FlawRecipe": "-1 SL when brewing from this book."
     },
+    "Cloud": {
+      "Disease": "{target} breathes the plague – the GM chooses a disease."
+    },
     "Addiction": {
       "Name": "Addiction: {potion}",
       "TestTitle": "addiction ({potion})",
@@ -1601,8 +1604,8 @@
       "Resolve": "Regains 1 Resolve point.",
       "ResolveFull": "Resolve is already full.",
       "Corruption": "Gains {value} Corruption.",
-      "TestPassed": "The drinker resists.",
-      "TestFailed": "The drinker fails to resist.",
+      "TestPassed": "Resisted.",
+      "TestFailed": "Failed to resist.",
       "TestTitle": "Resist the potion",
       "ThrownCondition": "{target}: {value} × {condition}.",
       "ThrownDamage": "{target}: {damage} damage. {details}",

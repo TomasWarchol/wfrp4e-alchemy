@@ -11,6 +11,7 @@ import { registerInventory } from './inventory.js';
 import { BrewingEngine } from './logic/brewing-engine.js';
 import { PotionConsumer } from './logic/potion-consumer.js';
 import { AddictionEngine } from './logic/addiction.js';
+import { CloudEngine } from './logic/clouds.js';
 import { SpoilageEngine } from './logic/spoilage-engine.js';
 import { CalendarIntegration } from './calendar-integration.js';
 import { AlchemyWorkshopApp } from './apps/alchemy-workshop.js';
@@ -134,6 +135,7 @@ Hooks.once('init', () => {
     default: true
   });
   AddictionEngine.init();
+  CloudEngine.init();
 
   game.settings.register(MODULE_ID, 'requireEquippedBooks', {
     scope: 'world',

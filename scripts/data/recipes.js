@@ -1942,7 +1942,12 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.UlguShadowMist.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.UlguShadowMist.Effect",
     "instantEffect": "ulguShadowMist",
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "cloud": {
+      "radius": 6,
+      "color": "#3b2d4f",
+      "sight": true
+    }
   },
   {
     "id": "potion-ulgu-phantasmagoria",
@@ -2301,7 +2306,12 @@ export const ALCHEMY_RECIPES = [
     "effectDescription": "GOLD_ALCHEMY.Recipes.SmokePellet.Effect",
     "instantEffect": "smokePelletCloud",
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "cloud": {
+      "radius": 4,
+      "color": "#8a8a8a",
+      "sight": true
+    }
   },
   {
     "id": "potion-smelling-salts",
@@ -5634,7 +5644,23 @@ export const ALCHEMY_RECIPES = [
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
     "instantEffect": "recipeCloud",
     "volatility": "moderate",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "cloud": {
+      "radius": 6,
+      "color": "#8a9a3a",
+      "roundSteps": [
+        {
+          "test": "endurance",
+          "difficulty": "average",
+          "fail": [
+            {
+              "add": "fatigued",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "potion-nightblack",
@@ -8185,7 +8211,22 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipeCloud",
     "volatility": "extreme",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "cloud": {
+      "radius": 6,
+      "color": "#5f7a2e",
+      "roundSteps": [
+        {
+          "test": "endurance",
+          "difficulty": "difficult",
+          "fail": [
+            {
+              "note": "GOLD_ALCHEMY.Cloud.Disease"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "potion-soulburn-tonic",

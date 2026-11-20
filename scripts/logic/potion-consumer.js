@@ -208,8 +208,9 @@ export class PotionConsumer {
     }
 
     let difficulty = 'challenging';
-    const throwerToken = thrower.getActiveTokens?.(true, false)?.find(token => token.scene === target?.scene) ?? null;
-    if (!isCloud && throwerToken) {
+    const throwerToken = thrower.getActiveTokens?.(true, false)?.find(token => token.scene === (target?.scene ?? canvas?.scene)) ?? null;
+    // Zasięg sprawdzany także dla chmur rzucanych w cel; chmura bez celu spada pod nogi rzucającego
+    if (target && throwerToken) {
       const range = Math.max(1, Number(thrower.system?.characteristics?.s?.bonus) || 1);
       const band = throwRangeBand(this._distance(throwerToken, target), range);
       if (!band) {
@@ -233,7 +234,21 @@ export class PotionConsumer {
     if (!spoilage.stillWorks) {
       lines.push(game.i18n.localize('GOLD_ALCHEMY.Chat.ThrowFizzled'));
     } else if (isCloud) {
-      const rounds = (await (new Roll('1d10')).evaluate()).total;
+      // Chmura jako region sceny w miejscu celu (albo pod rzucającym); bez żetonu na scenie – tylko opis
+      const spot = target ?? throwerToken;
+      let rounds = 0;
+      if (spot && recipe?.cloud) {
+        rounds = await AlchemyQueries.createCloud({
+          recipeId: recipe.id,
+          sceneId: spot.scene.id,
+          x: spot.center.x,
+          y: spot.center.y,
+          level: spot.document.level ?? null,
+          name: item.name,
+          throwerUuid: thrower.uuid
+        });
+      }
+      if (!rounds) rounds = (await (new Roll('1d10')).evaluate()).total;
       lines.push(game.i18n.format('GOLD_ALCHEMY.Chat.CloudCreated', { rounds }));
     } else if (!hit.success) {
       lines.push(game.i18n.localize('GOLD_ALCHEMY.Chat.ThrowMissed'));

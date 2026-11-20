@@ -195,7 +195,7 @@
       "EffectRefreshed": "{effect}: ta sama mikstura jeszcze raz – czas działania liczy się od nowa, premie się nie dublują.",
       "ThrowMissed": "Chybienie! Flakon roztrzaskuje się obok celu – MG decyduje, gdzie upadł i kogo zahaczył.",
       "ThrowFizzled": "Zepsuta mikstura rozbija się bez żadnego efektu.",
-      "CloudCreated": "Chmura spowija obszar na {rounds} rund i daje całkowitą osłonę w swoim zasięgu.",
+      "CloudCreated": "Chmura spowija obszar na {rounds} rund i sama się rozwiewa.",
       "ThrownAblaze": "{target}: Podpalenie ×{value}.",
       "ThrownAlkahest": "{target}: chemiczne oparzenia – Podpalenie ×{value}.",
       "ThrownAcid": "{target}: oparzenia kwasem – Podpalenie ×{value}.",
@@ -318,7 +318,7 @@
       "SmokePellet": {
         "Name": "Bomba Dymna",
         "Desc": "Granat dymny tworzący gryzącą chmurę zasłony.",
-        "Effect": "Chmura dymu na 1k10 rund: całkowicie przesłania widok, uniemożliwia strzały i magiczne pociski."
+        "Effect": "Rzucana: chmura dymu (promień 4 m) na 1k10 rund w miejscu upadku, a bez celu pod nogami rzucającego. Nikt nie widzi do środka ani przez nią, więc strzały i zaklęcia potrzebują linii wzroku obok chmury."
       },
       "MorrSalve": {
         "Name": "Balsam z Morzyca",
@@ -610,7 +610,7 @@
       "UlguShadowMist": {
         "Name": "Wywary Mgły Cienia",
         "Desc": "Flakon rozbijany o ziemię, tworzący chmurę nieprzeniknionego cienia.",
-        "Effect": "Tworzy mgłę cienia o promieniu 6 m na 1k10 rund (całkowita osłona)."
+        "Effect": "Rzucany: mgła cienia (promień 6 m) na 1k10 rund w miejscu upadku, a bez celu pod nogami rzucającego. Nikt nie widzi do środka ani przez nią (całkowita osłona)."
       },
       "UlguPhantasmagoria": {
         "Name": "Eliksir Zwodniczej Maski",
@@ -895,7 +895,7 @@
       "Stinkpot": {
         "Name": "Smrodzielnik",
         "Desc": "Zapieczętowany garnek zgniłej siarki i czosnkowej papki, używany do wykurzania piwnic i rozpędzania tłumów.",
-        "Effect": "Rzucany: cuchnąca chmura (promień 6 m) na 1k10 rund; każdy w środku co rundę zdaje Przeciętny (+20) Test Odporności albo otrzymuje 1 Stan Zmęczenie (MG)."
+        "Effect": "Rzucany: cuchnąca chmura (promień 6 m) na 1k10 rund; każdy w środku na początku swojej tury zdaje Przeciętny (+20) Test Odporności albo otrzymuje 1 Stan Zmęczenie."
       },
       "Nightblack": {
         "Name": "Czernidło Nocne",
@@ -1130,7 +1130,7 @@
       "PlagueVapour": {
         "Name": "Opar Zarazy",
         "Desc": "Zapieczętowane gliniane jajo miazmatu z grobowej zgnilizny. Prawo wiesza jego warzycieli; łowcy czarownic, podejrzewając Pana Zarazy, palą ich – zwykle razem z domem.",
-        "Effect": "Rzucany: chorobliwa chmura (promień 6 m) na 1k10 rund; każdy w środku zdaje Trudny (−10) Test Odporności albo zapada na chorobę wybraną przez MG."
+        "Effect": "Rzucany: chorobliwa chmura (promień 6 m) na 1k10 rund; każdy w środku na początku swojej tury zdaje Trudny (−10) Test Odporności albo zapada na chorobę wybraną przez MG (przypomina o tym karta czatu)."
       },
       "SoulburnTonic": {
         "Name": "Tonik Spalonej Duszy",
@@ -1584,6 +1584,9 @@
       },
       "FlawRecipe": "-1 PS przy warzeniu z tej księgi."
     },
+    "Cloud": {
+      "Disease": "{target} wdycha zarazę – MG wybiera chorobę."
+    },
     "Addiction": {
       "Name": "Nałóg: {potion}",
       "TestTitle": "nałóg ({potion})",
@@ -1601,8 +1604,8 @@
       "Resolve": "Odzyskuje 1 Punkt Determinacji.",
       "ResolveFull": "Determinacja jest już pełna.",
       "Corruption": "Otrzymuje Punkty Zepsucia: {value}.",
-      "TestPassed": "Pijący się opiera.",
-      "TestFailed": "Pijący nie zdołał się oprzeć.",
+      "TestPassed": "Opiera się.",
+      "TestFailed": "Nie zdołał się oprzeć.",
       "TestTitle": "Opór wobec mikstury",
       "ThrownCondition": "{target}: {value} × {condition}.",
       "ThrownDamage": "{target}: {damage} obrażeń. {details}",

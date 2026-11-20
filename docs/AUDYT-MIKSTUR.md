@@ -50,7 +50,7 @@ Smolista Bomba (Pochwycenie) może zostać bez testu, bo działa jak broń z cec
 - Rzut w jeden cel (pierwszy namierzony) z prawdziwym testem broni: zasięg, modyfikatory i lokacja trafienia.
 - Mikstury obszarowe dostają `blast: N` (jak cecha Wybuchowa). Skutek obejmuje żetony w promieniu N m od celu, z limitem odległości rzutu BS×3 (jak broń rzucana).
 
-### P3. Chmury to tylko tekst ~
+### P3. Chmury to tylko tekst ~ (zrobione 2026-11-21)
 
 Bomba Dymna, Mgła Cienia, Smrodzielnik i Opar Zarazy piszą na czacie „chmura na X rund” i nic więcej. Smrodzielnik i Opar Zarazy mają w opisie test co rundę, ale nikt go nie wywołuje.
 
@@ -250,7 +250,7 @@ Inne pary do przejrzenia:
 ### Ulgu (7)
 | Mikstura | Ocena | Uwaga |
 |---|---|---|
-| Wywary Mgły Cienia | ~ | Chmura tylko tekstem (P3) |
+| Wywary Mgły Cienia | ✓ | Region blokujący widzenie (P3, zrobione) |
 | Eliksir Zwodniczej Maski | ~ | Filtr `startsWith` (P9) |
 | Olej Cichego Kroku | ✓ | |
 | Eliksir Widmowego Przejścia | ✗ | Flaga nieczytana i czas 10 zamiast 1k10 rund |
@@ -265,14 +265,14 @@ Inne pary do przejrzenia:
 | Kwas Witriolowy | ~ | Obszar i cele (P2) |
 | Ogień Fosforowy | ~ | Obszar i cele (P2) |
 | Oślepiający Proszek Błyskowy | ✗ | Oślepienie bez testu, „3 m” niesprawdzane (P1, P2) |
-| Bomba Dymna | ~ | Chmura tylko tekstem (P3) |
+| Bomba Dymna | ✓ | Region blokujący widzenie (P3, zrobione) |
 | Sole Trzeźwiące | ✓ | |
 | Alchemiczny Klej Szybkoschnący | ~ | Brak efektu; mógłby dawać Pochwycenie jak Smolista Bomba |
 | Kwas Trolla | ~ | Obszar i cele (P2); cechy Przebijający i Niebezpieczny nie działają |
 | Gromowy Dzban | ✗ | Ogłuszenie bez testu (P1) |
 | Smolista Bomba | ✓ | Pochwycenie bez testu jest zgodne z zasadami |
 | Woreczek Wapna | ✗ | Oślepienie bez testu (P1) |
-| Smrodzielnik | ✗ | Test co rundę tylko w opisie (P3) |
+| Smrodzielnik | ✓ | Test na początku tury w chmurze (P3, zrobione) |
 | Czernidło Nocne | ~ | Działa przy każdym Skradaniu, nie tylko w ciemności |
 | Olej Ostrej Klingi | ~ | Działa każdą bronią białą, nie tylko naoliwioną |
 | Krople Pewnej Ręki | ✓ | |
@@ -358,7 +358,7 @@ Inne pary do przejrzenia:
 | Pył Koszmarów | ✗ | Panika bez testu Opanowania (P1) |
 | Maść Zmiennolicego | ✓ | |
 | Eliksir Pustego Serca | ✗ | Błąd: Zmęczenie znika (P7) |
-| Opar Zarazy | ✗ | Test tylko w opisie (P3) |
+| Opar Zarazy | ✓ | Test na początku tury, notka o chorobie dla MG (P3, zrobione) |
 | Tonik Spalonej Duszy | ✓ | Kandydat na Nałóg |
 
 **Podsumowanie:** 157 mikstur, z czego 87 ✓, 41 ~ i 29 ✗.

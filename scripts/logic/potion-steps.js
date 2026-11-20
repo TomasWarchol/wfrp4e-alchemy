@@ -13,6 +13,9 @@
  *   { fortune: 1 } / { resolve: 1 }                    przywraca Szczęście / Determinację (najwyżej do Przeznaczenia / Odporności Psychicznej)
  *   { corruption: 1 }                                  dodaje Punkty Zepsucia
  *   { test: 'endurance' | 'cool', difficulty: 'hard', pass: [...], fail: [...] }
+ *   { note: 'GOLD_ALCHEMY.…' }                         linia dla MG na karcie czatu ({target} – imię)
+ * Chmury (`'recipeCloud'`, receptura z `cloud`) – zob. clouds.js; `cloud.roundSteps` to kroki jak przy wypiciu,
+ * wykonywane na początku tury każdego żetonu w chmurze (testy bez okna).
  * Kroki rzutu (na celu, `sl` – PS testu trafienia):
  *   { add: 'blinded', value: 1, perSL: true }          stan, +1 poziom za każdy PS
  *   { damage: 4, perSL: true, ignoreAP: false }        obrażenia
@@ -117,6 +120,8 @@ export async function runDrinkSteps(steps, actor, ctx) {
       const cur = Number(actor.system?.status?.corruption?.value) || 0;
       await actor.update({ 'system.status.corruption.value': Math.max(0, cur + step.corruption) });
       lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.Corruption', { value: step.corruption }));
+    } else if (step.note) {
+      lines.push(ctx.i18n(step.note, { target: actor.prototypeToken?.name || actor.name }));
     } else if (step.test) {
       const result = await ctx.test(actor, TEST_SKILLS[step.test] ?? step.test, step.difficulty || 'challenging');
       if (!result) continue; // anulowane okno testu: bez skutków testu

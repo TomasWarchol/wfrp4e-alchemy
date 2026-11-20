@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+- **Clouds from thrown potions are real areas on the scene.** Smoke Pellet (4 yards), Shadow Mist Draught, Stinkpot and Plague Vapour (6 yards) leave a circle where they land, or at the thrower's feet without a target. Thrown at a target, they follow the range rules of thrown potions.
+  - Smoke and shadow fog block sight into and through the cloud.
+  - Anyone inside the Stinkpot at the start of their turn makes an Average (+20) Endurance Test or gains 1 Fatigued Condition. In the Plague Vapour it is a Difficult (−10) Endurance Test, and a failure reminds the GM to choose a disease. These tests roll without a dialog.
+  - A cloud lasts 1d10 rounds: in combat until the start of the round it runs out, outside combat 6 seconds of world time per round. It also goes away when the combat ends.
+- Resistance results on chat cards no longer say "the drinker", so they read right for clouds too.
+
 ## 1.10.0
 - **80 new original recipes** (120 of the module's own in total, available without any sourcebook): 23 for the Colleges, each true to its Wind, 5 general magical, 14 mundane alchemy (thrown jars, tar and lime bombs, oils and pastes), 14 apothecary and 14 herbal remedies, and 10 forbidden brews. Mundane alchemy, apothecary and herbalism now work without the official modules.
 - Remedies behave like Old World medicine: several have side effects (a festering wrap, a burning salve, addiction).
