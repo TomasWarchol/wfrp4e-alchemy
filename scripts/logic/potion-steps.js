@@ -8,6 +8,8 @@
  *   { heal: 'tb' | '2tb' | '3tb' | 4 | '1d10' }        leczy Rany (formuła rzutu albo wielokrotność BWt)
  *   { remove: 'poisoned', value: 1 | 'all' }            zdejmuje poziomy stanu
  *   { add: 'fatigued', value: 1 }                      nakłada stan
+ *   { add: 'unconscious', duration: { formula: '1d10', units: 'hours' } }
+ *                                                      stan na określony czas: po nim efekt-licznik zdejmuje stan
  *   { fortune: 1 } / { resolve: 1 }                    przywraca Szczęście / Determinację (najwyżej do Przeznaczenia / Odporności Psychicznej)
  *   { corruption: 1 }                                  dodaje Punkty Zepsucia
  *   { test: 'endurance' | 'cool', difficulty: 'hard', pass: [...], fail: [...] }
@@ -23,6 +25,36 @@ export const RECIPE_THROWN = 'recipeThrown';
 export const RECIPE_CLOUD = 'recipeCloud';
 
 const TEST_SKILLS = { endurance: 'NAME.Endurance', cool: 'NAME.Cool' };
+
+/** Sekundy w jednostce czasu kroku. */
+const UNIT_SECONDS = { rounds: 6, minutes: 60, hours: 3600, days: 86400 };
+
+/**
+ * Dane efektu-licznika: po wygaśnięciu (Foundry v14 usuwa go sam) zdejmuje stan nałożony przez miksturę.
+ * Ręczne usunięcie efektu też zdejmuje stan.
+ * @param {{name: string, img?: string, key: string, value?: number, seconds: number}} options
+ */
+export function timedConditionEffect({ name, img, key, value = 1, seconds }) {
+  return {
+    name,
+    img: img || 'icons/svg/clockwork.svg',
+    duration: { value: Math.max(1, Math.round(seconds)), units: 'seconds' },
+    system: {
+      scriptData: [{
+        label: name,
+        trigger: 'deleteEffect',
+        script: `if (this.actor.hasCondition(${JSON.stringify(key)})) await this.actor.removeCondition(${JSON.stringify(key)}, ${Number(value) || 1});`
+      }]
+    }
+  };
+}
+
+/** Czas kroku w sekundach (rzut formuły × jednostka) albo null, gdy krok nie ma czasu. */
+async function stepSeconds(duration, ctx) {
+  if (!duration?.formula) return null;
+  const amount = await ctx.roll(String(duration.formula));
+  return Math.max(1, amount) * (UNIT_SECONDS[duration.units] ?? 1);
+}
 
 /** Liczba Ran do wyleczenia. */
 async function healAmount(spec, actor, ctx) {
@@ -65,6 +97,12 @@ export async function runDrinkSteps(steps, actor, ctx) {
       const value = Number(step.value) || 1;
       await actor.addCondition?.(step.add, value);
       lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.Added', { condition: ctx.conditionLabel(step.add), value }));
+      const seconds = await stepSeconds(step.duration, ctx);
+      if (seconds) {
+        const name = ctx.i18n('GOLD_ALCHEMY.Steps.TimedName', { condition: ctx.conditionLabel(step.add) });
+        await actor.createEmbeddedDocuments?.('ActiveEffect', [timedConditionEffect({ name, key: step.add, value, seconds })]);
+        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.TimedFor', { duration: ctx.formatDuration?.(seconds) ?? `${seconds} s` }));
+      }
     } else if (step.fortune || step.resolve) {
       const [pool, cap, key] = step.fortune ? ['fortune', 'fate', 'Fortune'] : ['resolve', 'resilience', 'Resolve'];
       const cur = Number(actor.system?.status?.[pool]?.value) || 0;

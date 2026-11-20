@@ -7,7 +7,7 @@ import { SpoilageEngine } from './spoilage-engine.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { CalendarIntegration } from '../calendar-integration.js';
 import { AlchemyQueries } from '../queries.js';
-import { RECIPE_CLOUD, RECIPE_DRINK, RECIPE_THROWN, runDrinkSteps, runThrownSteps, stepsHeal } from './potion-steps.js';
+import { RECIPE_CLOUD, RECIPE_DRINK, RECIPE_THROWN, runDrinkSteps, runThrownSteps, stepsHeal, timedConditionEffect } from './potion-steps.js';
 
 /** Mikstury bojowe: rzuca się je we wskazane tokeny zamiast pić. */
 const THROWN_EFFECTS = new Set([
@@ -295,8 +295,48 @@ export class PotionConsumer {
       roll: async (formula) => (await (new Roll(formula)).evaluate()).total,
       test: (actor, skillKey, difficulty) => this._drinkerTest(actor, skillKey, difficulty, game.i18n.localize('GOLD_ALCHEMY.Steps.TestTitle')),
       conditionLabel: (key) => game.i18n.localize(game.wfrp4e?.config?.conditions?.[key] ?? key),
-      damageTypes: game.wfrp4e?.config?.DAMAGE_TYPE || { NORMAL: 0, IGNORE_AP: 1 }
+      damageTypes: game.wfrp4e?.config?.DAMAGE_TYPE || { NORMAL: 0, IGNORE_AP: 1 },
+      formatDuration: (seconds) => this._formatDuration(seconds)
     };
+  }
+
+  /** Czas w czytelnej postaci: godziny, a krótsze w minutach. */
+  static _formatDuration(seconds) {
+    return seconds >= 3600
+      ? game.i18n.format('GOLD_ALCHEMY.Time.HoursShort', { count: Math.round(seconds / 360) / 10 })
+      : game.i18n.format('GOLD_ALCHEMY.Time.Minutes', { count: Math.max(1, Math.round(seconds / 60)) });
+  }
+
+  /**
+   * Senność po Mandragorze: po upływie onsetMinutes pijący zasypia (Utrata Przytomności) na `hours` godzin.
+   * Zdjęcie senności przed czasem (np. przez MG) nie usypia.
+   */
+  static _mandrakeOnset(drinker, hours, onsetMinutes) {
+    const label = game.i18n.localize(game.wfrp4e?.config?.conditions?.unconscious ?? 'unconscious');
+    const sleep = timedConditionEffect({
+      name: game.i18n.format('GOLD_ALCHEMY.Steps.TimedName', { condition: label }),
+      key: 'unconscious',
+      seconds: hours * 3600
+    });
+    return {
+      name: game.i18n.localize('GOLD_ALCHEMY.Effects.MandrakeDrowsy'),
+      img: 'icons/svg/sleep.svg',
+      duration: { value: onsetMinutes * 60, units: 'seconds' },
+      system: {
+        scriptData: [{
+          label: game.i18n.localize('GOLD_ALCHEMY.Effects.MandrakeDrowsy'),
+          trigger: 'deleteEffect',
+          script: `if ((this.effect.duration?.remaining ?? 0) > 0) return;\nawait this.actor.addCondition("unconscious");\nawait this.actor.createEmbeddedDocuments("ActiveEffect", [${JSON.stringify(sleep)}]);`
+        }]
+      }
+    };
+  }
+
+  /** Nakłada stan na określony czas (efekt-licznik zdejmuje go po wygaśnięciu). */
+  static async _addTimedCondition(actor, key, value, seconds, label) {
+    await actor.addCondition?.(key, value);
+    const name = game.i18n.format('GOLD_ALCHEMY.Steps.TimedName', { condition: label });
+    await actor.createEmbeddedDocuments?.('ActiveEffect', [timedConditionEffect({ name, key, value, seconds })]);
   }
 
   /**
@@ -418,6 +458,8 @@ export class PotionConsumer {
         const result = await this._drinkerTest(drinker, 'NAME.Endurance', 'challenging', game.i18n.localize('GOLD_ALCHEMY.Chat.ResistMandrake'));
         if (result?.succeeded) return i18n('GOLD_ALCHEMY.Notifications.MandrakeResisted');
         const hours = (await (new Roll('1d10+4')).evaluate()).total;
+        const onsetMinutes = 120 + (await (new Roll('1d60')).evaluate()).total;
+        await drinker.createEmbeddedDocuments?.('ActiveEffect', [this._mandrakeOnset(drinker, hours, onsetMinutes)]);
         return i18n('GOLD_ALCHEMY.Notifications.SleepComing', { hours });
       }
       case 'forgetMemory': {
@@ -446,7 +488,8 @@ export class PotionConsumer {
           : side <= 6 ? ['broken', 1, 'Broken']
             : side <= 9 ? ['stunned', 1, 'Stunned']
               : ['unconscious', 1, 'Unconscious'];
-        await drinker.addCondition?.(condition, value);
+        // Skutek uboczny trwa tyle minut, ile PS porażki; potem efekt-licznik zdejmuje stan
+        await this._addTimedCondition(drinker, condition, value, minutes * 60, i18n(`GOLD_ALCHEMY.Conditions.${key}`));
         return `${healed} ${i18n('GOLD_ALCHEMY.Notifications.CordeliaSideEffect', { condition: i18n(`GOLD_ALCHEMY.Conditions.${key}`), minutes })}`;
       }
       default:

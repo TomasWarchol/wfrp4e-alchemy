@@ -374,8 +374,11 @@ Inne pary do przejrzenia:
    - wykluczenie Splatania i Języka (Magicznego) z mikstur niemagicznych.
 2. **Test obronny celu w rzucanych miksturach (P1)** i rzut w jeden cel albo obszar `blast` (P2).
 3. **Limit kumulacji mikstur świeckich (P5).**
-4. **Automatyzacja flag (P6):** najpierw Klepsydra, potem oleje do broni, odporność na Strach i Maska Śmierci.
-5. **Stany z czasem (P7):** Cordelia, Krople Snu, Mandragora.
+4. **Automatyzacja flag (P6).** **Zrobione 2026-11-20**, sprawdzone w DEV-test:
+   - Klepsydra, oba oleje do broni, odporność na Strach i Grozę, Maska Śmierci (Zatrucie).
+   - Zostały: Kompas z Meteorytowego Srebra (+2 PS) i Zaskoczenie celu przy Niewidzialności.
+5. **Stany z czasem (P7).** **Zrobione 2026-11-20**, sprawdzone w DEV-test: Cordelia, Krople Snu, Mandragora. Krok receptury `add` przyjmuje teraz `duration`.
+   - Przy okazji naprawione: skrypty blokujące stan w 12 miksturach dawały czerwone błędy przy każdym nałożeniu stanu (podwójne usuwanie).
 6. **Nałóg (P4)** jako zasada domowa z ustawieniem świata (domyślnie włączona).
 7. **Przegląd balansu (P8)** po sprawdzeniu wartości z WoM.
 

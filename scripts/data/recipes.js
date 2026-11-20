@@ -455,7 +455,16 @@ export const ALCHEMY_RECIPES = [
           "mode": 5,
           "value": "true"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "applyDamage",
+            "script": "if (args.sourceItem?.type != \"weapon\" || !args.sourceItem.system.isMelee) return;\nawait args.actor.addCondition(\"ablaze\");\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.FlamingWeaponHit\")}`);"
+          }
+        ]
+      }
     },
     "volatility": "moderate"
   },
@@ -512,7 +521,20 @@ export const ALCHEMY_RECIPES = [
           "mode": 2,
           "value": "10"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 100;",
+            "options": {
+              "activateScript": "return !!args.extendedTest?.flags?.wfrp4e?.fear;",
+              "hideScript": "return !args.extendedTest?.flags?.wfrp4e?.fear;"
+            }
+          }
+        ]
+      }
     },
     "volatility": "major"
   },
@@ -618,7 +640,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"surprised\")) {\n  this.actor.removeCondition(\"surprised\");\n}"
+            "script": "const condition = this.actor.hasCondition(\"surprised\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -944,7 +966,20 @@ export const ALCHEMY_RECIPES = [
           "mode": 2,
           "value": "-10"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 100;",
+            "options": {
+              "activateScript": "return !!(args.context?.terror || args.extendedTest?.flags?.wfrp4e?.fear);",
+              "hideScript": "return !(args.context?.terror || args.extendedTest?.flags?.wfrp4e?.fear);"
+            }
+          }
+        ]
+      }
     },
     "volatility": "moderate"
   },
@@ -1685,6 +1720,15 @@ export const ALCHEMY_RECIPES = [
             "multiplier": 3600
           }
         }
+      },
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"poisoned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          }
+        ]
       }
     },
     "volatility": "moderate"
@@ -1731,7 +1775,21 @@ export const ALCHEMY_RECIPES = [
           "mode": 5,
           "value": "true"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "prePrepareItem",
+            "script": "if (args.item.type == \"weapon\" && args.item.system.isMelee && !args.item.system.qualities.value.some(q => q.name == \"magical\")) args.item.system.qualities.value.push({ name: \"magical\" });"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "preApplyDamage",
+            "script": "if (args.sourceItem?.type != \"weapon\" || !args.sourceItem.system.isMelee) return;\nif (!args.actor.has(game.i18n.localize(\"NAME.Undead\"))) return;\nargs.damage += 3;\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.GraveOilHit\")}`);"
+          }
+        ]
+      }
     },
     "volatility": "moderate"
   },
@@ -1782,6 +1840,15 @@ export const ALCHEMY_RECIPES = [
         "wfrp4e-alchemy": {
           "deathWard": true
         }
+      },
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "takeDamage",
+            "script": "const wounds = Number(args.actor.system.status.wounds.value) || 0;\nif (wounds > 0 && args.totalWoundLoss >= wounds) {\n  args.totalWoundLoss = wounds - 1;\n  args.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.DeathWardSaved\")}`);\n  this.effect.delete();\n}"
+          }
+        ]
       }
     },
     "volatility": "major"
@@ -3256,7 +3323,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "const poisoned = this.actor.hasCondition(\"poisoned\");\nif (poisoned) poisoned.delete();"
+            "script": "const condition = this.actor.hasCondition(\"poisoned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -3450,7 +3517,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"surprised\")) {\n  this.actor.removeCondition(\"surprised\");\n}"
+            "script": "const condition = this.actor.hasCondition(\"surprised\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           },
           {
             "label": "@effect.name",
@@ -3962,7 +4029,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"ablaze\")) {\n  this.actor.removeCondition(\"ablaze\", this.actor.hasCondition(\"ablaze\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"ablaze\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -4356,7 +4423,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"poisoned\")) {\n  this.actor.removeCondition(\"poisoned\", this.actor.hasCondition(\"poisoned\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"poisoned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -4635,7 +4702,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"blinded\")) {\n  this.actor.removeCondition(\"blinded\", this.actor.hasCondition(\"blinded\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"blinded\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -4806,7 +4873,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"stunned\")) {\n  this.actor.removeCondition(\"stunned\", this.actor.hasCondition(\"stunned\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"stunned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -4874,7 +4941,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"broken\")) {\n  this.actor.removeCondition(\"broken\", this.actor.hasCondition(\"broken\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"broken\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -5308,7 +5375,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"fatigued\")) {\n  this.actor.removeCondition(\"fatigued\", this.actor.hasCondition(\"fatigued\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"fatigued\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -6410,7 +6477,11 @@ export const ALCHEMY_RECIPES = [
         "fail": [
           {
             "add": "unconscious",
-            "value": 1
+            "value": 1,
+            "duration": {
+              "formula": "1d10",
+              "units": "hours"
+            }
           }
         ]
       }
@@ -7617,7 +7688,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"fatigued\")) {\n  this.actor.removeCondition(\"fatigued\", this.actor.hasCondition(\"fatigued\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"fatigued\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -7989,12 +8060,12 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"broken\")) {\n  this.actor.removeCondition(\"broken\", this.actor.hasCondition(\"broken\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"broken\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           },
           {
             "label": "@effect.name",
             "trigger": "update",
-            "script": "if (this.actor.hasCondition(\"fatigued\")) {\n  this.actor.removeCondition(\"fatigued\", this.actor.hasCondition(\"fatigued\").conditionValue || 1);\n}"
+            "script": "const condition = this.actor.hasCondition(\"fatigued\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           },
           {
             "label": "@effect.name",

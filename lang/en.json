@@ -162,7 +162,7 @@
       "MarvelousDrunk": "Swallowed: 1 Fatigued Condition. Otherwise… nothing happens.",
       "MundanePanacea": "Bleeding stopped, poison neutralised.",
       "PurityCooldown": "The soul will not accept another cleansing before a week has passed.",
-      "SleepComing": "In 2–3 hours the drinker falls into a deep sleep for {hours} hours (the GM applies Unconscious).",
+      "SleepComing": "In 2–3 hours the drinker falls into a deep sleep (Unconscious) for {hours} hours.",
       "CordeliaSideEffect": "Side effect: {condition} for {minutes} min.",
       "SettingsSaved": "Alchemy settings saved for {actor}."
     },
@@ -182,7 +182,7 @@
       "Drinks": "{drinker} drinks: {potion}",
       "PotionCondition": "Potion Condition",
       "SideEffect": "Side Effect",
-      "TetherExpired": "Chamon Tether expired",
+      "TetherExpired": "Tether expired",
       "TetherRefundInfo": "{points} Weave points return to the alchemist.",
       "TetherSevered": "{alchemist} has severed the etheric tether with {potion} held by {holder}. {points} attunement points restored.",
       "TetherSeveredDesc": "[Chamon tether was severed by the Alchemist. The potion has lost its magical properties.]",
@@ -280,7 +280,7 @@
       "LeadFortitude": {
         "Name": "Lead Fortitude",
         "Desc": "A heavy leaden decoction steeling the mind against dread.",
-        "Effect": "+10 WP and −10 I for 1 hour; immune to Fear and Terror (GM adjudicates)."
+        "Effect": "+10 WP and −10 I for 1 hour; +100 to Cool Tests against Fear and Terror."
       },
       "ChamonPanacea": {
         "Name": "Transmutational Panacea of Chamon",
@@ -488,12 +488,12 @@
       "AqshyWeaponOil": {
         "Name": "Flaming Weapon Oil",
         "Desc": "An ointment infused with Aqshy sulfur, igniting blades on impact.",
-        "Effect": "The weapon burns for 1 hour: a hit inflicts 1 Ablaze Condition (GM adjudicates)."
+        "Effect": "For 1 hour your melee weapons burn: every hit inflicts 1 Ablaze Condition."
       },
       "AqshyWarBlood": {
         "Name": "Aqshy War Blood",
         "Desc": "A searing draught eradicating fear and hesitation.",
-        "Effect": "+20 I and +10 WP for 10 minutes; immune to Fear (GM adjudicates)."
+        "Effect": "+20 I and +10 WP for 10 minutes; +100 to Cool Tests against Fear."
       },
       "AzyrStarlight": {
         "Name": "Starlight Phial",
@@ -588,17 +588,17 @@
       "ShyishPaleMask": {
         "Name": "Draught of the Pale Mask",
         "Desc": "A draft halting pulse and breath into a state of suspended animation.",
-        "Effect": "Feigned death for 1d10 hours: immune to poisons, diseases and mind magic (GM adjudicates)."
+        "Effect": "Feigned death for 1d10 hours: cannot gain or keep the Poisoned Condition; resists diseases and mind magic (GM adjudicates)."
       },
       "ShyishSpiritBane": {
         "Name": "Grave Oil / Spirit Bane",
         "Desc": "A weapon coating slaying incorporeal spirits and wraiths.",
-        "Effect": "Weapon strikes as magical and deals +3 damage against undead for 1 hour."
+        "Effect": "For 1 hour your melee weapons count as magical and deal +3 Damage to Undead."
       },
       "ShyishHourglass": {
         "Name": "Hourglass Decoction",
         "Desc": "A mystical fluid staying the final sand in the glass of death.",
-        "Effect": "For 1 hour: when Wounds drop to 0, the character survives once with 1 Wound (GM adjudicates)."
+        "Effect": "For 1 hour: the first time damage would drop the drinker to 0 Wounds, they keep 1 Wound instead; then the draught is spent."
       },
       "ShyishShroud": {
         "Name": "Shyish Shroud",
@@ -983,7 +983,7 @@
       "SlumberDrops": {
         "Name": "Slumber Drops",
         "Desc": "Physicians buy it openly; poisoners buy it from the same shelf. A few drops in wine bring deep, dreamless sleep.",
-        "Effect": "Hard (−20) Endurance Test: on a failure the drinker falls Unconscious (sleeps 1d10 hours, GM); on a success gains 1 Fatigued Condition."
+        "Effect": "Hard (−20) Endurance Test: on a failure the drinker falls Unconscious and sleeps 1d10 hours; on a success gains 1 Fatigued Condition."
       },
       "EyebrightWash": {
         "Name": "Eyebright Wash",
@@ -1512,7 +1512,11 @@
       "Minutes": "{count} min"
     },
     "Effects": {
-      "HealingLimit": "Potion healing (encounter limit)"
+      "HealingLimit": "Potion healing (encounter limit)",
+      "DeathWardSaved": "the draught holds death back – 1 Wound remains.",
+      "FlamingWeaponHit": "the burning blade sets the target Ablaze.",
+      "GraveOilHit": "+3 Damage against the Undead.",
+      "MandrakeDrowsy": "Mandrake: drowsiness"
     },
     "Conditions": {
       "Blinded": "Blinded (3)",
@@ -1589,7 +1593,9 @@
       "TestFailed": "The drinker fails to resist.",
       "TestTitle": "Resist the potion",
       "ThrownCondition": "{target}: {value} × {condition}.",
-      "ThrownDamage": "{target}: {damage} damage. {details}"
+      "ThrownDamage": "{target}: {damage} damage. {details}",
+      "TimedName": "{condition} (timed)",
+      "TimedFor": "Lasts {duration}."
     }
   }
 }

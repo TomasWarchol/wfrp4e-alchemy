@@ -162,7 +162,7 @@
       "MarvelousDrunk": "Mikstura przełknięta: 1 Stan Zmęczenie. Poza tym… nic się nie dzieje.",
       "MundanePanacea": "Krwawienie zatamowane, trucizna zneutralizowana.",
       "PurityCooldown": "Dusza nie przyjmie kolejnego oczyszczenia przed upływem tygodnia.",
-      "SleepComing": "Za 2–3 godziny pijący zapadnie w głęboki sen na {hours} godz. (MG nałoży stan Nieprzytomny).",
+      "SleepComing": "Za 2–3 godziny pijący zapadnie w głęboki sen (Utrata Przytomności) na {hours} godz.",
       "CordeliaSideEffect": "Skutek uboczny: {condition} na {minutes} min.",
       "SettingsSaved": "Zapisano ustawienia alchemii dla {actor}."
     },
@@ -182,7 +182,7 @@
       "Drinks": "{drinker} wypija: {potion}",
       "PotionCondition": "Stan mikstury",
       "SideEffect": "Efekt Uboczny",
-      "TetherExpired": "Więź Chamonu wygasła",
+      "TetherExpired": "Więź wygasła",
       "TetherRefundInfo": "{points} pkt Osnowy wraca do alchemika.",
       "TetherSevered": "Alchemik {alchemist} zerwał więź z miksturą {potion} u postaci {holder}. Zwrócono {points} pkt Osnowy.",
       "TetherSeveredDesc": "[Więź Chamonu została zerwana przez Alchemika. Mikstura straciła swoje magiczne właściwości.]",
@@ -280,7 +280,7 @@
       "LeadFortitude": {
         "Name": "Wywar Ołowianej Niewzruszoności",
         "Desc": "Ołowiany dekokt czyniący umysł ciężkim i niewrażliwym na terror.",
-        "Effect": "+10 SW i −10 I na 1 godzinę; odporność na Strach i Grozę (rozstrzyga MG)."
+        "Effect": "+10 SW i −10 I na 1 godzinę; +100 do Testów Opanowania przeciw Strachowi i Grozie."
       },
       "ChamonPanacea": {
         "Name": "Transmutacyjne Panaceum Chamonu",
@@ -488,12 +488,12 @@
       "AqshyWeaponOil": {
         "Name": "Olej Płonącego Oręża",
         "Desc": "Smarowidło nasycone siarką Aqshy, zapalające ostrze przy uderzeniu.",
-        "Effect": "Broń płonie przez 1 godzinę: trafienie nakłada 1 Stan Podpalenie (rozstrzyga MG)."
+        "Effect": "Przez 1 godzinę broń biała płonie: każde trafienie nakłada 1 Stan Podpalenie."
       },
       "AqshyWarBlood": {
         "Name": "Destylat Gorączki Bojowej",
         "Desc": "Żarliwy wywar usuwający wahanie i strach przed śmiercią.",
-        "Effect": "+20 I i +10 SW na 10 minut; odporność na Strach (rozstrzyga MG)."
+        "Effect": "+20 I i +10 SW na 10 minut; +100 do Testów Opanowania przeciw Strachowi."
       },
       "AzyrStarlight": {
         "Name": "Destylat Gwiezdnego Pyłu",
@@ -588,17 +588,17 @@
       "ShyishPaleMask": {
         "Name": "Eliksir Maski Śmierci",
         "Desc": "Napój wprowadzający ciało w stan pozornej śmierci bez pulsu i oddechu.",
-        "Effect": "Pozorna śmierć na 1k10 godzin: odporność na trucizny, choroby i magię umysłu (rozstrzyga MG)."
+        "Effect": "Pozorna śmierć na 1k10 godzin: nie może otrzymać ani utrzymać Stanu Zatrucie; opiera się chorobom i magii umysłu (rozstrzyga MG)."
       },
       "ShyishSpiritBane": {
         "Name": "Olej Wiecznego Spoczynku",
         "Desc": "Olej na broń raniący istoty niematerialne i upiory.",
-        "Effect": "Broń zadaje obrażenia magiczne i +3 obrażeń przeciwko nieumarłym na 1 godzinę."
+        "Effect": "Przez 1 godzinę broń biała liczy się jako magiczna i zadaje Ożywieńcom +3 Obrażeń."
       },
       "ShyishHourglass": {
         "Name": "Destylat Klepsydry Morra",
         "Desc": "Mistyczny płyn zawieszający śmiertelne przeznaczenie.",
-        "Effect": "Przez 1 godzinę: gdy Rany spadną do 0, postać raz przeżywa z 1 Raną (rozstrzyga MG)."
+        "Effect": "Przez 1 godzinę: gdy obrażenia pierwszy raz miałyby zbić Rany do 0, pijącemu zostaje 1 Rana; potem destylat jest zużyty."
       },
       "ShyishShroud": {
         "Name": "Esencja Całunu",
@@ -983,7 +983,7 @@
       "SlumberDrops": {
         "Name": "Krople Snu",
         "Desc": "Medycy kupują je jawnie; truciciele – z tej samej półki. Kilka kropli w winie przynosi głęboki sen bez snów.",
-        "Effect": "Trudny (−20) Test Odporności: porażka – pijący otrzymuje Stan Utrata Przytomności (śpi 1k10 godzin, MG); sukces – otrzymuje 1 Stan Zmęczenie."
+        "Effect": "Trudny (−20) Test Odporności: porażka – pijący otrzymuje Stan Utrata Przytomności i śpi 1k10 godzin; sukces – otrzymuje 1 Stan Zmęczenie."
       },
       "EyebrightWash": {
         "Name": "Przemywanie Świetlikiem",
@@ -1512,7 +1512,11 @@
       "Minutes": "{count} min"
     },
     "Effects": {
-      "HealingLimit": "Leczenie miksturą (limit spotkania)"
+      "HealingLimit": "Leczenie miksturą (limit spotkania)",
+      "DeathWardSaved": "destylat powstrzymuje śmierć – zostaje 1 Rana.",
+      "FlamingWeaponHit": "płonące ostrze podpala cel.",
+      "GraveOilHit": "+3 Obrażeń przeciw Ożywieńcowi.",
+      "MandrakeDrowsy": "Mandragora: senność"
     },
     "Conditions": {
       "Blinded": "Oślepienie (3)",
@@ -1589,7 +1593,9 @@
       "TestFailed": "Pijący nie zdołał się oprzeć.",
       "TestTitle": "Opór wobec mikstury",
       "ThrownCondition": "{target}: {value} × {condition}.",
-      "ThrownDamage": "{target}: {damage} obrażeń. {details}"
+      "ThrownDamage": "{target}: {damage} obrażeń. {details}",
+      "TimedName": "{condition} (na czas)",
+      "TimedFor": "Trwa {duration}."
     }
   }
 }

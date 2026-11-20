@@ -14,6 +14,19 @@
 - Fixed: test bonuses for named skills no longer catch similar names ("Charm" no longer helps Charm Animal).
 - Mundane potions no longer help Casting or Channelling: Lucidity Tonic, Focusing Philtre and Soul Balm skip spell tests.
 - Draught of Forgetfulness describes the Cool Test it actually uses.
+- **Potions that only promised something now do it:**
+  - Hourglass Decoction keeps the drinker at 1 Wound the first time damage would drop them to 0, then it is spent.
+  - Flaming Weapon Oil sets the target Ablaze on every melee hit.
+  - Grave Oil makes melee weapons magical and adds +3 Damage against Undead.
+  - Lead Fortitude gives +100 to Cool Tests against Fear and Terror; Aqshy War Blood gives the same against Fear.
+  - Draught of the Pale Mask blocks Poisoned.
+- **Conditions with a duration now end on time:**
+  - Cordelia's side effect lasts as many minutes as the SL of failure.
+  - Slumber Drops put the drinker to sleep for 1d10 hours.
+  - A failed Mandrake Extract test brings drowsiness and then sleep (Unconscious) for 1d10+4 hours.
+  - A short timer effect removes the Condition when time runs out, or when the GM deletes it.
+- Fixed: potions that block a Condition (Greenward Draught, Furnace Blood, Dawnlight Tonic and others) no longer throw errors when that Condition is applied.
+- The chat card says "Tether expired" instead of "Chamon Tether expired" for every College.
 
 ## 1.9.1
 - **Sourcebook content only with its official module.** Recipes and ingredients from official books (Core Rulebook, Winds of Magic, Starter Set, The Horned Rat, Ubersreik Adventures I, Imperial Zoo) appear only while that book's official Foundry module is active. The *Strict Source Module Filtering* setting is gone (filtering is always on) and translation modules (`…-pl`) no longer stand in for the content module.

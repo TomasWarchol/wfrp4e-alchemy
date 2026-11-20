@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { runDrinkSteps, runThrownSteps, stepsHeal } from "../scripts/logic/potion-steps.js";
+import { runDrinkSteps, runThrownSteps, stepsHeal, timedConditionEffect } from "../scripts/logic/potion-steps.js";
 
 function fakeActor({ wounds = 5, max = 12, tb = 3, conditions = {}, fortune = 1, fate = 2, corruption = 0 } = {}) {
   const actor = {
@@ -66,6 +66,30 @@ describe("Kroki mikstury – wypicie", () => {
     const cancelled = fakeActor({ conditions: { poisoned: 1 } });
     await runDrinkSteps([step], cancelled, ctx(null));
     expect(cancelled.conds.poisoned).toBe(1);
+  });
+
+  it("stan z czasem tworzy efekt-licznik, który go potem zdejmuje", async () => {
+    const actor = fakeActor();
+    actor.effects = [];
+    actor.createEmbeddedDocuments = async (type, data) => { actor.effects.push(...data); };
+    const lines = await runDrinkSteps([{ add: "unconscious", duration: { formula: "1d10", units: "hours" } }], actor, ctx());
+    expect(actor.conds.unconscious).toBe(1);
+    expect(actor.effects).toHaveLength(1);
+    const [timer] = actor.effects;
+    expect(timer.duration).toEqual({ value: 4 * 3600, units: "seconds" });
+    expect(timer.system.scriptData[0].trigger).toBe("deleteEffect");
+    expect(timer.system.scriptData[0].script).toContain('removeCondition("unconscious", 1)');
+    expect(lines.at(-1)).toContain("TimedFor");
+    // Bez czasu – bez efektu-licznika
+    await runDrinkSteps([{ add: "fatigued", value: 1 }], actor, ctx());
+    expect(actor.effects).toHaveLength(1);
+  });
+
+  it("efekt-licznik ma co najmniej 1 sekundę i domyślną ikonę", () => {
+    const data = timedConditionEffect({ name: "Oślepienie (na czas)", key: "blinded", value: 3, seconds: 0.2 });
+    expect(data.duration.value).toBe(1);
+    expect(data.img).toBeTruthy();
+    expect(data.system.scriptData[0].script).toContain('removeCondition("blinded", 3)');
   });
 
   it("rozpoznaje leczenie także w gałęziach testu", () => {
