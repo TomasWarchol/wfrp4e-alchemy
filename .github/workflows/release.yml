@@ -39,15 +39,19 @@ jobs:
         run: |
           rm -rf packs
           mkdir packs
-          npm install --no-save --no-package-lock classic-level@1.4.1
-          node --input-type=module -e '
+          names=$(jq -r '.packs[].name' module.json)
+          # classic-level w osobnym katalogu: npm install --no-save obok package.json modułu się wywraca
+          lv="$RUNNER_TEMP/leveldb"
+          mkdir -p "$lv"
+          (cd "$lv" && npm init -y > /dev/null && npm install --no-audit --no-fund classic-level@1.4.1)
+          (cd "$lv" && node --input-type=module -e '
             import { ClassicLevel } from "classic-level";
             for (const name of process.argv.slice(1)) {
-              const db = new ClassicLevel(`packs/${name}`);
+              const db = new ClassicLevel(`${process.env.GITHUB_WORKSPACE}/packs/${name}`);
               await db.open();
               for await (const _ of db.keys()) throw new Error(`packs/${name} is not empty`);
               await db.close();
-            }' $(jq -r '.packs[].name' module.json)
+            }' $names)
           ls -R packs
 
       - name: Build module.zip
