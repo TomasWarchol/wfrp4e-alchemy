@@ -9,6 +9,7 @@ import { CapacityEngine } from './logic/capacity-engine.js';
 import { iconMarkup, registerUi, syncChatStyle, windMarkup } from './ui.js';
 import { registerInventory } from './inventory.js';
 import { BrewingEngine } from './logic/brewing-engine.js';
+import { isLaboratoryItem } from './logic/laboratories.js';
 import { PotionConsumer } from './logic/potion-consumer.js';
 import { AddictionEngine } from './logic/addiction.js';
 import { CloudEngine } from './logic/clouds.js';
@@ -136,6 +137,7 @@ Hooks.once('init', () => {
   });
   AddictionEngine.init();
   CloudEngine.init();
+  Hooks.on('deleteCombat', combat => PotionConsumer.endCombat(combat));
 
   game.settings.register(MODULE_ID, 'requireEquippedBooks', {
     scope: 'world',
@@ -168,6 +170,27 @@ Hooks.once('init', () => {
     default: true
   });
 
+  // Mnożnik cen składników i mikstur (suwak dla MG, 0 ms obciążenia w trakcie gry)
+  game.settings.register(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.PRICE_MULTIPLIER, {
+    name: 'GOLD_ALCHEMY.Settings.PriceMultiplier',
+    hint: 'GOLD_ALCHEMY.Settings.PriceMultiplierHint',
+    scope: 'world',
+    config: true,
+    type: Number,
+    range: { min: 0.25, max: 3, step: 0.05 },
+    default: 1,
+    onChange: async () => {
+      RecipeRegistry.invalidateCache();
+      const workshop = foundry.applications?.instances?.get('alchemy-workshop-app');
+      if (workshop) workshop.render();
+      if (game.user === game.users.activeGM) {
+        await CompendiumEngine.seedIngredients();
+        await CompendiumEngine.seedPotions();
+        await CompendiumEngine.seedRecipes();
+      }
+    }
+  });
+
   game.settings.register(MODULE_ID, 'recipesDataVersion', {
     scope: 'world',
     config: false,
@@ -190,6 +213,13 @@ Hooks.once('init', () => {
   });
 
   game.settings.register(MODULE_ID, 'potionsDataVersion', {
+    scope: 'world',
+    config: false,
+    type: Number,
+    default: 0
+  });
+
+  game.settings.register(MODULE_ID, 'ingredientsDataVersion', {
     scope: 'world',
     config: false,
     type: Number,
@@ -280,6 +310,21 @@ Hooks.once('ready', async () => {
   // Pozycje menu w formacie ContextMenuEntry z Foundry v14 (label / visible / onClick).
   // Mikstury bojowe się rzuca (we wskazane tokeny), pozostałe pije.
   const throwPotionLabel = game.i18n.localize('GOLD_ALCHEMY.Action.ThrowPotion');
+  const buildApplyOption = (sheet) => ({
+    label: game.i18n.localize('GOLD_ALCHEMY.Balance.ApplyToAlly'),
+    icon: '<i class="fas fa-hand-holding-medical"></i>',
+    visible: target => PotionConsumer.canApplyToAlly(findPotion(sheet, target)),
+    onClick: async (event, target) => {
+      const doc = findPotion(sheet, target);
+      const selected = [...game.user.targets];
+      if (!doc || selected.length !== 1 || !selected[0]?.actor) {
+        return ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Balance.SelectAlly'));
+      }
+      if (!await AlchemyQueries.applyToAlly(doc, selected[0].document)) {
+        ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Balance.SelectAlly'));
+      }
+    }
+  });
   const buildDrinkOption = (sheet) => ({
     label: drinkPotionLabel,
     icon: '<i class="fas fa-wine-bottle"></i>',
@@ -312,7 +357,7 @@ Hooks.once('ready', async () => {
         cls.prototype._getContextMenuOptions = function() {
           const options = origMethod.call(this) || [];
           if (!options.some(opt => (opt.label ?? opt.name) === drinkPotionLabel)) {
-            options.push(buildDrinkOption(this), buildThrowOption(this));
+            options.push(buildDrinkOption(this), buildThrowOption(this), buildApplyOption(this));
           }
           return options;
         };
@@ -388,7 +433,8 @@ function refreshOpenWorkshop(document) {
   const isRecipeBook = isBook(document);
   const isLanguageSkill = document.type === 'skill' && /(language|język)/i.test(document.name || '');
   const isReadingTalent = document.type === 'talent' && /read|czyt/i.test(document.name || '');
-  if ((isRecipeBook || isLanguageSkill || isReadingTalent) && !workshop._alchemyRefreshScheduled) {
+  const isLab = isLaboratoryItem(document);
+  if ((isRecipeBook || isLanguageSkill || isReadingTalent || isLab) && !workshop._alchemyRefreshScheduled) {
     workshop._alchemyRefreshScheduled = true;
     requestAnimationFrame(() => {
       workshop._alchemyRefreshScheduled = false;

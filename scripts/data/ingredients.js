@@ -3,8 +3,9 @@
  * Każdy składnik jest pełnoprawnym obiektem przedmiotu (Item trapping / ingredient)
  */
 
-import { MODULE_ID } from '../config.js';
+import { MODULE_ID, getPriceMultiplier } from '../config.js';
 import { resolveAlchemyImage } from './image-compatibility.js';
+import { scalePrice } from '../logic/rules.js';
 
 export const ALCHEMY_INGREDIENTS = [
   {
@@ -130,7 +131,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'college-chamon',
     img: 'icons/commodities/metal/ingot-plain-silver.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.MeteoricSilver',
-    price: { gc: 6, ss: 0, bp: 0 },
+    price: { gc: 4, ss: 10, bp: 0 },
     encumbrance: 0.2,
     availability: 'rare'
   },
@@ -150,7 +151,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'college-chamon',
     img: 'icons/commodities/gems/gem-rough-cushion-white.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.CrystalPrism',
-    price: { gc: 4, ss: 0, bp: 0 },
+    price: { gc: 3, ss: 0, bp: 0 },
     encumbrance: 0.1,
     availability: 'scarce'
   },
@@ -380,7 +381,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/consumables/potions/bottle-bulb-corked-amber.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.PineResin',
-    price: { gc: 0, ss: 6, bp: 0 },
+    price: { gc: 0, ss: 4, bp: 0 },
     encumbrance: 0.2,
     availability: 'plentiful'
   },
@@ -671,9 +672,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'herbal',
     img: 'icons/consumables/plants/plant-buds-black-purple.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Nightshade',
-    price: { gc: 2, ss: 0, bp: 0 },
+    price: { gc: 1, ss: 10, bp: 0 },
     encumbrance: 0.1,
-    availability: 'rare'
+    availability: 'scarce'
   },
   {
     key: 'Yarrow',
@@ -721,7 +722,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'herbal',
     img: 'icons/consumables/plants/tearthumb-dried-halberd-leaf-green.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Wormwood',
-    price: { gc: 0, ss: 8, bp: 0 },
+    price: { gc: 0, ss: 6, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -773,7 +774,7 @@ export const ALCHEMY_INGREDIENTS = [
     description: 'GOLD_ALCHEMY.IngredientsDesc.Garlic',
     price: { gc: 0, ss: 2, bp: 0 },
     encumbrance: 0.1,
-    availability: 'common'
+    availability: 'plentiful'
   },
   {
     key: 'WildHoney',
@@ -781,9 +782,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'apothecary',
     img: 'icons/consumables/food/honey-beehive-brown.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.WildHoney',
-    price: { gc: 0, ss: 10, bp: 0 },
+    price: { gc: 0, ss: 5, bp: 0 },
     encumbrance: 0.1,
-    availability: 'common'
+    availability: 'plentiful'
   },
   {
     key: 'WineVinegar',
@@ -791,9 +792,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/commodities/materials/pottery-jug.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.WineVinegar',
-    price: { gc: 0, ss: 4, bp: 0 },
+    price: { gc: 0, ss: 3, bp: 0 },
     encumbrance: 0.1,
-    availability: 'common'
+    availability: 'plentiful'
   },
   {
     key: 'Quicklime',
@@ -801,7 +802,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/commodities/materials/powder-grey.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Quicklime',
-    price: { gc: 0, ss: 6, bp: 0 },
+    price: { gc: 0, ss: 4, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -811,7 +812,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/commodities/materials/slime-brown.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.WoodTar',
-    price: { gc: 0, ss: 8, bp: 0 },
+    price: { gc: 0, ss: 5, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -821,9 +822,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/commodities/materials/powder-black.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Lampblack',
-    price: { gc: 0, ss: 3, bp: 0 },
+    price: { gc: 0, ss: 2, bp: 0 },
     encumbrance: 0.1,
-    availability: 'common'
+    availability: 'plentiful'
   },
   {
     key: 'MustardSeed',
@@ -831,9 +832,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'apothecary',
     img: 'icons/consumables/plants/sprout-seed-yellow-green.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.MustardSeed',
-    price: { gc: 0, ss: 4, bp: 0 },
+    price: { gc: 0, ss: 3, bp: 0 },
     encumbrance: 0.1,
-    availability: 'common'
+    availability: 'plentiful'
   },
   {
     key: 'Coltsfoot',
@@ -841,7 +842,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'herbal',
     img: 'icons/consumables/plants/heart-cordate-leaf-yellow-green.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Coltsfoot',
-    price: { gc: 0, ss: 5, bp: 0 },
+    price: { gc: 0, ss: 3, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -851,9 +852,9 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'herbal',
     img: 'icons/commodities/flowers/daisy-white-teal.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Eyebright',
-    price: { gc: 0, ss: 10, bp: 0 },
+    price: { gc: 0, ss: 6, bp: 0 },
     encumbrance: 0.1,
-    availability: 'scarce'
+    availability: 'common'
   },
   {
     key: 'MilkThistle',
@@ -881,7 +882,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'herbal',
     img: 'icons/commodities/flowers/lily-yellow.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Hypericum',
-    price: { gc: 0, ss: 8, bp: 0 },
+    price: { gc: 0, ss: 6, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -891,7 +892,7 @@ export const ALCHEMY_INGREDIENTS = [
     category: 'mundane',
     img: 'icons/commodities/materials/glass-cube.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Alum',
-    price: { gc: 0, ss: 6, bp: 0 },
+    price: { gc: 0, ss: 4, bp: 0 },
     encumbrance: 0.1,
     availability: 'common'
   },
@@ -913,7 +914,7 @@ export const ALCHEMY_INGREDIENTS = [
     description: 'GOLD_ALCHEMY.IngredientsDesc.GraveMoss',
     price: { gc: 1, ss: 0, bp: 0 },
     encumbrance: 0.1,
-    availability: 'rare'
+    availability: 'scarce'
   },
   {
     key: 'BatWing',
@@ -932,6 +933,116 @@ export const ALCHEMY_INGREDIENTS = [
     img: 'icons/consumables/plants/thorned-dried-stem-brown.webp',
     description: 'GOLD_ALCHEMY.IngredientsDesc.Henbane',
     price: { gc: 1, ss: 5, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'CheapSpirits',
+    name: 'GOLD_ALCHEMY.Ingredients.CheapSpirits',
+    category: 'mundane',
+    img: 'icons/consumables/potions/bottle-round-corked-orange.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.CheapSpirits',
+    price: { gc: 0, ss: 4, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'plentiful'
+  },
+  {
+    key: 'AethyrDust',
+    name: 'GOLD_ALCHEMY.Ingredients.AethyrDust',
+    category: 'magical',
+    img: 'icons/commodities/materials/bowl-powder-teal.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.AethyrDust',
+    price: { gc: 1, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'ForgeEmberAsh',
+    name: 'GOLD_ALCHEMY.Ingredients.ForgeEmberAsh',
+    category: 'college-aqshy',
+    img: 'icons/commodities/materials/powder-red-green-yellow.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.ForgeEmberAsh',
+    price: { gc: 1, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Stormwater',
+    name: 'GOLD_ALCHEMY.Ingredients.Stormwater',
+    category: 'college-azyr',
+    img: 'icons/consumables/potions/bottle-round-corked-blue.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Stormwater',
+    price: { gc: 1, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'Fulgurite',
+    name: 'GOLD_ALCHEMY.Ingredients.Fulgurite',
+    category: 'college-azyr',
+    img: 'icons/commodities/gems/gem-rough-cushion-teal.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.Fulgurite',
+    price: { gc: 2, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'SunQuartz',
+    name: 'GOLD_ALCHEMY.Ingredients.SunQuartz',
+    category: 'college-hysh',
+    img: 'icons/commodities/gems/gem-rough-cushion-white.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.SunQuartz',
+    price: { gc: 1, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'HyshIncense',
+    name: 'GOLD_ALCHEMY.Ingredients.HyshIncense',
+    category: 'college-hysh',
+    img: 'icons/commodities/materials/bowl-powder-gold.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.HyshIncense',
+    price: { gc: 2, ss: 10, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'MistMoss',
+    name: 'GOLD_ALCHEMY.Ingredients.MistMoss',
+    category: 'college-ulgu',
+    img: 'icons/consumables/plants/fern-broad-leaf-damaged-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.MistMoss',
+    price: { gc: 1, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'ShadowResin',
+    name: 'GOLD_ALCHEMY.Ingredients.ShadowResin',
+    category: 'college-ulgu',
+    img: 'icons/commodities/materials/slime-brown.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.ShadowResin',
+    price: { gc: 2, ss: 0, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'scarce'
+  },
+  {
+    key: 'MorrBloom',
+    name: 'GOLD_ALCHEMY.Ingredients.MorrBloom',
+    category: 'college-shyish',
+    img: 'icons/commodities/flowers/buds-black.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.MorrBloom',
+    price: { gc: 0, ss: 16, bp: 0 },
+    encumbrance: 0.1,
+    availability: 'common'
+  },
+  {
+    key: 'WarpstonePinch',
+    name: 'GOLD_ALCHEMY.Ingredients.WarpstonePinch',
+    category: 'forbidden',
+    img: 'icons/commodities/gems/gem-faceted-diamond-green.webp',
+    description: 'GOLD_ALCHEMY.IngredientsDesc.WarpstonePinch',
+    price: { gc: 3, ss: 10, bp: 0 },
     encumbrance: 0.1,
     availability: 'rare'
   }
@@ -961,11 +1072,7 @@ export function createIngredientItemData(ing, quantity = 1) {
       encumbrance: {
         value: ing.encumbrance || 0.1
       },
-      price: {
-        gc: ing.price?.gc || 0,
-        ss: ing.price?.ss || 0,
-        bp: ing.price?.bp || 0
-      },
+      price: scalePrice(ing.price, getPriceMultiplier()),
       availability: {
         value: ing.availability || 'common'
       },

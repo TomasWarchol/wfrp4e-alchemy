@@ -4,11 +4,13 @@
  */
 
 import { recipeBookFlags, recipeEntry, recipeScrollFlags } from './recipe-book-data.js';
-import { MODULE_ID } from '../config.js';
+import { MODULE_ID, getPriceMultiplier } from '../config.js';
 import { createIngredientItemData } from '../data/ingredients.js';
+import { ALCHEMY_LABORATORIES, createLaboratoryItemData } from '../data/laboratories.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 import { buildPotionEffectData } from './effect-data.js';
+import { scalePrice } from './rules.js';
 
 /**
  * Konwertuje recepturę na obiekt przedmiotu mikstury gotowej do compendium
@@ -46,6 +48,7 @@ export function createPotionItemData(recipe) {
         isPotion: true,
         recipeId: recipe.id,
         recipeKey: recipe.key,
+        ...(recipe.auditUpdated ? { auditUpdated: true } : {}),
         attunementCost: recipe.attunementCost || 0,
         alchemyData: {
           recipeId: recipe.id,
@@ -84,7 +87,7 @@ export function createRecipeScrollItemData(recipe) {
       trappingType: { value: 'booksAndDocuments' },
       quantity: { value: 1 },
       encumbrance: { value: 0.1 },
-      price: { gc: 1, ss: 10, bp: 0 },
+      price: scalePrice({ gc: 1, ss: 10, bp: 0 }, getPriceMultiplier()),
       availability: { value: 'scarce' },
       description: {
         value: `<p><em>${desc}</em></p><p><strong>${game.i18n.localize('GOLD_ALCHEMY.Details.Effect')}:</strong> ${effectDesc}</p><p><strong>${game.i18n.localize('GOLD_ALCHEMY.Compendium.RequiredIngredients')}</strong></p><ul>${ingredientsListHtml}</ul><p><em>${game.i18n.localize('GOLD_ALCHEMY.Compendium.ScrollHint')}</em></p>`
@@ -94,7 +97,8 @@ export function createRecipeScrollItemData(recipe) {
       [MODULE_ID]: {
         isRecipe: true,
         recipeId: recipe.id,
-        recipeKey: recipe.key
+        recipeKey: recipe.key,
+        ...(recipe.auditUpdated ? { auditUpdated: true } : {})
       },
       ...recipeScrollFlags(recipeEntry(recipe.id, recipe))
     }
@@ -118,7 +122,7 @@ export function createRecipeBookItemData(name, img, recipeIds, description) {
       trappingType: { value: 'booksAndDocuments' },
       quantity: { value: 1 },
       encumbrance: { value: 1.0 },
-      price: { gc: 15, ss: 0, bp: 0 },
+      price: scalePrice({ gc: 15, ss: 0, bp: 0 }, getPriceMultiplier()),
       availability: { value: 'rare' },
       description: {
         value: `<p>${description}</p><p><em>${game.i18n.localize('GOLD_ALCHEMY.Compendium.BookHint')}</em></p>`
@@ -139,10 +143,12 @@ export class CompendiumEngine {
   static INGREDIENTS_PACK = `${MODULE_ID}.alchemy-ingredients`;
   static POTIONS_PACK = `${MODULE_ID}.alchemy-potions`;
   static RECIPES_PACK = `${MODULE_ID}.alchemy-recipes`;
+  /** Podnieś, gdy zmieniają się składniki lub aparatury – wygenerowane wpisy zostaną odświeżone. */
+  static INGREDIENTS_DATA_VERSION = 2;
   /** Podnieś, gdy zmieniają się efekty mikstur – wygenerowane wpisy kompendium zostaną odbudowane. */
-  static POTIONS_DATA_VERSION = 6;
+  static POTIONS_DATA_VERSION = 7;
   /** Podnieś, gdy zmienia się format zwojów i ksiąg – wygenerowane wpisy zostaną przepisane. */
-  static RECIPES_DATA_VERSION = 2;
+  static RECIPES_DATA_VERSION = 3;
 
   /** Update module-owned compendium entries while keeping anything added by a GM. */
   static async syncPack(pack, itemsData, getDataKey, getDocumentKey, force = false) {
@@ -162,7 +168,11 @@ export class CompendiumEngine {
       desiredKeys.add(key);
       const existing = generatedByKey.get(key);
       if (existing) {
-        if (force) updates.push({ ...data, _id: existing.id });
+        const unlocalized = (typeof existing.name === 'string' && existing.name.startsWith('GOLD_ALCHEMY.'))
+          || (typeof existing.system?.description?.value === 'string' && existing.system.description.value.includes('GOLD_ALCHEMY.'));
+        if (force || unlocalized || (data.flags?.[MODULE_ID]?.auditUpdated && !existing.getFlag(MODULE_ID, 'auditUpdated'))) {
+          updates.push({ ...data, _id: existing.id });
+        }
         else {
           const update = { _id: existing.id };
           let changed = false;
@@ -231,7 +241,7 @@ export class CompendiumEngine {
   }
 
   /**
-   * Wypełnia compendium składników
+   * Wypełnia compendium składników i aparatur alchemicznych
    */
   static async seedIngredients(force = false) {
     const pack = game.packs.get(this.INGREDIENTS_PACK);
@@ -240,16 +250,22 @@ export class CompendiumEngine {
       return;
     }
 
+    const storedVersion = Number(game.settings.get(MODULE_ID, 'ingredientsDataVersion')) || 0;
+    const versionStale = storedVersion < this.INGREDIENTS_DATA_VERSION;
     const activeIngredients = RecipeRegistry.getActiveIngredients();
-    console.log(`${MODULE_ID} | Seeding ${activeIngredients.length} ingredients into ${this.INGREDIENTS_PACK}...`);
-    const itemsData = activeIngredients.map(ing => createIngredientItemData(ing, 1));
+    console.log(`${MODULE_ID} | Seeding ${activeIngredients.length} ingredients + ${ALCHEMY_LABORATORIES.length} laboratories into ${this.INGREDIENTS_PACK}...`);
+    const itemsData = [
+      ...activeIngredients.map(ing => createIngredientItemData(ing, 1)),
+      ...ALCHEMY_LABORATORIES.map(lab => createLaboratoryItemData(lab))
+    ];
     await this.syncPack(
       pack,
       itemsData,
-      data => data.flags?.[MODULE_ID]?.ingredientKey,
-      document => document.getFlag(MODULE_ID, 'ingredientKey'),
-      force
+      data => data.flags?.[MODULE_ID]?.ingredientKey || (data.flags?.[MODULE_ID]?.labKey ? `lab:${data.flags[MODULE_ID].labKey}` : null),
+      document => document.getFlag(MODULE_ID, 'ingredientKey') || (document.getFlag(MODULE_ID, 'labKey') ? `lab:${document.getFlag(MODULE_ID, 'labKey')}` : null),
+      force || versionStale
     );
+    if (versionStale) await game.settings.set(MODULE_ID, 'ingredientsDataVersion', this.INGREDIENTS_DATA_VERSION);
     console.log(`${MODULE_ID} | Ingredients compendium initialized with ${itemsData.length} items.`);
   }
 
@@ -269,8 +285,13 @@ export class CompendiumEngine {
 
     // Nowa wersja efektów: usuń wpisy wygenerowane przez moduł (dodane przez MG zostają), syncPack utworzy je od nowa
     const storedVersion = Number(game.settings.get(MODULE_ID, 'potionsDataVersion')) || 0;
-    if (storedVersion < this.POTIONS_DATA_VERSION) {
-      const generatedIds = (await pack.getDocuments()).filter(doc => doc.getFlag(MODULE_ID, 'recipeId')).map(doc => doc.id);
+    const updatedRecipes = new Set(activeRecipes.filter(recipe => recipe.auditUpdated).map(recipe => recipe.id));
+    if (storedVersion < this.POTIONS_DATA_VERSION || updatedRecipes.size) {
+      const generatedIds = (await pack.getDocuments()).filter(doc => {
+        const key = doc.getFlag(MODULE_ID, 'recipeId');
+        return key && (storedVersion < this.POTIONS_DATA_VERSION
+          || (updatedRecipes.has(key) && !doc.getFlag(MODULE_ID, 'auditUpdated')));
+      }).map(doc => doc.id);
       if (generatedIds.length) {
         const wasLocked = pack.locked;
         if (wasLocked) await pack.configure({ locked: false });
@@ -280,7 +301,7 @@ export class CompendiumEngine {
           if (wasLocked) await pack.configure({ locked: true });
         }
       }
-      await game.settings.set(MODULE_ID, 'potionsDataVersion', this.POTIONS_DATA_VERSION);
+      if (storedVersion < this.POTIONS_DATA_VERSION) await game.settings.set(MODULE_ID, 'potionsDataVersion', this.POTIONS_DATA_VERSION);
     }
     await this.syncPack(
       pack,
@@ -315,7 +336,7 @@ export class CompendiumEngine {
       book(
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Chamon.Name'),
         'icons/sundries/books/book-embossed-gold.webp',
-        ['potion-iron-skin', 'potion-liquid-gold', 'potion-quicksilver-speed', 'potion-lead-fortitude', 'potion-chamon-quicksilver-mind', 'potion-alkahest', 'potion-meteoric-compass'],
+        ['potion-iron-skin', 'potion-liquid-gold', 'potion-quicksilver-speed', 'potion-lead-fortitude', 'potion-chamon-quicksilver-mind', 'potion-chamon-assayers-eye', 'potion-chamon-leaden-ward', 'potion-alkahest'],
         game.i18n.localize('GOLD_ALCHEMY.Compendium.Books.Chamon.Desc')
       ),
       book(

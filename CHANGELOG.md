@@ -1,10 +1,17 @@
 # Changelog
 
-## Unreleased
-- **Clouds from thrown potions are real areas on the scene.** Smoke Pellet (4 yards), Shadow Mist Draught, Stinkpot and Plague Vapour (6 yards) leave a circle where they land, or at the thrower's feet without a target. Thrown at a target, they follow the range rules of thrown potions.
+## 1.11.0
+- **Alchemical laboratories and apparatus are items in the inventory.** A new inventory section holds them, with an entry in the Create Item dialog and **Make into alchemical laboratory** in a trapping's sheet header. Each has its own level (+SL or −SL) and number of cauldrons (a Field Alembic, a Poor, a Standard and a Fine Laboratory are in the compendium). Brewing uses a laboratory the character owns and needs a free cauldron; a blast or fire damages that laboratory by one level. **A character with no laboratory can no longer brew**, so give existing alchemists one from the compendium.
+- **Alchemy price multiplier** (world setting, 0.25–3): scales the prices of ingredients, potions, recipe scrolls and books. Changing it updates the compendia once.
+- The workshop shows the estimated ingredient cost of a recipe.
+- **Rebalanced 46 original recipes following the Sol and Astra audits.** Original potions no longer increase Willpower. Witch Eye Drops cost 1 Corruption and grant +20 to a single immediate Channelling Test. Selected workshop and forbidden recipes cap finished doses after quality and critical bonuses.
+- Spring Dew restores just 1 Wound at 0 Wounds and removes Bleeding. Use **Apply to targeted character** for selected remedies, including the Yarrow Poultice. The GM determines whether narrative conditions such as access to a wound are met.
+- Grave Oil applies to one selected melee weapon for the current combat. Its first hit against an Undead target gets +2 Damage. The revised rules for remote Wisp light, reading traces of magic and resisting Corruption are shown in chat for the GM to resolve.
+- Compass of Meteoric Silver, Prism of Power and Plague Vapour are reference entries outside the brewing catalogue. Use the sourcebook for the first two and GM-defined exposure for the last.
+- **Clouds from thrown potions are real areas on the scene.** Smoke Pellet (3 yards), Shadow Mist Draught and Stinkpot (6 yards) leave a circle where they land, or at the thrower's feet without a target. Thrown at a target, they follow the range rules of thrown potions.
   - Smoke and shadow fog block sight into and through the cloud.
-  - Anyone inside the Stinkpot at the start of their turn makes an Average (+20) Endurance Test or gains 1 Fatigued Condition. In the Plague Vapour it is a Difficult (−10) Endurance Test, and a failure reminds the GM to choose a disease. These tests roll without a dialog.
-  - A cloud lasts 1d10 rounds: in combat until the start of the round it runs out, outside combat 6 seconds of world time per round. It also goes away when the combat ends.
+  - Anyone inside the Stinkpot at the start of their turn makes an Average (+20) Endurance Test or gains 1 Fatigued Condition. The test rolls without a dialog.
+  - Smoke Pellet lasts 2 rounds indoors, 1 round outdoors in still air, and dissipates immediately in wind. The other clouds last 1d10 rounds. Outside combat each round counts as 6 seconds of world time.
 - Resistance results on chat cards no longer say "the drinker", so they read right for clouds too.
 - **Three Winds of Magic potions now follow the book:**
   - Potion of Fortune calls for an Easy (+40) Augury Test (Intelligence without the Skill); a success means the GM reveals the likely course of events, a failure gives a misleading vision. It no longer grants a Fortune point.

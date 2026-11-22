@@ -10,14 +10,14 @@ const INGREDIENT_RULES = [
   [/venom|saliva|nightshade|datura|lotus/i, 'ing_venom'],
   [/root|mandrake/i, 'ing_root'],
   [/mushroom|fung|toadstool/i, 'ing_mushroom'],
-  [/crystal|stone|prism|gem|quartz|amber/i, 'ing_mineral'],
+  [/crystal|stone|prism|gem|quartz|amber|fulgurite/i, 'ing_mineral'],
   [/gold|silver|iron|lead|copper|mercury|needle|cinnabar/i, 'ing_metal'],
   [/salt|saltpeter|ammonia/i, 'ing_salt'],
   [/oil|wax|fat|resin|sap/i, 'ing_oil'],
   [/blood|bone|feather|down|eye|claw|fang|gland|horn|scale/i, 'ing_animal'],
   [/dust|powder|ash|sulfur|phosphor|charcoal|sand|sediment/i, 'ing_powder'],
-  [/water|dew|aqua|alcohol|essence|ink|regia|vitae/i, 'ing_liquid'],
-  [/leaf|leaves|petal|clover|herb|balm|nettle|comfrey|sage|valerian|hop|bean|mint|lavender|rose/i, 'ing_herb']
+  [/water|dew|aqua|alcohol|essence|ink|regia|vitae|spirits/i, 'ing_liquid'],
+  [/leaf|leaves|petal|clover|herb|balm|nettle|comfrey|sage|valerian|hop|bean|mint|lavender|rose|moss|bloom/i, 'ing_herb']
 ];
 const CATEGORY_FALLBACK = { herbal: 'ing_herb', apothecary: 'ing_herb', magical: 'ing_aethyr', mundane: 'ing_powder', forbidden: 'ing_venom' };
 

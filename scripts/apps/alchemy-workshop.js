@@ -21,7 +21,8 @@ import { createBook, openBook } from '../../../wfrp4e-grimoires/scripts/public.m
 import { ALCHEMY_BOOK_KIND } from '../logic/recipe-book-data.js';
 import { useWorkbench } from '../ui.js';
 import { workbenchContext } from './workbench-view.js';
-import { cauldronCount, getPendingBrews } from '../logic/pending-brews.js';
+import { getPendingBrews } from '../logic/pending-brews.js';
+import { formatSlMod, getActorLaboratories, labBrewUsage, selectDefaultLabId } from '../logic/laboratories.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 
 const INGREDIENT_CATEGORY = new Map(ALCHEMY_INGREDIENTS.map((ing) => [ing.key, ing.category]));
@@ -37,7 +38,7 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     this.knowledgeFilter = 'all'; // 'all', 'memorized', 'grimoire', 'unknown'
     this.showBookManager = false;
     this.showAllWorldRecipes = false; // Podgląd receptur świata wymaga jawnego włączenia przez MG
-    this.selectedLabTier = 'standard';
+    this.selectedLabId = null;
     this.gmDrawerOpen = false;
 
     this.selectedRecipeId = RecipeRegistry.getActiveRecipes()[0]?.id || null;
@@ -141,11 +142,13 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
     const requireDiscovery = game.settings?.get(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.REQUIRE_DISCOVERY) !== false;
 
     // 5. Przetworzenie każdej receptury pod kątem wiedzy, składników i uprawnień
-    // Kotły: każde warzenie w toku zajmuje jeden; dobre laboratorium ma dwa
+    // Posiadane laboratoria i aparatury: każde ma własny modyfikator PS oraz liczbę kotłów
     const pendingBrews = getPendingBrews(this.actor);
-    const currentLab = BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier;
-    const cauldrons = cauldronCount(currentLab);
-    const freeCauldron = pendingBrews.length < cauldrons;
+    const labs = getActorLaboratories(this.actor);
+    const labUsage = labBrewUsage(labs, pendingBrews);
+    this.selectedLabId = selectDefaultLabId(labUsage.list, this.selectedLabId);
+    const selectedLabEntry = this.selectedLabId ? (labUsage.byId.get(this.selectedLabId) ?? null) : null;
+    const canStartInSelectedLab = Boolean(selectedLabEntry && selectedLabEntry.free > 0);
     const currentTimestamp = CalendarIntegration.getCurrentTimestamp();
     const recipes = categoryRecipes.map(recipe => {
       const ingCheck = BrewingEngine.checkIngredients(this.actor, recipe, ingredientInventory);
@@ -156,12 +159,13 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       // Receptura może być warzona, jeśli jest znana (z pamięci lub z księgi) i są składniki oraz podtrzymanie
       const isKnown = knowledge.isMemorized || knowledge.isFromBook;
       const hasTether = recipe.attunementCost === 0 || capacityState.available >= recipe.attunementCost;
-      const ownBrew = pendingBrews.find((b) => b.recipeId === recipe.id);
+      const ownBrew = pendingBrews.find((b) => b.recipeId === recipe.id && currentTimestamp >= b.completesAt)
+        ?? pendingBrews.find((b) => b.recipeId === recipe.id);
       const isPendingBrew = Boolean(ownBrew);
       // A4: przy rezerwacji składniki i Więź tego warzenia są już w kotle
       const reservedPending = isPendingBrew && Boolean(ownBrew.reserved);
       const canBrew = (!requireDiscovery || isKnown) && (reservedPending || (ingCheck.canBrew && hasTether))
-        && (isPendingBrew ? currentTimestamp >= ownBrew.completesAt : freeCauldron);
+        && (isPendingBrew ? currentTimestamp >= ownBrew.completesAt : canStartInSelectedLab);
 
       return {
         ...recipe,
@@ -229,17 +233,63 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       this.selectedRecipeId = selectedRecipe?.id || null;
     }
     if (selectedRecipe) {
+      const dosesLabel = selectedRecipe.dosesFormula === '1d10'
+        ? game.i18n.localize('GOLD_ALCHEMY.Details.DosesBatch')
+        : selectedRecipe.dosesFormula === '1d3'
+          ? game.i18n.localize('GOLD_ALCHEMY.Details.DosesSmallBatch')
+          : '1';
       selectedRecipe = {
         ...selectedRecipe,
         creationTimeLabel: RecipeRegistry.formatCreationTime(selectedRecipe.creationTimeDays),
-        dosesLabel: selectedRecipe.track === 'mundane' ? game.i18n.localize('GOLD_ALCHEMY.Details.DosesBatch') : '1',
+        dosesLabel,
         priceLabel: RecipeRegistry.priceLabel(selectedRecipe.listPriceSS)
       };
     }
 
     const currentDateFormatted = CalendarIntegration.formatDate(CalendarIntegration.getCurrentTimestamp());
 
-    const context = {
+      const labLookup = new Map(labs.map((l) => [l.id, l]));
+      const formatBrew = (brew) => {
+        const liveLab = brew.labItemId ? labLookup.get(brew.labItemId) : null;
+        const labName = liveLab?.name || brew.labName
+          || (brew.labTierId ? game.i18n.localize(ALCHEMY_CONFIG.LAB_TIERS[brew.labTierId]?.name || '') : '')
+          || game.i18n.localize('GOLD_ALCHEMY.LabItem.UnknownLab');
+        const slMod = liveLab ? liveLab.slMod : (Number.isFinite(Number(brew.labSlMod)) ? Number(brew.labSlMod) : 0);
+        const ready = currentTimestamp >= brew.completesAt;
+        const date = CalendarIntegration.formatDate(brew.completesAt);
+        return {
+          ...brew,
+          id: brew.id || brew.recipeId,
+          name: brew.recipeName,
+          labName,
+          labSlLabel: formatSlMod(slMod),
+          isReady: ready,
+          ready,
+          completionDate: date,
+          date,
+          statusText: game.i18n.format('GOLD_ALCHEMY.Details.PendingBrewInLab', {
+            recipe: brew.recipeName,
+            lab: `${labName} (${formatSlMod(slMod)} ${game.i18n.localize('GOLD_ALCHEMY.Workbench.SL')})`,
+            date
+          })
+        };
+      };
+      const activeBrews = pendingBrews.map(formatBrew);
+      const laboratories = labUsage.list.map((lab) => ({
+        id: lab.id,
+        name: lab.name,
+        slMod: lab.slMod,
+        slLabel: formatSlMod(lab.slMod),
+        used: lab.used,
+        total: lab.total,
+        free: lab.free,
+        full: lab.free <= 0,
+        icon: lab.icon,
+        selected: lab.id === this.selectedLabId
+      }));
+      const selectedLab = laboratories.find((l) => l.id === this.selectedLabId) ?? null;
+
+      const context = {
       actor: this.actor,
       isGM,
       showAllWorldRecipes: this.showAllWorldRecipes,
@@ -280,31 +330,26 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       playerWorkshopEnabled: registry.isFeatureUnlocked(this.actor, 'alchemy'),
       recipes: filteredRecipes,
       selectedRecipe,
-      selectedLabTier: BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier,
-      canChooseLab: !BrewingEngine.labByGM() || isGM,
-      labIcon: `ui-lab_${BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier}`,
-      labName: ALCHEMY_CONFIG.LAB_TIERS[BrewingEngine.labByGM() ? BrewingEngine.actorLabTier(this.actor) : this.selectedLabTier]?.name,
-      labTiers: ALCHEMY_CONFIG.LAB_TIERS,
+      laboratories,
+      hasLaboratories: laboratories.length > 0,
+      multipleLaboratories: laboratories.length > 1,
+      selectedLabId: this.selectedLabId,
+      selectedLab,
+      labIcon: selectedLab?.icon ?? 'ui-lab_poor',
       tetheredPotions: capacityState.tethered,
       currentDateFormatted,
       gmDrawerOpen: this.gmDrawerOpen,
       // Warzenie w toku wybranej receptury (a w widoku klasycznym – pierwsze, jak dawniej)
       pendingBrew: (() => {
-        const brew = pendingBrews.find((b) => b.recipeId === selectedRecipe?.id) ?? (useWorkbench() ? null : pendingBrews[0]);
-        return brew ? {
-          ...brew,
-          isReady: currentTimestamp >= brew.completesAt,
-          completionDate: CalendarIntegration.formatDate(brew.completesAt),
-          statusText: game.i18n.format('GOLD_ALCHEMY.Details.PendingBrew', {
-            recipe: brew.recipeName,
-            date: CalendarIntegration.formatDate(brew.completesAt)
-          })
-        } : null;
+        const match = activeBrews.find((b) => b.recipeId === selectedRecipe?.id && b.isReady)
+          ?? activeBrews.find((b) => b.recipeId === selectedRecipe?.id)
+          ?? (useWorkbench() ? null : activeBrews[0]);
+        return match ?? null;
       })(),
       cauldrons: {
-        total: cauldrons,
-        used: pendingBrews.length,
-        brewing: pendingBrews.map((b) => ({ name: b.recipeName, date: CalendarIntegration.formatDate(b.completesAt), ready: currentTimestamp >= b.completesAt }))
+        total: labUsage.totalCapacity,
+        used: labUsage.totalUsed,
+        brewing: activeBrews
       }
     };
     // Pracownia: te same dane ułożone dla nowego wyglądu (ustawienie klienta „Wygląd warsztatu”)
@@ -400,20 +445,23 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
   }
 
   static async _onBrewPotion(event, target) {
-    const recipe = RecipeRegistry.getRecipeById(this.selectedRecipeId);
+    const recipeId = target.dataset.recipeId || this.selectedRecipeId;
+    const brewId = target.dataset.brewId || null;
+    const recipe = RecipeRegistry.getRecipeById(recipeId);
     if (!recipe || !isSourceModuleActive(recipe.sourceModule)) return;
 
     target.disabled = true;
     try {
-      await BrewingEngine.brew(this.actor, recipe, this.selectedLabTier);
+      await BrewingEngine.brew(this.actor, recipe, this.selectedLabId, brewId);
     } finally {
       this.render();
     }
   }
 
-  static async _onCancelPendingBrew() {
+  static async _onCancelPendingBrew(event, target) {
     if (!game.user.isGM) return;
-    await BrewingEngine.cancelPendingBrew(this.actor, this.selectedRecipeId);
+    const id = target.dataset.brewId || this.selectedRecipeId;
+    await BrewingEngine.cancelPendingBrew(this.actor, id);
     this.render();
   }
 
@@ -507,16 +555,12 @@ export class AlchemyWorkshopApp extends HandlebarsApplicationMixin(ApplicationV2
       });
     }
 
-    // Wybór poziomu laboratorium
-    const labSelect = html.querySelector('select[name="labTier"]');
+    // Wybór posiadanej aparatury / laboratorium
+    const labSelect = html.querySelector('select[name="labItemId"]');
     if (labSelect) {
-      labSelect.addEventListener('change', async (ev) => {
-        // A3: MG zapisuje poziom na postaci; bez tej zasady wybór dotyczy tylko bieżącego warzenia
-        if (BrewingEngine.labByGM()) {
-          if (game.user.isGM) await this.actor.setFlag(MODULE_ID, 'labTier', ev.target.value);
-        } else {
-          this.selectedLabTier = ev.target.value;
-        }
+      labSelect.addEventListener('change', (ev) => {
+        this.selectedLabId = ev.target.value;
+        this.render();
       });
     }
 

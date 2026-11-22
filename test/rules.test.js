@@ -141,7 +141,7 @@ describe("dane receptur", () => {
   });
 });
 
-import { potionQuality } from "../scripts/logic/rules.js";
+import { formatPrice, potionQuality, priceFromGC, scalePrice, scalePriceSS } from "../scripts/logic/rules.js";
 
 describe("A5: jakość mikstury z PS", () => {
   it("progi: 0–1 zwykła, 2–3 dobra, 4+ wyborna", () => {
@@ -178,5 +178,46 @@ describe("A6: premia Chamonu", () => {
     const s = memoryState({ ...chamon, chamonMode: "slots" });
     expect(s.max).toBe(7);
     expect(s.used).toBe(2);
+  });
+});
+
+describe("mnożnik cen (scalePrice / scalePriceSS)", () => {
+  it("mnożnik 1 nie zmienia ceny bazowej", () => {
+    expect(scalePrice({ gc: 1, ss: 5, bp: 3 }, 1)).toEqual({ gc: 1, ss: 5, bp: 3 });
+    expect(scalePriceSS(17, 1)).toBe(17);
+  });
+  it("skaluje ceny w górę i w dół z zachowaniem pensów (min. 1 p)", () => {
+    expect(scalePrice({ gc: 0, ss: 2, bp: 0 }, 0.25)).toEqual({ gc: 0, ss: 0, bp: 6 });
+    expect(scalePrice({ gc: 0, ss: 5, bp: 0 }, 0.5)).toEqual({ gc: 0, ss: 2, bp: 6 });
+    expect(scalePrice({ gc: 1, ss: 10, bp: 0 }, 1.5)).toEqual({ gc: 2, ss: 5, bp: 0 });
+    expect(scalePrice({ gc: 0, ss: 0, bp: 1 }, 0.25)).toEqual({ gc: 0, ss: 0, bp: 1 });
+    expect(scalePrice({ gc: 0, ss: 0, bp: 0 }, 2)).toEqual({ gc: 0, ss: 0, bp: 0 });
+  });
+  it("skaluje cenę dawki w szylingach (min. 1 s) i ignoruje błędny mnożnik", () => {
+    expect(scalePriceSS(20, 0.5)).toBe(10);
+    expect(scalePriceSS(20, 1.5)).toBe(30);
+    expect(scalePriceSS(1, 0.25)).toBe(1);
+    expect(scalePriceSS(12, 0)).toBe(12);
+    expect(scalePriceSS(12, NaN)).toBe(12);
+  });
+});
+
+describe("formatowanie walut WFRP (gc / ss / bp)", () => {
+  it("przelicza ułamkowe ZK na gc / ss / bp bez ułamków dziesiętnych", () => {
+    expect(priceFromGC(0.9)).toEqual({ gc: 0, ss: 18, bp: 0 });
+    expect(priceFromGC(1.5)).toEqual({ gc: 1, ss: 10, bp: 0 });
+    expect(priceFromGC(0.025)).toEqual({ gc: 0, ss: 0, bp: 6 });
+    expect(priceFromGC(0)).toEqual({ gc: 0, ss: 0, bp: 0 });
+  });
+
+  it("formatuje niezerowe nominały w EN i PL", () => {
+    const pl = { gc: "zk", ss: "ss", bp: "bp" };
+    expect(formatPrice(priceFromGC(0.9))).toBe("18 ss");
+    expect(formatPrice(priceFromGC(0.9), pl)).toBe("18 ss");
+    expect(formatPrice({ gc: 1, ss: 10, bp: 0 })).toBe("1 gc 10 ss");
+    expect(formatPrice({ gc: 1, ss: 10, bp: 0 }, pl)).toBe("1 zk 10 ss");
+    expect(formatPrice({ gc: 9, ss: 0, bp: 0 })).toBe("9 gc");
+    expect(formatPrice({ gc: 0, ss: 2, bp: 6 }, pl)).toBe("2 ss 6 bp");
+    expect(formatPrice({ gc: 0, ss: 0, bp: 0 })).toBe("0 bp");
   });
 });

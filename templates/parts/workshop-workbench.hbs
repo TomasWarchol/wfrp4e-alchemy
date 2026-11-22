@@ -201,7 +201,7 @@
           <h4>{{alIcon "ui-tab_apothecary"}} {{localize "GOLD_ALCHEMY.Details.IngredientsTitle"}}</h4>
           <div class="al-jars">
             {{#each selectedRecipe.jars}}
-              <div class="al-jar {{#if sufficient}}is-full{{else}}is-empty{{/if}}" data-tooltip="{{localize name}} · {{estimatedCostGC}} {{localize 'GOLD_ALCHEMY.Currency.GC'}}">
+              <div class="al-jar {{#if sufficient}}is-full{{else}}is-empty{{/if}}" data-tooltip="{{localize name}} · {{estimatedCostLabel}}">
                 <span class="al-jar-art">{{#if sufficient}}{{alIcon "orn-jar_full"}}{{else}}{{alIcon "orn-jar_empty"}}{{/if}}<span class="al-jar-glyph">{{alIcon glyph}}</span></span>
                 <span class="al-jar-name">{{localize name}}</span>
                 <span class="al-jar-qty"><b>{{owned}}</b>/{{required}}</span>
@@ -211,25 +211,46 @@
           <span class="al-shelf-board" aria-hidden="true"></span>
         </div>
 
-        {{!-- Palenisko: laboratorium, warzenie w toku, przycisk --}}
+        {{!-- Palenisko: posiadana aparatura, lista warzeń w toku, przycisk --}}
         <div class="al-fire">
-          {{#if canChooseLab}}
-            <label class="al-lab">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}
-              <select name="labTier">
-                {{#each labTiers}}<option value="{{this.id}}" {{#if (bajeryEq this.id ../selectedLabTier)}}selected{{/if}}>{{localize this.name}}</option>{{/each}}
-              </select>
-            </label>
+          {{#if hasLaboratories}}
+            {{#if multipleLaboratories}}
+              <label class="al-lab">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}
+                <select name="labItemId">
+                  {{#each laboratories}}<option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}} ({{this.slLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}}, {{this.used}}/{{this.total}})</option>{{/each}}
+                </select>
+              </label>
+            {{else}}
+              <span class="al-lab" data-tooltip="{{localize 'GOLD_ALCHEMY.LabItem.SheetHint'}}">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}: <b>{{selectedLab.name}}</b> ({{selectedLab.slLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}})</span>
+            {{/if}}
+            <span class="al-cauldrons" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.CauldronsHint'}}{{#each cauldrons.brewing}}<br>{{name}} ({{labName}}) · {{date}}{{/each}}">{{alIcon "craft-vessel_cauldron"}} {{localize "GOLD_ALCHEMY.Workbench.Cauldrons"}}: <b>{{cauldrons.used}}/{{cauldrons.total}}</b></span>
           {{else}}
-            <span class="al-lab" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.LabSetByGM'}}">{{alIcon labIcon}} {{localize "GOLD_ALCHEMY.Details.Laboratory"}}: <b>{{localize labName}}</b></span>
+            <span class="al-no-lab">{{alIcon "ui-state_missing"}} {{localize "GOLD_ALCHEMY.Workbench.NoLaboratory"}}</span>
+            {{#if isGM}}<button type="button" class="al-cancel" data-action="openIngredientsCompendium">{{alIcon "ui-act_open_ingredients"}} {{localize "GOLD_ALCHEMY.Button.OpenIngredients"}}</button>{{/if}}
           {{/if}}
-          <span class="al-cauldrons" data-tooltip="{{localize 'GOLD_ALCHEMY.Workbench.CauldronsHint'}}{{#each cauldrons.brewing}}<br>{{name}} · {{date}}{{/each}}">{{alIcon "craft-vessel_cauldron"}} {{localize "GOLD_ALCHEMY.Workbench.Cauldrons"}}: <b>{{cauldrons.used}}/{{cauldrons.total}}</b></span>
           {{#if pendingBrew}}
             <p class="al-pending">{{alIcon "ui-state_brewing"}} {{pendingBrew.statusText}}</p>
-            {{#if isGM}}<button type="button" class="al-cancel" data-action="cancelPendingBrew">{{alIcon "ui-act_cancel"}} {{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
+            {{#if isGM}}<button type="button" class="al-cancel" data-action="cancelPendingBrew" data-brew-id="{{pendingBrew.id}}">{{alIcon "ui-act_cancel"}} {{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
           {{/if}}
           <button type="button" class="al-brew" data-action="brewPotion" {{#unless selectedRecipe.canBrew}}disabled data-tooltip="{{localize 'GOLD_ALCHEMY.Details.CannotBrewTooltip'}}"{{/unless}}>
             {{#if selectedRecipe.isPendingBrew}}{{alIcon "ui-act_complete"}} {{localize "GOLD_ALCHEMY.Details.CompleteBrewing"}}{{else}}{{alIcon "ui-act_brew"}} {{localize "GOLD_ALCHEMY.Workbench.LightFire"}}{{/if}}
           </button>
+          {{#if cauldrons.brewing.length}}
+            <div class="al-brewing-wrap">
+              <h5>{{alIcon "craft-vessel_cauldron"}} {{localize "GOLD_ALCHEMY.Workbench.ActiveBrews"}} ({{cauldrons.used}}/{{cauldrons.total}})</h5>
+              <ul class="al-brewing-list">
+                {{#each cauldrons.brewing}}
+                  <li class="al-brew-row {{#if this.ready}}is-ready{{/if}}">
+                    <a class="al-brew-name" data-action="selectRecipe" data-recipe-id="{{this.recipeId}}">{{this.name}}</a>
+                    <span class="al-brew-lab">{{alIcon "ui-lab_standard"}} {{this.labName}} ({{this.labSlLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}})</span>
+                    <span class="al-brew-date">{{#if this.ready}}{{localize "GOLD_ALCHEMY.Workbench.ReadyNow"}}{{else}}{{this.date}}{{/if}}</span>
+                    {{#if this.ready}}<button type="button" class="al-brew-act" data-action="brewPotion" data-recipe-id="{{this.recipeId}}" data-brew-id="{{this.id}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Details.CompleteBrewing'}}">{{alIcon "ui-act_complete"}}</button>{{/if}}
+                    {{#if ../isGM}}<button type="button" class="al-brew-act is-cancel" data-action="cancelPendingBrew" data-brew-id="{{this.id}}" data-tooltip="{{localize 'GOLD_ALCHEMY.Details.CancelBrewing'}}">{{alIcon "ui-act_cancel"}}</button>{{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
         </div>
 
         {{!-- Opis i efekt jako zwój --}}

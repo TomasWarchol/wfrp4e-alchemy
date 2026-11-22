@@ -6,7 +6,7 @@
  */
 
 .gold-alchemy-app {
-  background: #141210 url('systems/wfrp4e/ui/parchment.png') repeat !important;
+  background: #141210 url('../../../systems/wfrp4e/ui/backgrounds/parchment-texture.webp') repeat !important;
   color: #2b251f;
   font-family: 'Caslon Pro', 'Book Antiqua', Georgia, serif;
 }
@@ -1480,4 +1480,43 @@
   .gold-alchemy-app .book-requirement-editor label {
     grid-column: 1 / -1;
   }
+}
+
+.gold-alchemy-app .no-lab-warning {
+  color: #8a1f1f;
+  font-weight: bold;
+}
+
+.gold-alchemy-app .active-brews-box {
+  padding: 6px 8px;
+  background: rgba(255, 250, 235, 0.5);
+  border: 1px dashed rgba(92, 69, 48, 0.45);
+  border-radius: 4px;
+}
+
+.gold-alchemy-app .active-brews-list {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 3px;
+}
+
+.gold-alchemy-app .active-brews-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.gold-alchemy-app .active-brews-list a {
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.gold-alchemy-app .btn-brew-mini {
+  padding: 2px 8px;
+  font-size: 0.8rem;
 }

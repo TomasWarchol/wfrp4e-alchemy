@@ -30,7 +30,14 @@ export const RECIPE_DRINK = 'recipe';
 export const RECIPE_THROWN = 'recipeThrown';
 export const RECIPE_CLOUD = 'recipeCloud';
 
-const TEST_SKILLS = { endurance: 'NAME.Endurance', cool: 'NAME.Cool', dodge: 'NAME.Dodge' };
+const TEST_SKILLS = { endurance: 'NAME.Endurance', cool: 'NAME.Cool', dodge: 'NAME.Dodge', athletics: 'NAME.Athletics' };
+
+const SIZE_ORDER = ['tiny', 'ltl', 'sml', 'avg', 'lrg', 'enor', 'mnst'];
+
+function hasTrait(actor, trait, ctx) {
+  const localized = ctx.i18n('NAME.' + trait);
+  return Boolean(actor.has?.(localized) || (localized !== trait && actor.has?.(trait)));
+}
 
 /** Sekundy w jednostce czasu kroku. */
 const UNIT_SECONDS = { rounds: 6, minutes: 60, hours: 3600, days: 86400 };
@@ -89,8 +96,12 @@ export async function runDrinkSteps(steps, actor, ctx) {
   const lines = [];
   for (const step of steps || []) {
     if (step.heal !== undefined) {
-      const wounds = await healAmount(step.heal, actor, ctx);
       const cur = Number(actor.system?.status?.wounds?.value) || 0;
+      if (step.requireWounds && cur <= 0) {
+        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.HealNoWounds'));
+        continue;
+      }
+      const wounds = await healAmount(step.heal, actor, ctx);
       const max = Number(actor.system?.status?.wounds?.max) || cur;
       const healed = Math.max(0, Math.min(max, cur + wounds) - cur);
       await actor.update({ 'system.status.wounds.value': cur + healed });
@@ -124,7 +135,12 @@ export async function runDrinkSteps(steps, actor, ctx) {
       lines.push(ctx.i18n(step.note, { target: actor.prototypeToken?.name || actor.name }));
     } else if (step.test) {
       const result = await ctx.test(actor, TEST_SKILLS[step.test] ?? step.test, step.difficulty || 'challenging');
-      if (!result) continue; // anulowane okno testu: bez skutków testu
+      if (!result) {
+        if (!step.mandatory) continue; // anulowane okno testu: bez skutków (chyba że test jest obowiązkowy)
+        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.TestFailed'));
+        lines.push(...await runDrinkSteps(step.fail, actor, ctx));
+        continue;
+      }
       lines.push(ctx.i18n(result.succeeded ? 'GOLD_ALCHEMY.Steps.TestPassed' : 'GOLD_ALCHEMY.Steps.TestFailed'));
       lines.push(...await runDrinkSteps(result.succeeded ? step.pass : step.fail, actor, ctx));
     }
@@ -142,15 +158,25 @@ export async function runThrownSteps(steps, actor, sl, ctx) {
   const target = actor.prototypeToken?.name || actor.name;
   for (const step of steps || []) {
     // Test obronny celu: sukces chroni przed tym stanem (obrażenia i Podpalenie działają bez testu)
-    if (step.resist && step.add) {
+    if (step.against && !step.against.some(trait => hasTrait(actor, trait, ctx))) continue;
+    if (step.excludeTraits && step.excludeTraits.some(trait => hasTrait(actor, trait, ctx))) continue;
+    if (step.maxSize) {
+      const actorSize = actor.system?.details?.size?.value;
+      const limitIdx = SIZE_ORDER.indexOf(step.maxSize);
+      const actorIdx = SIZE_ORDER.indexOf(actorSize);
+      if (limitIdx >= 0 && actorIdx > limitIdx) continue;
+    }
+    if (step.onlyIfAbsent && actor.hasCondition?.(step.add)) continue;
+    if (step.resist && (step.add || step.note)) {
       const result = await ctx.resist?.(actor, TEST_SKILLS[step.resist.test] ?? step.resist.test, step.resist.difficulty || 'challenging');
       if (result?.succeeded) {
-        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.ThrownResisted', { target, condition: ctx.conditionLabel(step.add) }));
+        const condition = step.add ? ctx.conditionLabel(step.add) : ctx.i18n(step.resistLabel || 'GOLD_ALCHEMY.Steps.EffectLabel');
+        lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.ThrownResisted', { target, condition }));
         continue;
       }
     }
     if (step.add) {
-      const value = (Number(step.value) || 1) + (step.perSL ? bonus : 0);
+      const value = (Number(step.value) || 1) + (step.perSL ? bonus : 0) + Number(step.extraAtSL > 0 && bonus >= step.extraAtSL);
       await actor.addCondition?.(step.add, value);
       lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.ThrownCondition', { target, condition: ctx.conditionLabel(step.add), value }));
     } else if (step.damage) {
@@ -158,6 +184,8 @@ export async function runThrownSteps(steps, actor, sl, ctx) {
       const type = step.ignoreAP ? ctx.damageTypes.IGNORE_AP : ctx.damageTypes.NORMAL;
       const details = await actor.applyBasicDamage?.(damage, { damageType: type, suppressMsg: true });
       lines.push(ctx.i18n('GOLD_ALCHEMY.Steps.ThrownDamage', { target, damage, details: details || '' }));
+    } else if (step.note) {
+      lines.push(ctx.i18n(step.note, { target }));
     }
   }
   return lines;

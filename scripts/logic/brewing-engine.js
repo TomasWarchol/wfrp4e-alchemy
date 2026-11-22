@@ -8,10 +8,11 @@ import { CapacityEngine } from './capacity-engine.js';
 import { RecipeRegistry } from './recipe-registry.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 import { buildPotionEffectData } from './effect-data.js';
-import { brewingModifiers, hasTalent, isTestSuccess, potionQuality } from './rules.js';
+import { brewingModifiers, hasTalent, isTestSuccess, mundaneBatchQuantity, potionQuality } from './rules.js';
+import { damagedLabSlMod, formatSlMod, getActorLaboratories, labBrewUsage, selectDefaultLabId } from './laboratories.js';
 import { recipeTradition, recipeWind } from '../ui.js';
 import { ALCHEMY_INGREDIENTS, createIngredientItemData } from '../data/ingredients.js';
-import { cauldronCount, getPendingBrews, setPendingBrews } from './pending-brews.js';
+import { getPendingBrews, setPendingBrews } from './pending-brews.js';
 
 /** Atrybuty karty czatu dla wyglądu pracowni: tradycja, wiatr i ikona (ikony dokłada hook renderu czatu). */
 const cardAttrs = (recipe) => `data-tradition="${recipeTradition(recipe)}" data-wind="${recipeWind(recipe) ?? ''}"`;
@@ -147,6 +148,7 @@ export class BrewingEngine {
         required: ingredient.quantity,
         owned: totalOwned,
         estimatedCostGC: Number(((Number(ingredient.costZK) || 0) * ingredient.quantity).toFixed(2)),
+        estimatedCostLabel: RecipeRegistry.formatPriceGC((Number(ingredient.costZK) || 0) * ingredient.quantity),
         sufficient
       };
     });
@@ -182,19 +184,20 @@ export class BrewingEngine {
   /**
    * Główna procedura warzenia mikstury
    */
-  static async brew(actor, recipe, labTierId = 'standard') {
-    if (!actor || !recipe) return;
-    // A3: przy laboratorium ustawianym przez MG liczy się poziom zapisany na postaci, nie wybór z listy
-    if (this.labByGM()) labTierId = this.actorLabTier(actor);
+  static async brew(actor, recipe, labItemId = null, brewId = null) {
+    if (!actor || !recipe || recipe.referenceOnly) return;
 
-    // Każde warzenie w toku zajmuje kocioł; dobre laboratorium ma ich dwa
     const brews = getPendingBrews(actor);
-    const pendingBrew = brews.find((b) => b.recipeId === recipe.id) ?? null;
+    const labs = getActorLaboratories(actor);
+    const usage = labBrewUsage(labs, brews);
     const now = CalendarIntegration.getCurrentTimestamp();
-    if (!pendingBrew && brews.length >= cauldronCount(labTierId)) {
-      ui.notifications.warn(game.i18n.format('GOLD_ALCHEMY.Errors.AllCauldronsBusy', { count: cauldronCount(labTierId) }));
-      return;
-    }
+
+    const pendingBrew = (brewId && brews.find((b) => b.id === brewId && b.recipeId === recipe.id))
+      || brews.find((b) => b.recipeId === recipe.id && now >= b.completesAt)
+      || brews.find((b) => b.recipeId === recipe.id)
+      || null;
+
+    let lab = null;
     if (pendingBrew) {
       if (now < pendingBrew.completesAt) {
         ui.notifications.info(game.i18n.format('GOLD_ALCHEMY.Errors.BrewNotReady', {
@@ -202,7 +205,22 @@ export class BrewingEngine {
         }));
         return;
       }
-      labTierId = pendingBrew.labTierId || labTierId;
+      lab = pendingBrew.labItemId ? labs.find((l) => l.id === pendingBrew.labItemId) ?? null : labs[0] ?? null;
+    } else {
+      if (!labs.length) {
+        ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Errors.NoLaboratory'));
+        return;
+      }
+      const chosenId = selectDefaultLabId(usage.list, labItemId);
+      lab = chosenId ? usage.byId.get(chosenId) ?? null : null;
+      if (!lab) {
+        ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Errors.NoLaboratory'));
+        return;
+      }
+      if (lab.free <= 0) {
+        ui.notifications.warn(game.i18n.format('GOLD_ALCHEMY.Errors.LabFull', { lab: lab.name, count: lab.total }));
+        return;
+      }
     }
 
     if (!RecipeRegistry.canBrewRecipe(actor, recipe)) {
@@ -240,11 +258,14 @@ export class BrewingEngine {
       const reserve = this.reserveOnStart();
       if (reserve) await this.consumeIngredients(actor, recipe);
       await setPendingBrews(actor, [...brews, {
+        id: foundry.utils.randomID(),
         recipeId: recipe.id,
         recipeName: game.i18n.localize(recipe.name),
         startedAt,
         completesAt,
-        labTierId,
+        labItemId: lab.id,
+        labName: lab.name,
+        labSlMod: lab.slMod,
         reserved: reserve,
         attunementReserved: reserve ? Number(recipe.attunementCost) || 0 : 0
       }]);
@@ -306,9 +327,9 @@ export class BrewingEngine {
       }
     }
 
-    // 4. Modyfikatory
-    const labTier = ALCHEMY_CONFIG.LAB_TIERS[labTierId] || ALCHEMY_CONFIG.LAB_TIERS.standard;
-    const labSlMod = labTier.slMod || 0;
+    // 4. Modyfikatory (z posiadanej aparatury albo zapisanego przy starcie poziomu)
+    const fallbackSl = ALCHEMY_CONFIG.LAB_TIERS[pendingBrew.labTierId]?.slMod || 0;
+    const labSlMod = lab ? lab.slMod : (Number.isFinite(Number(pendingBrew.labSlMod)) ? Number(pendingBrew.labSlMod) : fallbackSl);
 
     const hasMagicalSense = hasTalent(actor.itemTypes?.talent ?? [], 'magicalSense');
     const { difficultyMod, slBonus: totalSlBonus } = brewingModifiers(recipe, {
@@ -354,9 +375,8 @@ export class BrewingEngine {
       const tetherCost = quality.tetherCost;
       let createdQty = 1;
       if (recipe.track === 'mundane') {
-        createdQty = Math.max(1, (await (new Roll(recipe.dosesFormula || '1d10')).evaluate()).total);
-        if (isCritical) createdQty *= 2;
-        createdQty += quality.bonusDoses;
+        const rolled = (await (new Roll(recipe.dosesFormula || '1d10')).evaluate()).total;
+        createdQty = mundaneBatchQuantity(rolled, { critical: isCritical, bonusDoses: quality.bonusDoses, maxDoses: recipe.maxDoses });
       } else if (isCritical) {
         if (tetherCost === 0) {
           createdQty = 2;
@@ -439,7 +459,7 @@ export class BrewingEngine {
     } else {
       let disasterMsg = '';
       if (isFumble) {
-        disasterMsg = await this.rollDisaster(actor);
+        disasterMsg = await this.rollDisaster(actor, lab?.item ?? null);
       }
 
       const chatHtml = `
@@ -527,10 +547,12 @@ export class BrewingEngine {
     }
   }
 
-  static async cancelPendingBrew(actor, recipeId = null) {
+  static async cancelPendingBrew(actor, brewIdOrRecipeId = null) {
     if (!game.user.isGM || !actor) return false;
     const brews = getPendingBrews(actor);
-    const pending = brews.find((b) => b.recipeId === recipeId) ?? brews[0];
+    const pending = (brewIdOrRecipeId && brews.find((b) => b.id && b.id === brewIdOrRecipeId))
+      ?? brews.find((b) => b.recipeId === brewIdOrRecipeId)
+      ?? brews[0];
     if (!pending) return false;
     await setPendingBrews(actor, brews.filter((b) => b !== pending));
     // Zarezerwowane składniki wracają z kotła do ekwipunku
@@ -545,11 +567,11 @@ export class BrewingEngine {
     return true;
   }
 
-  static async rollDisaster(actor) {
+  static async rollDisaster(actor, labItem = null) {
     const roll = await (new Roll('1d10')).evaluate();
     const val = roll.total;
 
-    // A7: skutki działają same – rany, stan Zatrucia po nieudanym Teście Odporności, uszkodzenie laboratorium
+    // A7: skutki działają same – rany, stan Zatrucia po nieudanym Teście Odporności, uszkodzenie aparatury
     const disasterKeys = [
       { max: 3, key: 'Ruined' },
       { max: 4, key: 'Smoke' },
@@ -563,7 +585,7 @@ export class BrewingEngine {
 
     const d = disasterKeys.find(item => val <= item.max) || disasterKeys[disasterKeys.length - 1];
     const lines = [`[${val}] ${game.i18n.localize(`GOLD_ALCHEMY.Disasters.${d.key}`)}`];
-    if (this.automateDisasters()) lines.push(...await this.#applyDisaster(actor, d));
+    if (this.automateDisasters()) lines.push(...await this.#applyDisaster(actor, d, labItem));
     return lines.join('<br>');
   }
 
@@ -577,7 +599,7 @@ export class BrewingEngine {
   }
 
   /** Nakłada skutki katastrofy na alchemika; zwraca linie do karty czatu. */
-  static async #applyDisaster(actor, disaster) {
+  static async #applyDisaster(actor, disaster, labItem = null) {
     const lines = [];
     const loc = (key, data) => (data ? game.i18n.format(`GOLD_ALCHEMY.DisasterEffects.${key}`, data) : game.i18n.localize(`GOLD_ALCHEMY.DisasterEffects.${key}`));
     try {
@@ -598,13 +620,13 @@ export class BrewingEngine {
           lines.push(loc('Resisted'));
         }
       }
-      if (disaster.labDamage && this.labByGM()) {
-        const order = ['poor', 'standard', 'fine'];
-        const current = this.actorLabTier(actor);
-        const lower = order[Math.max(0, order.indexOf(current) - 1)];
-        if (lower !== current) {
-          await actor.setFlag(MODULE_ID, 'labTier', lower);
-          lines.push(loc('LabDamaged', { lab: game.i18n.localize(ALCHEMY_CONFIG.LAB_TIERS[lower].name) }));
+      if (disaster.labDamage && labItem) {
+        const currentSl = Math.trunc(Number(labItem.flags?.[MODULE_ID]?.laboratory?.slMod) || 0);
+        const nextSl = damagedLabSlMod(currentSl);
+        if (nextSl !== currentSl) {
+          await labItem.update({ [`flags.${MODULE_ID}.laboratory.slMod`]: nextSl });
+          const slLabel = game.i18n.localize('GOLD_ALCHEMY.Workbench.SL');
+          lines.push(loc('LabDamaged', { lab: `${labItem.name} (${formatSlMod(nextSl)} ${slLabel})` }));
         }
       }
     } catch (err) {

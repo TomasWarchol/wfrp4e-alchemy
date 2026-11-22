@@ -96,6 +96,24 @@ describe("Kroki mikstury – wypicie", () => {
     expect(stepsHeal([{ remove: "bleeding" }])).toBe(false);
     expect(stepsHeal([{ test: "endurance", pass: [{ heal: "tb" }] }])).toBe(true);
   });
+
+  it("requireWounds: nie leczy postaci z 0 Ran", async () => {
+    const dying = fakeActor({ wounds: 0, max: 12, tb: 3 });
+    const lines = await runDrinkSteps([{ heal: "2tb", requireWounds: true }], dying, ctx());
+    expect(dying.system.status.wounds.value).toBe(0);
+    expect(lines[0]).toBe("HealNoWounds");
+
+    const wounded = fakeActor({ wounds: 2, max: 12, tb: 3 });
+    await runDrinkSteps([{ heal: "2tb", requireWounds: true }], wounded, ctx());
+    expect(wounded.system.status.wounds.value).toBe(8);
+  });
+
+  it("obowiązkowy test (mandatory): anulowanie okna nie omija kary", async () => {
+    const step = { test: "endurance", difficulty: "difficult", mandatory: true, fail: [{ add: "poisoned", value: 1 }] };
+    const cancelled = fakeActor();
+    await runDrinkSteps([step], cancelled, ctx(null));
+    expect(cancelled.conds.poisoned).toBe(1);
+  });
 });
 
 describe("Kroki mikstury – rzut", () => {
@@ -104,5 +122,33 @@ describe("Kroki mikstury – rzut", () => {
     await runThrownSteps([{ add: "entangled", value: 1, perSL: true }, { damage: 4, perSL: true, ignoreAP: true }, { damage: 2 }], actor, 2, ctx());
     expect(actor.conds.entangled).toBe(3);
     expect(actor.damage).toEqual([[6, 1], [2, 0]]);
+  });
+
+  it("excludeTraits i maxSize pomijają odporne i zbyt duże cele", async () => {
+    const undead = { ...fakeActor(), has: (trait) => trait === "Undead" };
+    await runThrownSteps([{ add: "broken", value: 1, excludeTraits: ["Undead", "Daemonic"] }], undead, 0, ctx());
+    expect(undead.conds).toEqual({});
+
+    const ogre = fakeActor();
+    ogre.system.details = { size: { value: "lrg" } };
+    await runThrownSteps([{ damage: 6, perSL: true }, { add: "prone", value: 1, maxSize: "avg" }], ogre, 1, ctx());
+    expect(ogre.damage).toEqual([[7, 0]]);
+    expect(ogre.conds.prone).toBeUndefined();
+
+    const human = fakeActor();
+    human.system.details = { size: { value: "avg" } };
+    await runThrownSteps([{ add: "prone", value: 1, maxSize: "avg" }], human, 0, ctx());
+    expect(human.conds.prone).toBe(1);
+  });
+
+  it("notka z testem obronnym (Proszek Kichający)", async () => {
+    const target = fakeActor();
+    const failCtx = { ...ctx(), resist: async () => ({ succeeded: false }) };
+    const failLines = await runThrownSteps([{ note: "GOLD_ALCHEMY.Steps.SneezingPenalty", resistLabel: "GOLD_ALCHEMY.Steps.SneezingLabel", resist: { test: "endurance", difficulty: "average" } }], target, 0, failCtx);
+    expect(failLines[0]).toContain("SneezingPenalty");
+
+    const passCtx = { ...ctx(), resist: async () => ({ succeeded: true }) };
+    const passLines = await runThrownSteps([{ note: "GOLD_ALCHEMY.Steps.SneezingPenalty", resistLabel: "GOLD_ALCHEMY.Steps.SneezingLabel", resist: { test: "endurance", difficulty: "average" } }], target, 0, passCtx);
+    expect(passLines[0]).toContain("ThrownResisted");
   });
 });

@@ -141,6 +141,7 @@ function describeSteps(steps) {
 
 /** Krótki opis tego, co mikstura robi w grze (z danych efektu, nie z tekstu). */
 export function describeMechanics(recipe) {
+  if (recipe.referenceOnly) return 'Poza katalogiem mikstur — zasady podręcznikowe lub fabuła MG';
   const parts = [];
   const ae = recipe.activeEffect;
   const changes = (ae?.system?.changes || ae?.changes || [])
@@ -171,8 +172,9 @@ export function describeMechanics(recipe) {
   if (ae?.flags?.[OWN]?.deathWard) parts.push('raz przeżywa z 1 Raną');
   if (recipe.instantSteps) parts.push(`wypicie: ${describeSteps(recipe.instantSteps)}`);
   if (recipe.thrownSteps) parts.push(`rzut: ${describeSteps(recipe.thrownSteps)}`);
-  if (recipe.instantEffect === 'recipeCloud') parts.push('rzut: chmura na 1k10 rund (skutki – MG)');
+  if (recipe.instantEffect === 'recipeCloud') parts.push(`rzut: chmura na ${recipe.cloud?.roundsFormula || '1k10'} rund`);
   else if (recipe.instantEffect && !recipe.instantEffect.startsWith('recipe')) parts.push(`efekt w kodzie: ${recipe.instantEffect}`);
+  if (recipe.manualUse && parts.length) parts.push('część efektu rozstrzyga MG');
   return parts.join('; ') || 'tylko opis (rozstrzyga MG)';
 }
 
@@ -200,7 +202,7 @@ export function buildRows({ recipes, ingredients, lang, normalize }) {
       sourceTitle: SOURCES[recipe.sourceModule] ?? '',
       track: n.track === 'magical' ? 'magiczny' : 'świecki',
       creationTimeEffective: n.creationTimeDays,
-      doses: n.dosesFormula,
+      doses: n.maxDoses ? `${n.dosesFormula} (maks. ${n.maxDoses})` : n.dosesFormula,
       ingredientsSummary: (recipe.ingredients || []).map((ing) => `${ingName(ing.key)} ×${ing.quantity}`).join('; '),
       ingredientCost: n.ingredientCostGC,
       priceEffective: priceText(n.listPriceSS),

@@ -1,13 +1,70 @@
 {
   "GOLD_ALCHEMY": {
-    "DisasterEffects": {"Wounds": "The alchemist loses {wounds} Wounds.", "Poisoned": "The alchemist fails the Endurance test and is Poisoned.", "Resisted": "The alchemist withstands the fumes.", "LabDamaged": "The laboratory is damaged and is now {lab}."},
-    "Quality": {"Label": "Quality", "good": "good", "excellent": "excellent"},
-    "Inventory": {"Section":"Alchemical ingredients","CreateType":"Alchemical ingredient","NewIngredient":"New ingredient","Make":"Make into alchemical ingredient","Made":"{name} is now an alchemical ingredient.","OpenCompendium":"Open the ingredients compendium (drag ingredients onto the sheet)"},
-    "AlchemyBook": {"Label":"Alchemical book","New":"Alchemical book","Section":"Alchemical books"},
+    "Balance": {
+      "ApplyToAlly": "Apply to targeted character",
+      "SelectAlly": "Target a nearby player character. The GM must be online if you cannot edit the target's sheet.",
+      "ChooseWeapon": "Select a melee weapon owned by the character.",
+      "OilCombat": "Weapon oils are applied during combat.",
+      "ChooseChannel": "Select a trained Channelling Skill.",
+      "SmokeTerrain": "Where will the Smoke Pellet land?",
+      "indoors": "Indoors",
+      "still": "Outdoors, still air",
+      "wind": "Outdoors, windy",
+      "SmokeDispersed": "The wind dispersed the smoke immediately."
+    },
+    "DisasterEffects": {
+      "Wounds": "The alchemist loses {wounds} Wounds.",
+      "Poisoned": "The alchemist fails the Endurance test and is Poisoned.",
+      "Resisted": "The alchemist withstands the fumes.",
+      "LabDamaged": "The laboratory is damaged and is now {lab}."
+    },
+    "Quality": {
+      "Label": "Quality",
+      "good": "good",
+      "excellent": "excellent"
+    },
+    "Inventory": {
+      "Section": "Alchemical ingredients",
+      "CreateType": "Alchemical ingredient",
+      "NewIngredient": "New ingredient",
+      "Make": "Make into alchemical ingredient",
+      "Made": "{name} is now an alchemical ingredient.",
+      "OpenCompendium": "Open the ingredients compendium (drag ingredients onto the sheet)"
+    },
+    "LabItem": {
+      "Section": "Alchemical laboratories & apparatus",
+      "CreateType": "Alchemical apparatus / laboratory",
+      "NewName": "New alchemical apparatus",
+      "Make": "Make into alchemical laboratory",
+      "Made": "{name} is now an alchemical laboratory.",
+      "SheetTitle": "Alchemical Laboratory Parameters",
+      "SLMod": "Laboratory level (+SL / -SL)",
+      "Cauldrons": "Capacity (simultaneous brews)",
+      "SheetHint": "SL bonus or penalty on brewing tests and how many potions this apparatus can brew at once.",
+      "UnknownLab": "Previous apparatus",
+      "FieldAlembic": "Field Alembic (-1 SL, 1 cauldron)",
+      "FieldAlembicDesc": "A compact copper alembic and spirit burner packed for travel (-1 SL, 1 brew at a time).",
+      "PoorLab": "Poor Laboratory (-1 SL, 1 cauldron)",
+      "PoorLabDesc": "A makeshift workshop of cracked stoneware and copper tubing. Brews 1 potion at a time (-1 SL).",
+      "StandardLab": "Standard Laboratory (+0 SL, 1 cauldron)",
+      "StandardLabDesc": "A solid alchemist's bench fitted with glass retorts, apothecary scales and furnace (+0 SL, 1 brew at a time).",
+      "FineLab": "Fine Laboratory (+1 SL, 2 cauldrons)",
+      "FineLabDesc": "A masterwork chamber with two independent distillation stations and crystal alembics (+1 SL, 2 brews at a time)."
+    },
+    "AlchemyBook": {
+      "Label": "Alchemical book",
+      "New": "Alchemical book",
+      "Section": "Alchemical books"
+    },
     "Workbench": {
       "Cauldrons": "Cauldrons",
-      "CauldronsHint": "Each brew in progress takes a cauldron; a fine laboratory has two.",
-      "LabSetByGM": "The GM sets your laboratory.",
+      "CauldronsHint": "Each brew in progress occupies one station in the chosen apparatus.",
+      "LabSetByGM": "The GM sets laboratory parameters.",
+      "SL": "SL",
+      "NoLaboratory": "No alchemical laboratory or apparatus in inventory.",
+      "ActiveBrews": "Brewing in progress",
+      "BrewingIn": "in",
+      "ReadyNow": "Ready to complete",
       "Tether": "Tether",
       "TetherHint": "Tether points: each magical potion in use holds some of them until it is drunk, severed or runs out of time.",
       "Memory": "Memory",
@@ -38,8 +95,9 @@
     "Days": "days",
     "Pieces": "pcs",
     "Currency": {
-      "GC": "GC",
-      "SS": "s"
+      "GC": "gc",
+      "SS": "ss",
+      "BP": "bp"
     },
     "Depleted": "(Depleted)",
     "RecipeBook": "Recipe Book",
@@ -78,18 +136,20 @@
       "CompleteBrewing": "Complete Brewing",
       "CancelBrewing": "Cancel Brewing",
       "PendingBrew": "Brewing: {recipe} · ready {date}.",
+      "PendingBrewInLab": "Brewing: {recipe} ({lab}) · ready {date}.",
       "WorldTimeMustPass": "World time must pass before completion.",
       "NoRecipeSelected": "Select a recipe from the list on the left.",
       "IngredientsMissingTooltip": "Missing required ingredients or attunement points",
       "CannotBrewTooltip": "Cannot brew this potion (missing ingredients, lacking tether points, or unknown recipe).",
       "Doses": "Doses",
       "DosesBatch": "1d10 (batch)",
-      "PricePerDose": "Price per dose"
+      "PricePerDose": "Price per dose",
+      "DosesSmallBatch": "1d3 (batch)"
     },
     "Lab": {
-      "Poor": "Poor Laboratory (200 GC, -1 SL)",
-      "Standard": "Standard Laboratory (400 GC, +0 SL)",
-      "Fine": "Fine Laboratory (800 GC, +1 SL)"
+      "Poor": "Poor Laboratory (200 gc, -1 SL)",
+      "Standard": "Standard Laboratory (400 gc, +0 SL)",
+      "Fine": "Fine Laboratory (800 gc, +1 SL)"
     },
     "Tethers": {
       "Title": "Active Tethers in Party",
@@ -98,6 +158,8 @@
     },
     "Errors": {
       "AllCauldronsBusy": "All {count} cauldrons are busy. Finish or cancel a brew first.",
+      "NoLaboratory": "This character has no alchemical laboratory or apparatus in their inventory!",
+      "LabFull": "Apparatus “{lab}” has all {count} cauldrons occupied. Choose another apparatus or finish a brew.",
       "NotEnoughCapacity": "Not enough attunement capacity! Required: {required}, available: {available}.",
       "MissingIngredients": "Missing required ingredients in inventory!",
       "NoDoses": "No doses of this potion left!",
@@ -112,7 +174,12 @@
       "ThrowOutOfRange": "Too far to throw: the furthest you can throw is {range} (three times your Strength Bonus)."
     },
     "Notifications": {
-      "BookNoRoom": {"kind":"{book} can’t hold recipes.","whole":"{book} holds a ritual and has no room for anything else.","slots":"{book} is full ({total} entries).","pages":"{book} has no free pages left."},
+      "BookNoRoom": {
+        "kind": "{book} can’t hold recipes.",
+        "whole": "{book} holds a ritual and has no room for anything else.",
+        "slots": "{book} is full ({total} entries).",
+        "pages": "{book} has no free pages left."
+      },
       "SelectCharacter": "Select a character to open the Alchemy Workshop.",
       "BrewSuccess": "Successfully brewed {qty} of potion: {potion}",
       "BrewStarted": "Brewing started. Ready: {date}. Requires at least 3 hours of work each day.",
@@ -270,22 +337,22 @@
       "IronSkin": {
         "Name": "Iron Skin",
         "Desc": "A draught hardened with Chamon essence, turning flesh to plate steel.",
-        "Effect": "+2 AP on all locations and −10 Agility for 10 minutes."
+        "Effect": "For 10 minutes +2 AP on all locations and −10 Agility."
       },
       "LiquidGold": {
         "Name": "Liquid Gold",
         "Desc": "A sacred drink of the Gold Order filling the soul with pure Gold Weave.",
-        "Effect": "+20 Willpower for 1 hour."
+        "Effect": "For 10 minutes one coated metal weapon or piece of armour becomes Magical and Unbreakable, gaining +2 Damage (weapon) or +2 AP (armour) – OR instantly repairs all damage to a metal item. GM adjudicates."
       },
       "QuicksilverSpeed": {
         "Name": "Quicksilver Speed",
         "Desc": "A concoction bestowing swiftness and mercurial reflexes.",
-        "Effect": "+20 I, +10 Ag and +1 Movement for 10 minutes."
+        "Effect": "For 10 minutes: +20 Dexterity, +10 Agility and ignores armour penalties to Agility and Dexterity Tests."
       },
       "LeadFortitude": {
         "Name": "Lead Fortitude",
         "Desc": "A heavy leaden decoction steeling the mind against dread.",
-        "Effect": "+10 WP and −10 I for 1 hour; +100 to Cool Tests against Fear and Terror."
+        "Effect": "For 10 minutes: −10 Initiative, but full immunity to Fear and Prone plus +20 to Cool Tests against Terror for the full duration."
       },
       "ChamonPanacea": {
         "Name": "Transmutational Panacea of Chamon",
@@ -295,7 +362,7 @@
       "WeaveEssence": {
         "Name": "Weave Essence",
         "Desc": "A decoction opening the wizard's mystical channels.",
-        "Effect": "+10 Willpower for 1 hour."
+        "Effect": "For 1 hour you sense active magic within 20 yards (intensity, not the Wind) OR keep an empathic link with 1 willing ally within 1 km (direction and whether alive/conscious). Adjudicated by the GM."
       },
       "VitriolAcid": {
         "Name": "Vitriol Acid",
@@ -316,12 +383,12 @@
       "SmellingSalts": {
         "Name": "Smelling Salts",
         "Desc": "A sharp ammoniac compound reviving the unconscious.",
-        "Effect": "Instantly revives unconscious actors and removes 1 Stunned condition."
+        "Effect": "When applied to a target with at least 1 Wound, removes 1 Stunned. For ordinary fainting, the GM may instead wake the target."
       },
       "SmokePellet": {
         "Name": "Smoke Pellet",
         "Desc": "A smoke bomb creating a choking cloud of concealment.",
-        "Effect": "Thrown: a smoke cloud (4-yard radius) for 1d10 rounds where it lands, or at your feet without a target. Nobody can see into or through it, so ranged attacks and spells need a line of sight around it."
+        "Effect": "Thick smoke blocks sight both ways in a 3-yard radius. It lasts 2 rounds indoors or 1 round outdoors in still air. Wind disperses it immediately."
       },
       "MorrSalve": {
         "Name": "Morr's Salve",
@@ -381,7 +448,7 @@
       "Alkahest": {
         "Name": "Alkahest (Universal Solvent)",
         "Desc": "The ultimate corrosive fluid dissolving stone, iron, and flesh.",
-        "Effect": "Thrown: every target hit gains 2 + SL Ablaze Conditions (chemical burns). Eats through stone or steel. Blast 2."
+        "Effect": "Thrown (Blast 2 yards): 2 + SL Ablaze Conditions (acid burns). Out of combat dissolves a lock or bores through stone or steel in 3 rounds."
       },
       "CompassMeteoric": {
         "Name": "Compass of Meteoric Silver",
@@ -483,62 +550,62 @@
       "AqshyLiquidFire": {
         "Name": "Liquid Flame of Aqshy",
         "Desc": "A thrown phial containing the condensed heat of the Red Wind.",
-        "Effect": "Thrown like an Incendiary, but magical: every target hit gains 2 + SL Ablaze Conditions. Blast 4: hits everyone within 4 yards of the target."
+        "Effect": "Thrown (Blast 4 yards): every target hit gains 2 + SL Ablaze Conditions. Aqshy flame ignites even wet targets."
       },
       "AqshyBlazingHeart": {
         "Name": "Draught of the Blazing Heart",
         "Desc": "A fiery potion boiling the drinker's blood with battle fury.",
-        "Effect": "+10 WS, +10 S and the Frenzy Trait for 10 minutes."
+        "Effect": "For 10 minutes: +10 Weapon Skill, +10 Strength and the Frenzy Trait; upon expiry the drinker gains 1 Fatigued Condition."
       },
       "AqshyWeaponOil": {
         "Name": "Flaming Weapon Oil",
         "Desc": "An ointment infused with Aqshy sulfur, igniting blades on impact.",
-        "Effect": "For 1 hour your melee weapons burn: every hit inflicts 1 Ablaze Condition."
+        "Effect": "Applied during combat to 1 melee weapon until the fight ends: +2 fiery Damage, and the first 3 hits dealing at least 1 Wound inflict 1 Ablaze Condition."
       },
       "AqshyWarBlood": {
         "Name": "Aqshy War Blood",
         "Desc": "A searing draught eradicating fear and hesitation.",
-        "Effect": "+20 I and +10 WP for 10 minutes; +100 to Cool Tests against Fear."
+        "Effect": "For 10 minutes: +10 Weapon Skill, +20 Initiative and immunity to Fear."
       },
       "AzyrStarlight": {
         "Name": "Starlight Phial",
         "Desc": "A crystalline fluid illuminating sight with celestial blue light.",
-        "Effect": "Night Vision and Second Sight Talents for 1 hour."
+        "Effect": "For 1 hour grants the Night Vision and Second Sight Talents."
       },
       "AzyrAstromancerSight": {
         "Name": "Astromancer's Draught",
         "Desc": "An astromancer brew giving glimpses of incoming blows.",
-        "Effect": "+20 I, +10 Ag and cannot be Surprised for 10 minutes."
+        "Effect": "For 10 minutes: +20 Initiative, +10 Agility and full immunity to Surprised."
       },
       "AzyrLightningReflex": {
         "Name": "Lightning Reflex Draught",
         "Desc": "A lightning-infused draught accelerating muscle response.",
-        "Effect": "+20 Agility and +1 Movement for 10 minutes."
+        "Effect": "For 10 minutes: +20 Agility and +1 Movement."
       },
       "AzyrStormTonic": {
         "Name": "Azyr Storm Tonic",
         "Desc": "A refreshing tonic shielding nerves against electrical shock.",
-        "Effect": "+10 Toughness for 2 hours."
+        "Effect": "For 1 hour: +10 Initiative, immunity to Surprised, and toggleable +20 to Endurance against storms and high winds."
       },
       "MeteoricCompass": {
         "Name": "Compass of Meteoric Silver",
         "Desc": "A navigational tool pointing toward the nearest magical concentration.",
-        "Effect": "Detects magic within 8 km. Grants +2 SL to magical tracking tests."
+        "Effect": "A high-alchemy implement described in Winds of Magic (pp. 52–53). Use the sourcebook rules for detecting and interpreting signals."
       },
       "PowerPrism": {
         "Name": "Power Prism",
         "Desc": "A faceted aethyric prism isolating and refracting the Winds of Magic.",
-        "Effect": "Allows filtering aethyr or altering wind availability (WoM p. 160)."
+        "Effect": "A high-alchemy implement described in Winds of Magic (pp. 52–53). It is set up in the field using the sourcebook rules."
       },
       "GhyranSpringDew": {
         "Name": "Dew of the Spring Bough",
         "Desc": "Sacred dew mending the most devastating trauma and amputation.",
-        "Effect": "Heals 3×TB Wounds and removes all Bleeding Conditions. One healing potion per encounter."
+        "Effect": "Can be applied to an ally. Heals 3×TB Wounds and removes all Bleeding (at 0 Wounds restores 1 Wound; does not heal Critical Wounds). Limit 1 healing potion per encounter."
       },
       "GhyranVitalSap": {
         "Name": "Vital Sap Draught",
         "Desc": "Ancient oak sap infusing the body with natural vigor.",
-        "Effect": "+10 Toughness for 1 hour; in combat 1 Wound at the start of each round."
+        "Effect": "For 10 minutes regains 1 Wound at the start of each round (only above 0 Wounds, max 10 Wounds total). Subject to the 1 healing potion per encounter limit."
       },
       "GhyranBloodPurifier": {
         "Name": "Ghyran Cleansing Draught",
@@ -548,87 +615,87 @@
       "GhyranIronbarkSalve": {
         "Name": "Balsam of Ironbark",
         "Desc": "A salve endowing skin with the durability of iron oak bark.",
-        "Effect": "+1 AP on all locations (stacks with armour) for 1 hour."
+        "Effect": "For 30 minutes +1 AP on all locations (stacks with armour). DOWNSIDE: Ablaze deals +1 extra Wound."
       },
       "GhurPredatorSight": {
         "Name": "Predator's Draught",
         "Desc": "A concoction bestowing the heightened senses of a timber wolf.",
-        "Effect": "Night Vision and Acute Sense (Smell) Talents for 1 hour."
+        "Effect": "For 1 hour grants the Night Vision and Acute Sense (Smell) Talents."
       },
       "GhurUrsineVigor": {
         "Name": "Ursine Vigor",
         "Desc": "A surge of primeval strength from a cave bear claw.",
-        "Effect": "+20 Strength and +10 Toughness for 10 minutes."
+        "Effect": "For 10 minutes: +20 Strength, ignores Encumbrance penalties and enables superhuman feats of strength."
       },
       "GhurPrimalRoar": {
         "Name": "Primal Roar Tonic",
         "Desc": "A tonic awakening savage instincts and predatory attacks.",
-        "Effect": "+10 WS and the Fear (1) Trait for 10 minutes."
+        "Effect": "For 10 minutes: +10 Weapon Skill and the Fear (1) Trait."
       },
       "GhurSavageSalve": {
         "Name": "Savage Pheromone Salve",
         "Desc": "A pheromone grease pacifying wild beasts.",
-        "Effect": "+10 to animal-related Tests (care, training, riding, charming) for 4 hours."
+        "Effect": "For 4 hours +20 to Animal Care, Animal Training, Ride and Charm Animal Tests."
       },
       "HyshRadiantPurity": {
         "Name": "Elixir of Radiant Purity",
         "Desc": "A sacred fluid cleansing corruption and dark blight from the soul.",
-        "Effect": "Removes 1 Corruption point – at most once per week per character."
+        "Effect": "For 1 hour toggleable +30 to resist external Corruption and Dark Magic PLUS can cleanse 1 fresh Corruption point gained within the last hour or during a GM ritual (max once per season; does not cleanse Warpstone potion Corruption!)."
       },
       "HyshSunsWrath": {
         "Name": "Phial of Sun's Wrath",
         "Desc": "A thrown phial bursting into radiant sunlight.",
-        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions unless they pass a Challenging (+0) Dodge Test; Daemons and Undead suffer extra Damage at the GM's discretion. Blast 3."
+        "Effect": "Thrown (Blast 3 yards): 1 + SL Blinded Conditions (Dodge +0) PLUS 2 + SL Damage ignoring armour to Daemons and Undead."
       },
       "HyshLucidityDraught": {
         "Name": "Hysh Lucidity Draught",
         "Desc": "A crystalline draught rendering the mind immune to shadows and deceit.",
-        "Effect": "+20 Willpower for 1 hour."
+        "Effect": "For 1 hour toggleable +20 to Tests resisting Illusions (Ulgu), Fear and mind magic, automatically sees through minor illusions and resists magical Stunned."
       },
       "HyshTruthDrops": {
         "Name": "Drops of Absolute Truth",
         "Desc": "Essence of truth discerning all deceit and falsehood.",
-        "Effect": "+20 to Intuition Tests for 1 hour."
+        "Effect": "For 1 hour +20 to Intuition. Whenever a speaker deliberately lies, they must pass a Hard (−20) Cool Test or the drinker senses the falsehood."
       },
       "ShyishPaleMask": {
         "Name": "Draught of the Pale Mask",
         "Desc": "A draft halting pulse and breath into a state of suspended animation.",
-        "Effect": "Feigned death for 1d10 hours: cannot gain or keep the Poisoned Condition; resists diseases and mind magic (GM adjudicates)."
+        "Effect": "Feigned death for 1d10 hours: the character is Unconscious (incapacitated and unable to act!), has no pulse, and the progression of poisons and diseases is suspended for the duration."
       },
       "ShyishSpiritBane": {
         "Name": "Grave Oil / Spirit Bane",
         "Desc": "A weapon coating slaying incorporeal spirits and wraiths.",
-        "Effect": "For 1 hour your melee weapons count as magical and deal +3 Damage to Undead."
+        "Effect": "Applied during combat to 1 melee weapon until the fight ends: the weapon counts as Magical and deals +2 Damage against Undead on every hit."
       },
       "ShyishHourglass": {
         "Name": "Hourglass Decoction",
         "Desc": "A mystical fluid staying the final sand in the glass of death.",
-        "Effect": "For 1 hour: the first time damage would drop the drinker to 0 Wounds, they keep 1 Wound instead; then the draught is spent."
+        "Effect": "For 1 hour the first time the drinker would drop to 0 Wounds they remain at 1 Wound instead (provided they survive any Critical Wound – does not reverse instant death)."
       },
       "ShyishShroud": {
         "Name": "Shyish Shroud",
         "Desc": "A brew wreathing the drinker in the dreadful chill of the grave.",
-        "Effect": "+10 Willpower and the Fear (1) Trait for 1 hour."
+        "Effect": "For 10 minutes: Fear (1) Trait against the living, and mindless Undead ignore the drinker until they attack."
       },
       "UlguShadowMist": {
         "Name": "Shadow Mist Draught",
         "Desc": "A phial shattered on the ground creating a cloud of impenetrable shadow.",
-        "Effect": "Thrown: shadow fog (6-yard radius) for 1d10 rounds where it lands, or at your feet without a target. Nobody can see into or through it (total concealment)."
+        "Effect": "Thrown: creates an impenetrable 6-yard-radius cloud of shadow lasting 1d10 rounds (blocks sight both ways, unaffected by wind)."
       },
       "UlguPhantasmagoria": {
         "Name": "Phantasmagoria Elixir",
         "Desc": "An illusory draught shifting facial features, voice, and aura.",
-        "Effect": "+20 to Charm and Entertain Tests (disguise, deceit) for 1d10 hours."
+        "Effect": "For 1d10 hours +20 to Charm and Entertain for one assumed identity; illusion alters facial features and voice."
       },
       "UlguStalkerOil": {
         "Name": "Stalker's Oil",
         "Desc": "A silence grease muffling footsteps and armor clatter.",
-        "Effect": "+10 to Stealth Tests for 2 hours."
+        "Effect": "For 2 hours +20 to Stealth and silent steps – ignores armour penalties to Stealth Tests."
       },
       "UlguWraithstep": {
         "Name": "Wraithstep Draught",
         "Desc": "A shadowy draught rendering the physical body semi-incorporeal.",
-        "Effect": "Allows passing through grates, doors, and bars for 1d10 rounds."
+        "Effect": "For 1d10 rounds the drinker may pass once with carried gear through bars, a door or a wall up to 1 yard thick."
       },
       "FlashPowder": {
         "Name": "Alchemical Flash Powder",
@@ -736,74 +803,74 @@
         "Effect": "For 1 hour removes 1 Bleeding Condition at the end of each round."
       },
       "QuicksilverMind": {
-        "Effect": "+1 SL to Intelligence-based Tests for 1 hour.",
+        "Effect": "For 2 hours +1 SL to all Trade and Evaluate Tests (excluding spellcasting).",
         "Name": "Quicksilver Mind Elixir",
         "Desc": "A drop of purified quicksilver dissolved in a sage distillate. Gold Magisters drink it over tomes and crucibles – thought becomes swift and cool as liquid metal."
       },
       "AqshyHearthfire": {
         "Name": "Hearthfire Tonic",
         "Desc": "A warming red cordial that keeps the Wind of Fire glowing in the belly through the coldest night.",
-        "Effect": "Removes 1 Fatigued Condition; +20 to Endurance Tests for 8 hours (meant for cold and exposure, GM decides)."
+        "Effect": "Removes 1 Fatigued Condition. For 8 hours prevents hypothermia and lets you toggle +20 to Endurance Tests against cold and harsh weather."
       },
       "AqshyFlameOfCourage": {
         "Name": "Flame of Courage",
         "Desc": "A searing shot that burns fear out of the heart and leaves only stubborn anger behind.",
-        "Effect": "Removes all Broken Conditions; +20 to Cool Tests for 1 hour."
+        "Effect": "Instantly removes all Broken Conditions, grants 10 minutes of immunity to Broken, and gives +20 to Cool Tests for 1 hour."
       },
       "AqshyFurnaceBlood": {
         "Name": "Furnace Blood",
         "Desc": "The drinker's veins run hot as a smithy's hearth; flames slide off the skin like water.",
-        "Effect": "+10 Strength and +10 Toughness for 10 minutes; the drinker cannot gain or keep the Ablaze Condition."
+        "Effect": "For 10 minutes: +10 Strength, +10 Toughness, full immunity to Ablaze, and every foe hitting the drinker with a melee weapon gains 1 Ablaze Condition."
       },
       "AzyrSkywardEye": {
         "Name": "Skyward Eye",
         "Desc": "Celestial magisters brew it for scouts and gunners: for a while the drinker sees the field as a hawk sees it from the clouds.",
-        "Effect": "+20 to Perception Tests (sight) and +10 Ballistic Skill for 1d10 × 10 minutes."
+        "Effect": "For 1d10 × 10 minutes: +10 Ballistic Skill, toggleable +20 to sight Perception, and ignores penalties for poor visibility and Long Range."
       },
       "AzyrAugury": {
         "Name": "Augur's Draught",
         "Desc": "Brewed under a clear sky; for an hour the drinker sees the small omens that precede every event.",
-        "Effect": "+1 SL to Perception and Intuition Tests for 1 hour."
+        "Effect": "For 1 hour +1 SL to Perception and Intuition PLUS 1 free reroll of any failed Test (excluding Casting, Channelling and Corruption Tests)."
       },
       "AzyrStarCompass": {
         "Name": "Star Compass Draught",
         "Desc": "A cool, star-flecked liquid that lets the drinker feel the turning of the heavens even under cloud.",
-        "Effect": "+20 to Navigation and Outdoor Survival Tests for 8 hours; the drinker always knows where north lies."
+        "Effect": "For 8 hours +20 to Navigation and Outdoor Survival; the drinker senses compass directions even underground or in thick fog."
       },
       "ChamonAssayersEye": {
         "Name": "Assayer's Eye",
         "Desc": "A drop of quicksilver tinged with Chamon: every metal and stone reveals its true nature to the drinker's eye and fingertips.",
-        "Effect": "+30 to Evaluate Tests for 1 hour; the drinker can tell true metal, gems and alloys from fakes by touch (GM)."
+        "Effect": "For 1 hour +20 to Evaluate and infallible identification of alloys, counterfeit coins and gemstones by touch."
       },
       "ChamonLeadenWard": {
         "Name": "Leaden Ward",
         "Desc": "A heavy grey elixir; the skin takes on a dull metallic sheen and the mind a stubborn weight.",
-        "Effect": "+1 AP on all locations (stacks with armour) and +10 Willpower for 1 hour."
+        "Effect": "For 10 minutes a magnetic ward grants +2 AP on all locations against missiles and ignores the Penetrating quality of missiles and blackpowder weapons. GM adjudicates."
       },
       "GhyranBloomBalm": {
         "Name": "Bloom Balm",
         "Desc": "A green salve that smells of spring rain; torn flesh knits like new bark over a wound.",
-        "Effect": "Heals 2 × Toughness Bonus Wounds and removes 1 Bleeding Condition. One healing potion per encounter."
+        "Effect": "Can be applied to an ally. Heals 2×TB Wounds (only above 0 Wounds) and removes 1 Bleeding Condition. Limit 1 healing potion per encounter."
       },
       "GhyranGreenward": {
         "Name": "Greenward Draught",
         "Desc": "Life magic floods the blood and burns away any venom before it can take hold.",
-        "Effect": "For 1 hour the drinker cannot gain or keep the Poisoned Condition."
+        "Effect": "Instantly removes all Poisoned Conditions and for 4 hours grants immunity to Poisoned plus toggleable +20 to Endurance against contracting diseases."
       },
       "GhyranOaksPatience": {
         "Name": "Oak's Patience",
         "Desc": "The drinker grows slow and rooted as an old oak – and nearly as hard to fell.",
-        "Effect": "+20 Toughness and −10 Agility for 1 hour."
+        "Effect": "For 10 minutes: −10 Agility, +10 Toughness and full immunity to Prone or forced movement while standing on the ground."
       },
       "GhurStagLeap": {
         "Name": "Stag's Leap",
         "Desc": "A musky brown draught; the drinker's legs remember the forest's wild running.",
-        "Effect": "+20 to Athletics, Climb and Swim Tests for 1 hour."
+        "Effect": "For 1 hour: +20 to Athletics and Climb, +1 Movement and doubled jump distance."
       },
       "GhurBoarhide": {
         "Name": "Boarhide Elixir",
         "Desc": "Skin thickens into bristled hide and the drinker snorts like a cornered boar.",
-        "Effect": "+1 AP on all locations (stacks with armour) and +10 Toughness for 10 minutes."
+        "Effect": "For 10 minutes: +1 AP on all locations and +10 Toughness, but −10 Fellowship and −10 Intelligence (feral urge)."
       },
       "GhurPackHowl": {
         "Name": "Pack Howl Tonic",
@@ -813,117 +880,117 @@
       "HyshDawnlight": {
         "Name": "Dawnlight Tonic",
         "Desc": "A clear liquid holding a single mote of morning light; darkness and dazzle no longer bite.",
-        "Effect": "Removes all Blinded Conditions; for 1 hour the drinker cannot gain or keep the Blinded Condition."
+        "Effect": "Instantly removes all Blinded Conditions and grants 1 hour of immunity to Blinded (including magical)."
       },
       "HyshLanternEyes": {
         "Name": "Lantern Eyes",
         "Desc": "The drinker's eyes glow softly; hidden things, false faces and illusions are laid bare.",
-        "Effect": "+20 to Perception Tests for 1 hour; the GM may let the drinker see through mundane disguises and minor illusions."
+        "Effect": "For 1 hour: toggleable +20 to sight Perception, Night Vision Talent, and sees through mundane disguises and minor illusions."
       },
       "HyshBanishingPhial": {
         "Name": "Banishing Phial",
         "Desc": "A thrown phial of concentrated Hysh that bursts in a flare of searing white.",
-        "Effect": "Thrown: every target hit takes 4 + SL damage ignoring armour and gains 1 Blinded Condition unless they pass a Challenging (+0) Dodge Test; Daemons and Undead may suffer more (GM)."
+        "Effect": "Thrown (1 target): 8 + SL Damage ignoring armour to Daemons and Undead plus 1 + SL Blinded Conditions (Dodge +0)."
       },
       "ShyishMorrsQuiet": {
         "Name": "Morr's Quiet",
         "Desc": "A cold, still draught; blows and shocks slide off a mind already resting in Morr's silence.",
-        "Effect": "Removes all Stunned Conditions; for 10 minutes the drinker cannot gain or keep the Stunned Condition."
+        "Effect": "Can be applied to an ally. Removes all Stunned Conditions and grants 10 minutes of immunity to Stunned."
       },
       "ShyishMementoMori": {
         "Name": "Memento Mori",
         "Desc": "The Amethyst Order teaches that death is neither cruel nor terrible. For an hour the drinker truly believes it.",
-        "Effect": "+10 Willpower for 1 hour; the drinker cannot gain or keep the Broken Condition."
+        "Effect": "For 1 hour full immunity to Fear, Terror and Broken caused by Undead and spirits."
       },
       "ShyishSoulLantern": {
         "Name": "Soul Lantern",
         "Desc": "A pale glow kindles behind the drinker's eyes, steadying the soul against what lies beyond.",
-        "Effect": "+20 to Willpower-based Tests for 1 hour; the drinker can see spirits and ghosts (GM)."
+        "Effect": "For 1 hour the drinker sees spirits and ethereal beings and may toggle +20 to Perception regarding them."
       },
       "UlguThiefsFingers": {
         "Name": "Shadow-Fingers Oil",
         "Desc": "Grey Order agents rub it into their fingertips; hands blur at the edge of sight and locks seem to whisper their secrets. Outside the Order, owning it is proof enough of burglary.",
-        "Effect": "+20 to Sleight of Hand and Pick Lock Tests for 2 hours."
+        "Effect": "For 2 hours +20 to Sleight of Hand and Pick Lock Tests."
       },
       "UlguShadowcloak": {
         "Name": "Shadowcloak Draught",
         "Desc": "The drinker's outline frays into the grey mist of Ulgu; eyes slide past without noticing.",
-        "Effect": "+30 to Stealth Tests and +10 Agility for 1d10 × 10 minutes."
+        "Effect": "For 1d10 × 10 minutes: +20 to Stealth and +10 Agility."
       },
       "UlguBewilderingDust": {
         "Name": "Bewildering Dust",
         "Desc": "A thrown pouch of grey glitter that scatters thoughts like startled crows.",
-        "Effect": "Thrown: everyone within 2 yards of the target gains 1 Stunned Condition unless they pass a Challenging (+0) Endurance Test."
+        "Effect": "Thrown (Blast 3 yards): 1 Stunned Condition (2 at ≥+3 SL) on a failed Difficult (−10) Cool Test; affects non-breathing creatures too."
       },
       "AethyricSalts": {
         "Name": "Aethyric Salts",
         "Desc": "Pungent crystals sniffed before a ritual, made by magisters of every College; the Winds feel a little closer and easier to grasp.",
-        "Effect": "+10 to Channelling Tests for 1 hour."
+        "Effect": "For 10 minutes +10 to Channelling Tests. DOWNSIDE: any double rolled on Channelling or Casting Tests (even a success!) triggers a Minor Miscast, and when the effect expires you gain 1 Fatigued Condition."
       },
       "WardingDraught": {
         "Name": "Warding Draught",
         "Desc": "A bitter ward against hostile sorcery, issued by the Colleges to witch hunters and templars; the drinker's will hardens like tempered glass.",
-        "Effect": "+20 to Willpower-based Tests for 10 minutes (including resisting spells)."
+        "Effect": "For 1 hour you may toggle +20 to Tests resisting hostile spells (does not apply to Dispelling or your own spellcasting)."
       },
       "QuietmindElixir": {
         "Name": "Quietmind Elixir",
         "Desc": "A lavender-scented elixir that stills the stray thoughts that spoil incantations.",
-        "Effect": "+10 to Language (Magick) Tests for 1 hour."
+        "Effect": "For 10 minutes +10 to Language (Magick) for casting spells and translation. DOWNSIDE: −20 to Dodge and −10 to Initiative while active, plus 1 Fatigued Condition on expiry."
       },
       "AethyricSteadiness": {
         "Name": "Aethyric Steadiness",
         "Desc": "Brewed for battle-wizards: the Winds flow through the drinker without draining body and mind.",
-        "Effect": "Removes all Fatigued Conditions; for 1 hour the drinker cannot gain or keep the Fatigued Condition."
+        "Effect": "Instantly removes all Fatigued Conditions and grants 4 hours of immunity to Fatigue (does not clear Fatigue caused by forbidden drug crashes)."
       },
       "WispPhial": {
         "Name": "Will-o'-Wisp Phial",
         "Desc": "A Jade apprentice's trick sold to night travellers; the drinker shines with a pale green glow, lighting the way – and announcing themselves to everyone around.",
-        "Effect": "For 1 hour the drinker sheds light in a 10-yard radius; −30 to Stealth Tests."
+        "Effect": "For 2 hours you guide a glowing wisp up to 20 yards away (torchlight out to 10 yards). Its light pierces ordinary smoke and magical mist (such as Ulgu’s Shadow Mist)."
       },
       "ThunderJar": {
         "Name": "Thunder Jar",
         "Desc": "A clay jar packed with powder and gravel; more noise than harm, but the noise is terrible.",
-        "Effect": "Thrown: every target hit takes 2 damage and gains 1 + SL Deafened Conditions unless they pass a Challenging (+0) Endurance Test. Blast 3."
+        "Effect": "Thrown (Blast 3 yards): deafening blast inflicts 1 Deafened Condition (Challenging +0 Endurance Test) audible for miles around."
       },
       "TarBomb": {
         "Name": "Tar Bomb",
         "Desc": "A thin-walled pot of hot, sticky tar that glues limbs to limbs and boots to the floor.",
-        "Effect": "Thrown: every target hit gains 1 + SL Entangled Conditions."
+        "Effect": "Thrown (1 target): 1 Entangled Condition (does not stack) on a failed Challenging (+0) Dodge Test. Breaking free takes an Action and an Average (+20) Strength or Athletics Test."
       },
       "QuicklimePouch": {
         "Name": "Quicklime Pouch",
         "Desc": "A paper pouch of burnt lime – a cutpurse's weapon, cruel and effective.",
-        "Effect": "Thrown: every target hit gains 1 + SL Blinded Conditions unless they pass a Challenging (+0) Dodge Test. Blast 2."
+        "Effect": "Thrown (1 target): 1 Blinded Condition on a failed Challenging (+0) Dodge Test."
       },
       "Stinkpot": {
         "Name": "Stinkpot",
         "Desc": "A sealed pot of rotten sulphur and garlic mash, used to flush out cellars and break up crowds.",
-        "Effect": "Thrown: a reeking cloud (6-yard radius) for 1d10 rounds; anyone inside at the start of their turn must pass an Average (+20) Endurance Test or gain 1 Fatigued Condition."
+        "Effect": "Thrown: foul cloud of 3-yard radius lasting 1d5 rounds (wind disperses it). Each creature in the cloud makes at most 1 Average (+20) Endurance Test or gains 1 Fatigued Condition."
       },
       "Nightblack": {
         "Name": "Nightblack",
         "Desc": "A greasy soot paste for face, hands and buckles; useless by day, invaluable by night.",
-        "Effect": "+20 to Stealth Tests in darkness for 4 hours."
+        "Effect": "For 4 hours lets you toggle +10 to Stealth in darkness, but imposes −10 Fellowship from the grimy soot."
       },
       "KeenEdgeOil": {
         "Name": "Keen-Edge Oil",
         "Desc": "A grit-laden oil worked into a blade with a whetstone; the edge bites deeper for a while.",
-        "Effect": "+10 to Melee Tests for 1 hour (the oiled weapon only)."
+        "Effect": "Applied during combat to 1 edged melee weapon: +1 Damage on the first 3 hits in this encounter."
       },
       "SteadyhandDrops": {
         "Name": "Steadyhand Drops",
         "Desc": "Bitter drops beloved of crossbowmen; the hand stops shaking, the tongue turns sour.",
-        "Effect": "+10 Ballistic Skill and −5 Fellowship for 1 hour."
+        "Effect": "For 1 hour lets you toggle +10 to Ballistic Skill solely when using the Aim action, at the cost of −5 Fellowship."
       },
       "FireproofSalve": {
         "Name": "Fireproof Salve",
         "Desc": "An alum and wax grease that Nuln gunners smear on sleeves and gloves; flames struggle to take hold.",
-        "Effect": "For 1 hour the drinker loses 1 Ablaze Condition at the start of every round."
+        "Effect": "For one hour, reduce the first newly inflicted Ablaze by 1 and immediately expend the salve. Existing Ablaze is unaffected."
       },
       "MinersPowder": {
         "Name": "Miner's Blasting Charge",
         "Desc": "A greased charge of blasting powder for splitting rock – and, regrettably, people. Most towns require a licence to carry one.",
-        "Effect": "Thrown: every target hit takes 6 + SL damage and is knocked Prone. Blast 5, like a Bomb."
+        "Effect": "Thrown (Blast 5 yards, Dangerous like a Bomb): 6 + SL Damage plus Prone for creatures up to Average size on a failed Challenging (+0) Dodge or Athletics Test."
       },
       "GlowwormPhial": {
         "Name": "Glowworm Phial",
@@ -933,17 +1000,17 @@
       "EtchingAcid": {
         "Name": "Etching Acid",
         "Desc": "A glass flask of engraver's acid; on skin it hisses and eats past any armour.",
-        "Effect": "Thrown: every target hit takes 3 + SL damage ignoring armour."
+        "Effect": "Thrown (1 target): 3 + SL Damage ignoring armour; out of combat eats through a lock or iron fitting in 10 minutes."
       },
       "ClimbersResin": {
         "Name": "Climber's Resin",
         "Desc": "A tacky amber resin for palms and boot-soles that grips stone like a lizard's foot.",
-        "Effect": "+20 to Climb Tests for 2 hours."
+        "Effect": "For 2 hours lets you toggle +10 to Climb Tests."
       },
       "SneezingPowder": {
         "Name": "Sneezing Powder",
         "Desc": "Ground mustard and lime in a twist of paper – a prankster's jest that has won more than one tavern brawl.",
-        "Effect": "Thrown: everyone within 2 yards of the target gains 1 Stunned Condition unless they pass a Challenging (+0) Endurance Test."
+        "Effect": "Thrown (1 breathing target): Average (+20) Endurance Test or a sneezing fit imposing −10 to the next Test this round."
       },
       "SympatheticInk": {
         "Name": "Sympathetic Ink",
@@ -958,12 +1025,12 @@
       "YarrowPoultice": {
         "Name": "Yarrow Poultice",
         "Desc": "A packed wad of yarrow and wax that staunches even an ugly cut.",
-        "Effect": "Removes up to 2 Bleeding Conditions."
+        "Effect": "One Action and access to the wound remove up to 2 levels of Bleeding without a Test."
       },
       "Feverbreaker": {
         "Name": "Feverbreaker",
         "Desc": "A sweet-bitter syrup every apothecary keeps for the coughing season.",
-        "Effect": "+20 to Endurance Tests for 1 day (meant for disease and fever, GM decides)."
+        "Effect": "For 24 hours lets you toggle +20 to Endurance solely against diseases and fever."
       },
       "WakerootTea": {
         "Name": "Wakeroot Tea",
@@ -978,52 +1045,52 @@
       "SteadyScalpel": {
         "Name": "Steady Scalpel Tincture",
         "Desc": "Surgeons take a spoonful before cutting: the hand steadies and the stomach stops turning.",
-        "Effect": "+20 to Heal Tests for 1 hour."
+        "Effect": "For 1 hour +10 to Heal Tests (or +20 to a single complex surgical procedure at the GM’s discretion)."
       },
       "ColtsfootSyrup": {
         "Name": "Coltsfoot Syrup",
         "Desc": "A thick brown syrup that loosens the chest and clears foul vapours from the lungs.",
-        "Effect": "Removes 1 Poisoned Condition."
+        "Effect": "After 10 minutes, removes 1 Poisoned caused by irritation from smoke or fumes. The GM confirms the cause and applies relief after the delay."
       },
       "SlumberDrops": {
         "Name": "Slumber Drops",
         "Desc": "Physicians buy it openly; poisoners buy it from the same shelf. A few drops in wine bring deep, dreamless sleep.",
-        "Effect": "Hard (−20) Endurance Test: on a failure the drinker falls Unconscious and sleeps 1d10 hours; on a success gains 1 Fatigued Condition."
+        "Effect": "After 10 minutes the drinker makes a Challenging (+0) Endurance Test or falls into ordinary sleep for 1 hour (can be woken forcefully)."
       },
       "EyebrightWash": {
         "Name": "Eyebright Wash",
         "Desc": "A cool rose-scented eyewash that clears smoke, grit and glare.",
-        "Effect": "Removes all Blinded Conditions; +10 to Perception Tests for 1 hour."
+        "Effect": "Can be applied to an ally. Clears 1 Blinded Condition caused by dust, smoke or flash."
       },
       "BoneknitSalve": {
         "Name": "Boneknit Salve",
         "Desc": "A greasy comfrey ointment rubbed into bruises and cracked bones.",
-        "Effect": "Heals 1d10 Wounds; the salve burns like fire – Average (+20) Endurance Test or gain 1 Fatigued Condition. One healing potion per encounter."
+        "Effect": "Can be applied to an ally. After a successful out-of-combat Heal Test restores +2 extra Wounds (max once per day, requires at least 1 Wound)."
       },
       "GarlicTincture": {
         "Name": "Garlic Tincture",
         "Desc": "Peasant medicine at its most honest: it works, and everyone knows you took it.",
-        "Effect": "+1 SL to Endurance Tests for 8 hours; the smell is unmistakable (GM may apply −10 to Charm)."
+        "Effect": "For 8 hours lets you toggle +10 to Endurance against contracting disease, but the pungent smell imposes −10 Fellowship."
       },
       "PoppyTincture": {
         "Name": "Poppy Tincture",
         "Desc": "A physician's last resort against pain. Too many doses and the patient never wants to stop.",
-        "Effect": "Removes up to 2 Fatigued Conditions; −10 Initiative and −10 Intelligence for 2 hours. Addictive: Challenging (+0) Cool Test after each dose."
+        "Effect": "For 2 hours suspends penalties from Critical Wounds and up to 2 pain-based Fatigued Conditions, but imposes −10 Initiative and −10 Intelligence. Addictive (Challenging +0 Cool Test)."
       },
       "MustardPlaster": {
         "Name": "Mustard Plaster",
         "Desc": "A burning yellow poultice bound over the chest; it drives out the chill and stiffens the resolve.",
-        "Effect": "+10 Toughness for 4 hours."
+        "Effect": "After 10 minutes of warming, gain +10 to the next Endurance Test against cold within an hour. The GM applies the bonus."
       },
       "CalmingOil": {
         "Name": "Calming Oil",
         "Desc": "A drop on each temple and the world slows down to a manageable pace.",
-        "Effect": "+20 to Cool Tests for 2 hours."
+        "Effect": "For 1 hour lets you toggle +10 to Cool (does not apply against Terror or Addiction Tests), at the cost of −10 Initiative."
       },
       "WayfarersTea": {
         "Name": "Wayfarer's Tea",
         "Desc": "A resinous trail tea that sharpens a traveller's sense of the land.",
-        "Effect": "+20 to Outdoor Survival and Track Tests for 8 hours."
+        "Effect": "For 8 hours +10 to Outdoor Survival and Track Tests."
       },
       "NettleWrap": {
         "Name": "Nettle Wrap",
@@ -1038,22 +1105,22 @@
       "WormwoodBitters": {
         "Name": "Wormwood Bitters",
         "Desc": "So bitter it brings tears; it purges the gut and leaves a face like a funeral.",
-        "Effect": "Removes 1 Poisoned Condition; −10 Fellowship for 1 hour."
+        "Effect": "Removes 1 Poisoned Condition (ordinary or foodborne), but the foul aftertaste imposes −10 Fellowship for 1 hour."
       },
       "ElderflowerSyrup": {
         "Name": "Elderflower Syrup",
         "Desc": "A fragrant cordial for travellers and convalescents.",
-        "Effect": "Removes 1 Fatigued Condition; +5 Toughness for 1 day."
+        "Effect": "Removes 1 Fatigued Condition and for 24 hours lets you toggle +10 to Endurance against chills and cold on the road."
       },
       "JuniperSmudge": {
         "Name": "Juniper Smudge",
         "Desc": "Juniper and sage smouldered in a sickroom; the patient breathes the smoke and the air feels cleaner.",
-        "Effect": "+10 to Endurance Tests for 1 day (meant for disease, GM decides)."
+        "Effect": "For 8 hours the smoke masks human scent (beasts and hounds suffer −20 to Track) and repels camp insects and vermin."
       },
       "SunwortDraught": {
         "Name": "Sunwort Draught",
         "Desc": "A red-gold tea that lifts black moods and keeps nightmares at bay.",
-        "Effect": "Removes 1 Broken Condition; +10 Willpower for 4 hours."
+        "Effect": "After 10 minutes of rest in safety, reroll one failed Cool Test against Broken caused by an ordinary threat. The GM adjudicates."
       },
       "MugwortDreamTea": {
         "Name": "Mugwort Dream-Tea",
@@ -1063,12 +1130,12 @@
       "FoxgloveDrops": {
         "Name": "Foxglove Drops",
         "Desc": "A heart stimulant measured drop by drop; a wise herbalist warns that the line between cure and poison is thin.",
-        "Effect": "Hard (−20) Endurance Test: on a success removes all Unconscious and 1 Stunned Condition; on a failure the drinker gains 2 Poisoned Conditions."
+        "Effect": "Can be applied to an ally. Requires at least 1 Wound (at 0 Wounds rouses for 1 last-breath round at most): Hard (−20) Endurance Test – success clears Unconscious and 1 Stunned, failure inflicts 2 Poisoned Conditions."
       },
       "HoneySalve": {
         "Name": "Honey Salve",
         "Desc": "Honey, wax and plantain – the oldest wound salve of the Reikland countryside.",
-        "Effect": "Heals 1d5 Wounds. One healing potion per encounter."
+        "Effect": "Can be applied to an ally. Heals 1d3 Wounds only when above 0 Wounds. Limit 1 healing potion per encounter."
       },
       "ThistleDraught": {
         "Name": "Thistle Draught",
@@ -1078,67 +1145,82 @@
       "SleepwellTea": {
         "Name": "Sleepwell Tea",
         "Desc": "Brewed at dusk; the drinker sleeps soundly and wakes rested even after a hard day.",
-        "Effect": "Removes 1 Fatigued Condition; after a full night's sleep the GM may remove all Fatigued Conditions."
+        "Effect": "Drunk before bed, removes 1 extra Fatigued Condition after a full night’s rest (no immediate effect in combat)."
       },
       "PlantainPoultice": {
         "Name": "Plantain Snakebite Poultice",
         "Desc": "Chewed plantain and forest herbs pressed onto a bite to draw out the venom.",
-        "Effect": "Average (+20) Endurance Test: on a success removes all Poisoned Conditions, otherwise removes 1."
+        "Effect": "Apply to the wound after a mild natural bite or sting. Removes 1 Poisoned without a Test. The GM confirms the cause before use."
       },
       "ThornbarkRub": {
         "Name": "Thornbark Rub",
         "Desc": "A stinging rub that leaves the skin raw, stiff and surprisingly hard to bruise.",
-        "Effect": "+10 Toughness and −10 Agility for 1 hour."
+        "Effect": "For 10 minutes: +10 Toughness, but the skin stiffens (−10 Agility)."
       },
       "BloodrageDraught": {
         "Name": "Bloodrage Draught",
         "Desc": "Brewed from henbane in the hidden cellars of mercenary camps and banned in every province. It works. The heart pays for it.",
-        "Effect": "+20 Weapon Skill, +10 Strength and the Frenzy Trait for 10 minutes. Difficult (−10) Endurance Test or gain 2 Fatigued Conditions; addictive: Difficult (−10) Cool Test after each dose. Illegal."
+        "Effect": "For 10 rounds (1 min): Frenzy Trait and +10 Strength. Upon expiry gain 1 Fatigued Condition plus a Difficult (−10) Endurance Test or a 2nd Fatigued Condition. Strongly addictive (Difficult −10 Cool Test)."
       },
       "Gravewine": {
         "Name": "Gravewine",
         "Desc": "Dark wine steeped with moss from robbed coffins. Grave-robbing alone sends a brewer to the gallows; the priests of Morr would want a word first.",
-        "Effect": "+20 Toughness and −20 Fellowship for 1 hour; cannot gain or keep the Fatigued Condition. Challenging (+0) Endurance Test or gain 1 Poisoned Condition. Addictive: Challenging (+0) Cool Test after each dose. Illegal."
+        "Effect": "BEFORE the effect, Difficult (−10) Endurance Test or 1 Poisoned Condition. For 15 minutes: +20 Toughness, −20 Fellowship and immunity to Fatigue. Addictive (Challenging +0 Cool Test)."
       },
       "BlackVial": {
         "Name": "Black Vial",
         "Desc": "A thin black vial that shatters into a cloud of choking venom. Owning one is a hanging offence in most cities.",
-        "Effect": "Thrown at one target: it gains 1 + SL Poisoned Conditions unless it passes a Challenging (+0) Endurance Test. Illegal."
+        "Effect": "Thrown (1 target): Difficult (−10) Endurance Test or 1 Poisoned Condition (2 at ≥+2 SL on the throw)."
       },
       "WillbreakerDraught": {
         "Name": "Willbreaker Draught",
         "Desc": "An interrogator's brew, slipped into wine. The drinker's resistance melts like wax.",
-        "Effect": "−20 Willpower for 1 hour (the victim is far easier to question, charm or intimidate). Illegal – though some witch hunters carry it all the same."
+        "Effect": "On drinking, Challenging (+0) Endurance Test: failure imposes −20 to Cool, Charm (lying) and resisting interrogation for 1 hour."
       },
       "WitchEyeDrops": {
         "Name": "Witch-Eye Drops",
         "Desc": "A pinch of warpstone in the eyes tears open the veil between the drinker and the raw Winds – and lets in Dhar with them. Heresy: possession means the pyre.",
-        "Effect": "+20 to Channelling Tests for 1 hour. Hard (−20) Endurance Test or gain 1 Corruption point. Addictive: Difficult (−10) Cool Test after each dose."
+        "Effect": "For 3 rounds: +20 to Channelling and +1 SL to Casting Spells. DOWNSIDE: always +1 Corruption Point, strong Addiction (Difficult −10 Cool Test), and every failed Channelling or Casting Test triggers a Minor Miscast!"
       },
       "NightmareDust": {
         "Name": "Nightmare Dust",
         "Desc": "Henbane and bat wing ground to a grey powder; those who breathe it see their worst fears step out of the shadows. A weapon of thieves and cultists alike.",
-        "Effect": "Thrown: everyone within 2 yards of the target gains 1 + SL Broken Conditions unless they pass a Challenging (+0) Cool Test. Illegal."
+        "Effect": "Thrown (Blast 2 yards): Challenging (+0) Cool Test or 1 Broken Condition. No effect on Undead, Daemonic, Fearless or creatures Immune to Psychology."
       },
       "TurncoatSalve": {
         "Name": "Turncoat Salve",
         "Desc": "Warpstone in wax: smeared on the face, it lets the flesh be kneaded like dough into another's likeness. The Changer of Ways smiles on every use. Heresy.",
-        "Effect": "+30 to Entertain and Charm Tests made to pass as someone else for 1d10 hours. Challenging (+0) Endurance Test or gain 1 Corruption point."
+        "Effect": "Physically moulds facial features for 1d10 hours: toggleable +30 to Entertain/Disguise when impersonating 1 specific person. Always inflicts +1 Corruption Point."
       },
       "HollowHeart": {
         "Name": "Hollow Heart Elixir",
         "Desc": "A duellist's poison: the heart slows almost to stillness, fear and exhaustion fall away – and come back all at once. Banned, and rightly so.",
-        "Effect": "+20 Toughness for 10 minutes; cannot gain or keep Broken or Fatigued. When the elixir wears off, the drinker gains 2 Fatigued Conditions. Hard (−20) Endurance Test or gain 2 Poisoned Conditions. Illegal."
+        "Effect": "BEFORE the effect, Hard (−20) Endurance Test or 2 Poisoned Conditions. For 10 minutes: +20 Toughness plus immunity to Broken and Fatigue; on expiry gain 2 Fatigued Conditions. Addictive (Challenging +0 Cool Test)."
       },
       "PlagueVapour": {
         "Name": "Plague Vapour",
         "Desc": "A sealed clay egg of grave-rot miasma. The law hangs its brewers; witch hunters, suspecting the Plague Lord, burn them – usually with the house.",
-        "Effect": "Thrown: a sickly cloud (6-yard radius) for 1d10 rounds; anyone inside at the start of their turn must pass a Difficult (−10) Endurance Test or contract a disease of the GM's choice (the chat card reminds the GM)."
+        "Effect": "GM story item. Identify the disease and exposure before the scene. Resolve exposure once per person using that disease’s rules."
       },
       "SoulburnTonic": {
         "Name": "Soulburn Tonic",
         "Desc": "Warpstone dissolved in henbane spirit: it burns a little of the soul as fuel, and the drinker feels unstoppable – for now. Heresy.",
-        "Effect": "Regains 1 Resolve point (not above Resilience) and gains 1 Corruption point. Addictive: Hard (−20) Cool Test after each dose."
+        "Effect": "Regains 1 Resolve Point (max once per day, never above Resilience). Always inflicts +1 Corruption Point and risks severe Addiction (Hard −20 Cool Test)."
+      },
+      "GhyranRiversBreath": {
+        "Name": "River's Breath",
+        "Desc": "A clear Jade Order draught smelling of reeds and oak sap, prized by riverwardens and scouts along the Reik.",
+        "Effect": "For 1 hour the drinker can breathe underwater and gains +20 to Swim Tests."
+      },
+      "GhurBeastHeart": {
+        "Name": "Heart of the Beast",
+        "Desc": "A thick, steaming crimson brew of the Amber College awakening the primal fury of an apex predator.",
+        "Effect": "For 10 minutes: +20 Strength, +10 Toughness, +1 Movement and the Fear (1) Trait, but −20 Fellowship and −10 Intelligence from bestial ferocity."
+      },
+      "AntisepticSpirit": {
+        "Name": "Antiseptic Spirit",
+        "Desc": "A stinging blend of spirits, vinegar, alum and sage – a staple bottle in every military barber-surgeon and apothecary’s kit.",
+        "Effect": "Used to wash a wound (can be applied to an ally): toggle +20 to Endurance Tests to avoid Wound Infection and +10 to Heal Tests treating infection."
       }
     },
     "Ingredients": {
@@ -1252,7 +1334,18 @@
       "BoneAsh": "Bone Ash",
       "GraveMoss": "Grave Moss",
       "BatWing": "Bat Wing",
-      "Henbane": "Henbane"
+      "Henbane": "Henbane",
+      "CheapSpirits": "Common Spirits",
+      "AethyrDust": "Aethyr Dust",
+      "ForgeEmberAsh": "Forge Cinder Ash",
+      "Stormwater": "Stormwater",
+      "Fulgurite": "Fulgurite Shard",
+      "SunQuartz": "Sun-Warmed Quartz",
+      "HyshIncense": "White Incense",
+      "MistMoss": "Mist Moss",
+      "ShadowResin": "Shadow Resin",
+      "MorrBloom": "Morr's Black Rose",
+      "WarpstonePinch": "Warpstone Pinch"
     },
     "IngredientsDesc": {
       "GoldIronFilings": "Finely ground iron filings mixed with real gold flakes, used in Chamon transmutations.",
@@ -1365,7 +1458,18 @@
       "BoneAsh": "Grey ash of burnt bones. Where the bones came from is best left unasked.",
       "GraveMoss": "Pale moss scraped from the inside of old coffins.",
       "BatWing": "Dried membranous wings, a staple of every witch-hunter's list of evidence.",
-      "Henbane": "A foul-smelling nightshade that brings fury, visions and death in turn."
+      "Henbane": "A foul-smelling nightshade that brings fury, visions and death in turn.",
+      "CheapSpirits": "Ordinary tavern spirits or strong wine bought from any innkeeper or village trader – a cheap base for rustic tinctures and bitter brews.",
+      "AethyrDust": "Fine, faintly shimmering residue scraped from magical alembics and College workshops. Available in large towns as a staple arcane reagent.",
+      "ForgeEmberAsh": "Glassy, heat-steeped cinder ash from a blacksmith or armourer’s hearth. Easy to buy in any settlement with a working forge.",
+      "Stormwater": "Rainwater caught in a copper vessel during a violent thunderstorm – gatherable in the wild or sold in city apothecaries.",
+      "Fulgurite": "A glassy tube of sand fused by a lightning strike. Found on moorlands after storms or traded near the Celestial College.",
+      "SunQuartz": "Clear quartz ground into sparkling dust. Bought from glaziers and stonemasons or chipped from mountain veins.",
+      "HyshIncense": "Fragrant purifying resins burned in temples of Verena and Sigmar as well as the halls of the Light Order.",
+      "MistMoss": "Silvery-grey moss gathered at dawn on misty fens and moors, favoured as a base by adepts of the Grey Order.",
+      "ShadowResin": "Dark, light-drinking resin tapped from ancient yews and deep-shadowed trees; traded in large cities and back-alley markets.",
+      "MorrBloom": "A dark crimson rose growing along the walls of Gardens of Morr. Easy to pluck after dusk, though Morr’s priests frown upon trespassers.",
+      "WarpstonePinch": "A tiny pinch of crystallised Chaos scraped from a warpstone shard. Possession means the pyre – obtained only on the black market, from cultists or skaven spoils."
     },
     "Colleges": {
       "AllColleges": "All Colleges",
@@ -1499,8 +1603,8 @@
       "ChamonSlots": "+5 slots only",
       "ReserveOnStart": "Brewing reserves ingredients and tether",
       "ReserveOnStartHint": "Starting a brew puts the ingredients into the cauldron at once and holds the tether points until the brew is finished. Cancelling (GM) returns the ingredients. When off, both are taken only at the brewing test.",
-      "LabByGM": "Laboratory set by the GM",
-      "LabByGMHint": "Each character's laboratory (poor, standard, fine) is set by the GM in the workshop and used for every brew. When off, the player picks the laboratory for each brew.",
+      "LabByGM": "Laboratory parameters set by the GM",
+      "LabByGMHint": "When enabled, only the GM can edit an apparatus item's SL modifier and cauldron capacity. When off, the character's owner can edit those fields directly.",
       "WorkshopStyle": "Workshop look",
       "WorkshopStyleHint": "Workbench: the alchemy workshop looks like an alchemist's laboratory with a recipe book, a workbench and the tether chain. Classic: the previous look.",
       "WorkshopStyleWorkbench": "Workbench",
@@ -1508,7 +1612,9 @@
       "RequireDiscovery": "Recipe Discovery & Grimoire System",
       "RequireDiscoveryHint": "Requires the character to know the recipe from memory or possess a recipe book in inventory to brew it.",
       "CopyNeedsInk": "Copying needs Alchemical Ink",
-      "CopyNeedsInkHint": "Copying a spell or a magical recipe into another book uses one Alchemical Ink per page."
+      "CopyNeedsInkHint": "Copying a spell or a magical recipe into another book uses one Alchemical Ink per page.",
+      "PriceMultiplier": "Alchemy price multiplier",
+      "PriceMultiplierHint": "Scales the prices of all alchemy ingredients, potions, recipe scrolls and grimoires (e.g. 0.5 for cheaper alchemy, 1.5 for pricier). Changing it updates compendiums once – zero performance impact during play."
     },
     "Time": {
       "Hours": "{count} h",
@@ -1521,9 +1627,11 @@
     "Effects": {
       "HealingLimit": "Potion healing (encounter limit)",
       "DeathWardSaved": "the draught holds death back – 1 Wound remains.",
-      "FlamingWeaponHit": "the burning blade sets the target Ablaze.",
-      "GraveOilHit": "+3 Damage against the Undead.",
-      "MandrakeDrowsy": "Mandrake: drowsiness"
+      "FlamingWeaponHit": "the burning blade sets the target Ablaze (1 Ablaze Condition).",
+      "GraveOilHit": "+2 Damage against the Undead.",
+      "MandrakeDrowsy": "Mandrake: drowsiness",
+      "KeenEdgeHit": "+1 Damage (up to 3 hits).",
+      "FurnaceRetaliate": "the searing heat sets the attacker Ablaze (1 Ablaze Condition)!"
     },
     "Conditions": {
       "Blinded": "Blinded (3)",
@@ -1615,7 +1723,12 @@
       "TimedName": "{condition} (timed)",
       "TimedFor": "Lasts {duration}.",
       "ThrownResisted": "{target} resists: no {condition}.",
-      "ResistTitle": "resisting the potion"
+      "ResistTitle": "resisting the potion",
+      "HealNoWounds": "Has no effect on a character at 0 Wounds.",
+      "EffectLabel": "the potion effect",
+      "SneezingLabel": "sneezing",
+      "SneezingPenalty": "{target}: sneezing fit (−10 to the next Test this round).",
+      "WillbreakerFailed": "{target}: −20 to Cool, Charm (lying) and resisting interrogation for 1 hour."
     }
   }
 }

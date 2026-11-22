@@ -8,11 +8,11 @@
  * - Przeciąganie i upuszczanie (Drag & Drop) receptur do pamięci i do ksiąg
  */
 
-import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive } from '../config.js';
+import { MODULE_ID, ALCHEMY_CONFIG, isSourceModuleActive, getPriceMultiplier } from '../config.js';
 import { ALCHEMY_RECIPES } from '../data/recipes.js';
 import { bookAccess, bookRoom, addEntryToBook, entriesOfType, isGrimoire, languageLabel, openEntries, readBook } from '../../../wfrp4e-grimoires/scripts/public.mjs';
 import { RECIPE_TYPE, recipeEntry } from './recipe-book-data.js';
-import { memoryState } from './rules.js';
+import { formatPrice, memoryState, priceFromGC, scalePriceSS } from './rules.js';
 import { ALCHEMY_INGREDIENTS } from '../data/ingredients.js';
 import { resolveAlchemyImage } from '../data/image-compatibility.js';
 import { ingredientAvailable } from './sources.js';
@@ -58,6 +58,15 @@ export class RecipeRegistry {
     return category === 'magical' || category.startsWith('college-');
   }
 
+  static getPriceMultiplier() {
+    return getPriceMultiplier();
+  }
+
+  static invalidateCache() {
+    this._allRecipesCache = null;
+    this._customRecipesCacheKey = null;
+  }
+
   static getIngredientUnitCost(ingredientKey) {
     const key = this.LEGACY_INGREDIENT_KEYS[ingredientKey] || ingredientKey;
     return this.INGREDIENT_UNIT_COSTS.has(key) ? this.INGREDIENT_UNIT_COSTS.get(key) : null;
@@ -67,15 +76,26 @@ export class RecipeRegistry {
     const legacyDifficulty = Number(recipe.difficulty) || 0;
     const volatility = recipe.volatility || this.LEGACY_VOLATILITY.find(row => legacyDifficulty <= row.maxDifficulty)?.value || 'moderate';
     const magical = this.isMagical(recipe);
+    const multiplier = this.getPriceMultiplier();
     const ingredients = (recipe.ingredients || []).map(ingredient => {
-      const cost = this.getIngredientUnitCost(ingredient.key);
-      return { ...ingredient, costZK: cost ?? (Number(ingredient.costZK) || 0) };
+      const baseCost = this.getIngredientUnitCost(ingredient.key);
+      const unitCost = baseCost ?? (Number(ingredient.costZK) || 0);
+      return { ...ingredient, costZK: multiplier === 1 ? unitCost : Math.round(unitCost * multiplier * 10000) / 10000 };
     });
-    const ingredientCostGC = ingredients.reduce((sum, ingredient) => sum + ingredient.costZK * (Number(ingredient.quantity) || 1), 0);
-    // Cena dawki: magiczna = 2× składniki; świecka = 4× koszt materiałów na dawkę (materiały to ¼ ceny – Rzemiosło, podręcznik)
+    const baseIngredientCostGC = (recipe.ingredients || []).reduce((sum, ingredient) => {
+      const baseCost = this.getIngredientUnitCost(ingredient.key);
+      const unitCost = baseCost ?? (Number(ingredient.costZK) || 0);
+      return sum + unitCost * (Number(ingredient.quantity) || 1);
+    }, 0);
+    const ingredientCostGC = baseIngredientCostGC * multiplier;
+    // Cena dawki: magiczna = 2× składniki; świecka = 4× koszt materiałów na dawkę (3× dla pojedynczych dawek 1/1)
+    const isSingleDoseMundane = !magical && recipe.maxDoses === 1 && recipe.dosesFormula === '1';
+    const batchSize = isSingleDoseMundane ? 1
+      : recipe.maxDoses === 3 && recipe.dosesFormula === '1d3' ? 2 : this.AVERAGE_BATCH;
     const derivedPriceSS = magical
-      ? ingredientCostGC * 20 * 2
-      : ingredientCostGC * 20 * 4 / this.AVERAGE_BATCH;
+      ? baseIngredientCostGC * 20 * 2
+      : baseIngredientCostGC * 20 * (isSingleDoseMundane ? 3 : 4) / batchSize;
+    const basePriceSS = Math.max(1, Math.round(Number(recipe.listPriceSS) || derivedPriceSS));
     return {
       ...recipe,
       volatility,
@@ -87,7 +107,7 @@ export class RecipeRegistry {
       bonusDaysPerSL: Math.max(0, Number(recipe.bonusDaysPerSL) || 0),
       expiryMode: recipe.expiryMode === 'deactivate' ? 'deactivate' : 'spoilage',
       ingredientCostGC: Math.round(ingredientCostGC * 100) / 100,
-      listPriceSS: Math.max(1, Math.round(Number(recipe.listPriceSS) || derivedPriceSS)),
+      listPriceSS: scalePriceSS(basePriceSS, multiplier),
       ingredients
     };
   }
@@ -119,7 +139,7 @@ export class RecipeRegistry {
       }
     } catch (_) {}
 
-    const customRecipesKey = JSON.stringify(customRecipes);
+    const customRecipesKey = `${this.getPriceMultiplier()}|${JSON.stringify(customRecipes)}`;
     if (this._allRecipesCache && customRecipesKey === this._customRecipesCacheKey) return this._allRecipesCache;
     this._customRecipesCacheKey = customRecipesKey;
     // MG może nadpisać parametry receptury z pakietu. Nadpisania zachowują
@@ -137,7 +157,7 @@ export class RecipeRegistry {
    * @returns {Array<object>}
    */
   static getActiveRecipes() {
-    return this.getAllRecipes().filter(r => isSourceModuleActive(r.sourceModule));
+    return this.getAllRecipes().filter(r => !r.referenceOnly && isSourceModuleActive(r.sourceModule));
   }
 
   /**
@@ -150,7 +170,7 @@ export class RecipeRegistry {
   static getRecipeById(recipeId, { includeUnavailable = false } = {}) {
     const recipe = this.getAllRecipes().find(r => r.id === recipeId || r.key === recipeId) || null;
     if (!recipe || includeUnavailable) return recipe;
-    return isSourceModuleActive(recipe.sourceModule) ? recipe : null;
+    return !recipe.referenceOnly && isSourceModuleActive(recipe.sourceModule) ? recipe : null;
   }
 
   /** Składniki do pokazania: bez tych z wyłączonych podręczników i tych, które służą tylko ich recepturom. */
@@ -224,10 +244,29 @@ export class RecipeRegistry {
     return key ? game.i18n.localize(`GOLD_ALCHEMY.Category.${key}`) : recipe.category;
   }
 
+  /** Etykiety waluty (zk / ss / bp lub gc / ss / bp) z bezpiecznym fallbackiem poza Foundry. */
+  static currencyLabels() {
+    const loc = (key, fallback) => (game?.i18n ? game.i18n.localize(key) : fallback);
+    return {
+      gc: loc('GOLD_ALCHEMY.Currency.GC', 'gc'),
+      ss: loc('GOLD_ALCHEMY.Currency.SS', 'ss'),
+      bp: loc('GOLD_ALCHEMY.Currency.BP', 'bp')
+    };
+  }
+
+  /** Cena { gc, ss, bp } jako czytelny tekst (np. „18 ss”, „1 zk 10 s”). */
+  static formatPrice(price) {
+    return formatPrice(price, this.currencyLabels());
+  }
+
+  /** Cena z ułamkowych złotych koron (np. 0.9 ZK) jako GC / ss / bp. */
+  static formatPriceGC(gc) {
+    return this.formatPrice(priceFromGC(gc));
+  }
+
   /** Cena z szylingów jako tekst. */
   static priceLabel(listPriceSS) {
-    const price = this.priceFromSS(listPriceSS);
-    return `${price.gc ? `${price.gc} ${game.i18n.localize('GOLD_ALCHEMY.Currency.GC')} ` : ''}${price.ss} ${game.i18n.localize('GOLD_ALCHEMY.Currency.SS')}`;
+    return this.formatPrice(this.priceFromSS(listPriceSS));
   }
 
   /** Czy szkoła receptury jest widoczna dla tej postaci (ustawienie MG). */

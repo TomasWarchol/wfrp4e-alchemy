@@ -4,8 +4,18 @@ import { applyHighestBonus, highestTestBonusScript } from "../scripts/logic/effe
 import { runThrownSteps } from "../scripts/logic/potion-steps.js";
 import { addictionEffectData, craving, dayIndex, doseModifier, morningResult, pendingMornings, recentDoses } from "../scripts/logic/addiction.js";
 import { ALCHEMY_RECIPES } from "../scripts/data/recipes.js";
+import { ALCHEMY_INGREDIENTS } from "../scripts/data/ingredients.js";
+import { mundaneBatchQuantity } from "../scripts/logic/rules.js";
 
 const DAY = 86400;
+
+it("limits edited batches after both quality and critical bonuses", () => {
+  const recipes = id => ALCHEMY_RECIPES.find(recipe => recipe.id === id);
+  const bonus = { critical: true, bonusDoses: 4 };
+  expect(mundaneBatchQuantity(1, { ...bonus, maxDoses: recipes("potion-witch-eye-drops").maxDoses })).toBe(1);
+  expect(mundaneBatchQuantity(3, { ...bonus, maxDoses: recipes("potion-smoke-pellet").maxDoses })).toBe(3);
+  expect(mundaneBatchQuantity(7, bonus)).toBe(18);
+});
 
 describe("Rzut miksturą – zasięg i wybuch", () => {
   it("progi zasięgu jak w systemie, zasięg = Bonus Siły", () => {
@@ -30,9 +40,10 @@ describe("Rzut miksturą – zasięg i wybuch", () => {
     expect(byId("potion-phosphor-fire").blast).toBe(4);
     expect(byId("potion-miners-powder").blast).toBe(5);
     expect(byId("potion-black-vial").blast).toBeUndefined();
-    expect(byId("potion-black-vial").thrownSteps[0].resist).toEqual({ test: "endurance", difficulty: "challenging" });
+    expect(byId("potion-black-vial").thrownSteps[0].resist).toEqual({ test: "endurance", difficulty: "difficult" });
     expect(byId("potion-nightmare-dust").thrownSteps[0].resist.test).toBe("cool");
-    expect(byId("potion-tar-bomb").thrownSteps[0].resist).toBeUndefined();
+    expect(byId("potion-nightmare-dust").thrownSteps[0].excludeTraits).toContain("Undead");
+    expect(byId("potion-tar-bomb").thrownSteps[0].resist).toEqual({ test: "dodge", difficulty: "challenging" });
   });
 });
 
@@ -144,6 +155,56 @@ describe("Nałóg", () => {
 
   it("uzależniające receptury mają trudność testu", () => {
     const addictive = ALCHEMY_RECIPES.filter((r) => r.addictive).map((r) => r.id).sort();
-    expect(addictive).toEqual(["potion-bloodrage-draught", "potion-gravewine", "potion-poppy-tincture", "potion-skaven-brew", "potion-soulburn-tonic", "potion-witch-eye-drops"]);
+    expect(addictive).toEqual(["potion-bloodrage-draught", "potion-gravewine", "potion-hollow-heart", "potion-poppy-tincture", "potion-skaven-brew", "potion-soulburn-tonic", "potion-witch-eye-drops"]);
+  });
+});
+
+describe("Balans i ekonomia katalogu autorskiego", () => {
+  const own = (r) => !r.sourceModule || r.sourceModule === "wfrp4e-alchemy";
+  const customRecipes = ALCHEMY_RECIPES.filter(own);
+  const officialRecipes = ALCHEMY_RECIPES.filter((r) => !own(r));
+  const ingByKey = new Map(ALCHEMY_INGREDIENTS.map((i) => [i.key, i]));
+
+  it("autorskie receptury nie podnoszą Siły Woli (SW) i nie mają ręcznej ceny dawki", () => {
+    for (const r of customRecipes) {
+      expect(r.listPriceSS, `${r.id} nie powinno mieć ręcznej ceny`).toBeUndefined();
+      for (const ch of r.activeEffect?.changes || []) {
+        if (ch.key === "system.characteristics.wp.modifier") {
+          expect(Number(ch.value), `${r.id} nie może podnosić SW`).toBeLessThanOrEqual(0);
+        }
+      }
+    }
+  });
+
+  it("dostępność: brak rare w świeckich/aptekarstwie/zielarstwie oraz w magii 1–2 Więzi", () => {
+    for (const r of customRecipes) {
+      const isMag = r.category === "magical" || r.category.startsWith("college-");
+      const avails = (r.ingredients || []).map((i) => ingByKey.get(i.key)?.availability);
+      if (["mundane", "apothecary", "herbal"].includes(r.category) || (isMag && r.attunementCost <= 2)) {
+        expect(avails, `${r.id} używa składnika rare`).not.toContain("rare");
+        expect(avails, `${r.id} używa składnika exotic`).not.toContain("exotic");
+      }
+    }
+  });
+
+  it("każdy autorski składnik zasila co najmniej 2 receptury", () => {
+    const officialIngKeys = new Set(officialRecipes.flatMap((r) => (r.ingredients || []).map((i) => i.key)));
+    const counts = new Map(ALCHEMY_INGREDIENTS.map((i) => [i.key, 0]));
+    for (const r of ALCHEMY_RECIPES) {
+      for (const i of r.ingredients || []) counts.set(i.key, (counts.get(i.key) || 0) + 1);
+    }
+    for (const ing of ALCHEMY_INGREDIENTS) {
+      if (officialIngKeys.has(ing.key) || (ing.sourceModule && ing.sourceModule !== "wfrp4e-alchemy")) continue;
+      expect(counts.get(ing.key), `Składnik ${ing.key} ma za mało użyć`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("testy toksyczności Wina Grobowego i Pustego Serca działają przed efektem +20 Wt, a Przebudzenie Ziemi ma limit leczenia", () => {
+    const byId = (id) => ALCHEMY_RECIPES.find((r) => r.id === id);
+    expect(byId("potion-gravewine").instantBeforeEffect).toBe(true);
+    expect(byId("potion-gravewine").instantSteps[0].mandatory).toBe(true);
+    expect(byId("potion-hollow-heart").instantBeforeEffect).toBe(true);
+    expect(byId("potion-hollow-heart").instantSteps[0].mandatory).toBe(true);
+    expect(byId("potion-ghyran-vital-sap").healingEffect).toBe(true);
   });
 });

@@ -77,9 +77,25 @@ export const ALCHEMY_CONFIG = {
 
   SETTINGS: {
     CUSTOM_RECIPES: 'customRecipes',
-    REQUIRE_DISCOVERY: 'requireDiscovery'
+    REQUIRE_DISCOVERY: 'requireDiscovery',
+    PRICE_MULTIPLIER: 'priceMultiplier'
   }
 };
+
+/**
+ * Mnożnik cen alchemii ustawiony przez MG (domyślnie 1).
+ * Bezpieczny poza Foundry (np. w testach i eksporcie arkusza).
+ * @returns {number}
+ */
+export function getPriceMultiplier() {
+  try {
+    if (typeof game !== 'undefined' && game.settings?.settings?.has(`${MODULE_ID}.${ALCHEMY_CONFIG.SETTINGS.PRICE_MULTIPLIER}`)) {
+      const value = Number(game.settings.get(MODULE_ID, ALCHEMY_CONFIG.SETTINGS.PRICE_MULTIPLIER));
+      if (Number.isFinite(value) && value > 0) return value;
+    }
+  } catch (_) {}
+  return 1;
+}
 
 /**
  * Czy treść z podręcznika `sourceModule` może się pokazać: tylko przy włączonym oficjalnym module

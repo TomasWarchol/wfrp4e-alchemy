@@ -10,6 +10,7 @@ const REFUND_NOTIFY = `${MODULE_ID}.refundNotify`;
 const SEVER_TETHER = `${MODULE_ID}.severTether`;
 const APPLY_THROWN = `${MODULE_ID}.applyThrown`;
 const CREATE_CLOUD = `${MODULE_ID}.createCloud`;
+const APPLY_TO_ALLY = `${MODULE_ID}.applyToAlly`;
 
 export class AlchemyQueries {
   /** Rejestracja handlerów – wołać w hooku "init". */
@@ -18,6 +19,36 @@ export class AlchemyQueries {
     registerQuery(SEVER_TETHER, (data, { user }) => this._onSeverTether(data, user));
     registerQuery(APPLY_THROWN, (data, { user }) => this._onApplyThrown(data, user));
     registerQuery(CREATE_CLOUD, (data, { user }) => this._onCreateCloud(data, user));
+    registerQuery(APPLY_TO_ALLY, (data, { user }) => this._onApplyToAlly(data, user));
+  }
+
+  static async applyToAlly(item, target) {
+    const { PotionConsumer } = await import('./logic/potion-consumer.js');
+    if (target.actor.isOwner) {
+      await PotionConsumer.consume(item, target.actor);
+      return true;
+    }
+    const source = item.actor?.getActiveTokens?.(true, true)?.find(token => token.parent === target.parent);
+    if (!source) return false;
+    return Boolean(await queryGM(APPLY_TO_ALLY, { itemUuid: item.uuid, sourceUuid: source.uuid, targetUuid: target.uuid }));
+  }
+
+  static async _onApplyToAlly({ itemUuid, sourceUuid, targetUuid } = {}, requester) {
+    if (!game.user.isGM || !requester) return false;
+    const [item, source, target] = await Promise.all([fromUuid(itemUuid), fromUuid(sourceUuid), fromUuid(targetUuid)]);
+    const actor = source?.actor;
+    const recipient = target?.actor;
+    if (!actor || !recipient?.hasPlayerOwner || item?.actor !== actor || !actor.testUserPermission(requester, 'OWNER')) return false;
+    const scene = source.parent;
+    if (scene?.documentName !== 'Scene' || target.parent !== scene || source.level !== target.level) return false;
+    const { size, distance } = scene.grid;
+    const dx = source.x - target.x + (source.width - target.width) * size / 2;
+    const dy = source.y - target.y + (source.height - target.height) * size / 2;
+    if (Math.max(Math.hypot(dx, dy) / size * distance, Math.abs(source.elevation - target.elevation)) > distance * 1.5) return false;
+    const { PotionConsumer } = await import('./logic/potion-consumer.js');
+    if (!PotionConsumer.canApplyToAlly(item)) return false;
+    await PotionConsumer.consume(item, recipient);
+    return true;
   }
 
   /**
@@ -29,7 +60,7 @@ export class AlchemyQueries {
   }
 
   /** Wykonywane u MG: rzucający musi należeć do pytającego użytkownika. */
-  static async _onCreateCloud({ recipeId, sceneId, x, y, level = null, name, throwerUuid } = {}, requester) {
+  static async _onCreateCloud({ recipeId, sceneId, x, y, level = null, name, throwerUuid, terrain } = {}, requester) {
     if (!game.user.isGM) return 0;
     const thrower = await fromUuid(throwerUuid);
     if (!requester || !thrower || (!requester.isGM && !thrower.testUserPermission(requester, 'OWNER'))) return 0;
@@ -38,7 +69,7 @@ export class AlchemyQueries {
     const recipe = RecipeRegistry.getRecipeById(recipeId, { includeUnavailable: true });
     const scene = game.scenes.get(sceneId);
     if (!recipe?.cloud || !scene || !Number.isFinite(Number(x)) || !Number.isFinite(Number(y))) return 0;
-    return CloudEngine.create({ scene, recipe, name: String(name || recipe.id).slice(0, 80), x: Number(x), y: Number(y), level });
+    return CloudEngine.create({ scene, recipe, name: String(name || recipe.id).slice(0, 80), x: Number(x), y: Number(y), level, terrain });
   }
 
   /**

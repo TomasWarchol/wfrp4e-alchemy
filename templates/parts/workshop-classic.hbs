@@ -325,7 +325,7 @@
               <li class="ing-item {{#if this.sufficient}}ing-ok{{else}}ing-missing{{/if}}">
                 <i class="fas {{#if this.sufficient}}fa-check-circle{{else}}fa-circle-xmark{{/if}}"></i>
                 <span class="ing-name">{{localize this.name}}</span>
-                <span class="ing-qty">{{localize "GOLD_ALCHEMY.Details.Owned"}}: <strong>{{this.owned}}</strong> / {{localize "GOLD_ALCHEMY.Details.Required"}}: <strong>{{this.required}}</strong> · {{this.estimatedCostGC}} {{localize "GOLD_ALCHEMY.Currency.GC"}}</span>
+                <span class="ing-qty">{{localize "GOLD_ALCHEMY.Details.Owned"}}: <strong>{{this.owned}}</strong> / {{localize "GOLD_ALCHEMY.Details.Required"}}: <strong>{{this.required}}</strong> · {{this.estimatedCostLabel}}</span>
               </li>
             {{/each}}
           </ul>
@@ -334,18 +334,43 @@
         <div class="brew-controls">
           {{#if pendingBrew}}
             <p class="pending-brew-status"><i class="fas fa-hourglass-half"></i> {{pendingBrew.statusText}} {{#unless pendingBrew.isReady}}{{localize "GOLD_ALCHEMY.Details.WorldTimeMustPass"}}{{/unless}}</p>
-            {{#if isGM}}<button type="button" data-action="cancelPendingBrew" class="btn-cancel-brew">{{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
+            {{#if isGM}}<button type="button" data-action="cancelPendingBrew" data-brew-id="{{pendingBrew.id}}" class="btn-cancel-brew">{{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
           {{/if}}
           <div class="control-group">
             <label><i class="fas fa-vial"></i> {{localize "GOLD_ALCHEMY.Details.Laboratory"}}:</label>
-            <select name="labTier" {{#unless canChooseLab}}disabled{{/unless}}>
-              {{#each labTiers}}
-                <option value="{{this.id}}" {{#if (bajeryEq this.id ../selectedLabTier)}}selected{{/if}}>
-                  {{localize this.name}}
-                </option>
-              {{/each}}
-            </select>
+            {{#if hasLaboratories}}
+              {{#if multipleLaboratories}}
+                <select name="labItemId">
+                  {{#each laboratories}}
+                    <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>
+                      {{this.name}} ({{this.slLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}}, {{this.used}}/{{this.total}})
+                    </option>
+                  {{/each}}
+                </select>
+              {{else}}
+                <span class="lab-readonly"><strong>{{selectedLab.name}}</strong> ({{selectedLab.slLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}}, {{cauldrons.used}}/{{cauldrons.total}})</span>
+              {{/if}}
+            {{else}}
+              <span class="no-lab-warning"><i class="fas fa-triangle-exclamation"></i> {{localize "GOLD_ALCHEMY.Workbench.NoLaboratory"}}</span>
+            {{/if}}
           </div>
+
+          {{#if cauldrons.brewing.length}}
+            <div class="active-brews-box">
+              <strong><i class="fas fa-fire-burner"></i> {{localize "GOLD_ALCHEMY.Workbench.ActiveBrews"}} ({{cauldrons.used}}/{{cauldrons.total}}):</strong>
+              <ul class="active-brews-list">
+                {{#each cauldrons.brewing}}
+                  <li>
+                    <a data-action="selectRecipe" data-recipe-id="{{this.recipeId}}">{{this.name}}</a>
+                    <span>→ {{this.labName}} ({{this.labSlLabel}} {{localize "GOLD_ALCHEMY.Workbench.SL"}})</span>
+                    <span>{{#if this.ready}}{{localize "GOLD_ALCHEMY.Workbench.ReadyNow"}}{{else}}{{this.date}}{{/if}}</span>
+                    {{#if this.ready}}<button type="button" class="btn-brew-mini" data-action="brewPotion" data-recipe-id="{{this.recipeId}}" data-brew-id="{{this.id}}">{{localize "GOLD_ALCHEMY.Details.CompleteBrewing"}}</button>{{/if}}
+                    {{#if ../isGM}}<button type="button" class="btn-cancel-brew" data-action="cancelPendingBrew" data-brew-id="{{this.id}}">{{localize "GOLD_ALCHEMY.Details.CancelBrewing"}}</button>{{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
 
           <div class="control-group">
             <label><i class="fas fa-clock"></i> {{localize "GOLD_ALCHEMY.Details.TimeAndShelfLife"}}:</label>

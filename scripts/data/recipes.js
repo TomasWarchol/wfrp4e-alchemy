@@ -279,29 +279,31 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/flask-corked-purple.webp",
     "ingredients": [
       {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 1.5
+      },
+      {
+        "key": "PureWater",
+        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "quantity": 1,
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WeaveEssence.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.WeaveEssence.Effect",
+    "volatility": "minor",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.WeaveEssence.Name",
       "icon": "icons/consumables/potions/flask-corked-purple.webp",
       "duration": {
         "seconds": 3600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ]
-    },
-    "volatility": "minor"
+      "changes": []
+    }
   },
   {
     "id": "potion-aqshy-liquid-fire",
@@ -319,16 +321,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-corked-orange.webp",
     "ingredients": [
       {
-        "key": "Sulfur",
-        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
-        "quantity": 1,
-        "costZK": 0.5
-      },
-      {
         "key": "CinnabarDust",
         "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
         "quantity": 1,
         "costZK": 2.5
+      },
+      {
+        "key": "Sulfur",
+        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
+        "quantity": 1,
+        "costZK": 0.5
       },
       {
         "key": "RockOil",
@@ -341,7 +343,8 @@ export const ALCHEMY_RECIPES = [
     "effectDescription": "GOLD_ALCHEMY.Recipes.AqshyLiquidFire.Effect",
     "instantEffect": "liquidFireExplosion",
     "volatility": "moderate",
-    "blast": 4
+    "blast": 4,
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-blazing-heart",
@@ -396,12 +399,19 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "immediate",
-            "script": "const specs = [[\"Compendium.wfrp4e-core.items.yRhhOlt18COq4e1q\", \"Frenzy\", \"trait\", null, \"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
+            "script": "const specs = [[\"Compendium.wfrp4e-core.items.yRhhOlt18COq4e1q\",\"Frenzy\",\"trait\",null,\"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "deleteEffect",
+            "script": "await this.actor.addCondition(\"fatigued\", 1);"
           }
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-weapon-oil",
@@ -419,22 +429,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/vial-cork-empty-fire.webp",
     "ingredients": [
       {
-        "key": "Sulfur",
-        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
+        "key": "CinnabarDust",
+        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 2.5
+      },
+      {
+        "key": "ForgeEmberAsh",
+        "name": "GOLD_ALCHEMY.Ingredients.ForgeEmberAsh",
+        "quantity": 1,
+        "costZK": 1
       },
       {
         "key": "RockOil",
         "name": "GOLD_ALCHEMY.Ingredients.RockOil",
         "quantity": 1,
         "costZK": 0.9
-      },
-      {
-        "key": "CinnabarDust",
-        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
-        "quantity": 1,
-        "costZK": 2.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AqshyWeaponOil.Desc",
@@ -456,13 +466,20 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
+            "trigger": "preApplyDamage",
+            "script": "if (args.sourceItem?.id !== this.effect.getFlag(\"wfrp4e-alchemy\", \"weaponId\")) return;\nargs.damage += 2;"
+          },
+          {
+            "label": "@effect.name",
             "trigger": "applyDamage",
-            "script": "if (args.sourceItem?.type != \"weapon\" || !args.sourceItem.system.isMelee) return;\nawait args.actor.addCondition(\"ablaze\");\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.FlamingWeaponHit\")}`);"
+            "script": "if (args.sourceItem?.id !== this.effect.getFlag(\"wfrp4e-alchemy\", \"weaponId\")) return;\nconst hits = Number(this.effect.getFlag(\"wfrp4e-alchemy\", \"ablazeHits\")) || 0;\nif (hits >= 3 || (Number(args.totalWoundLoss) || 0) < 1) return;\nawait this.effect.setFlag(\"wfrp4e-alchemy\", \"ablazeHits\", hits + 1);\nawait args.actor.addCondition(\"ablaze\", 1);\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.FlamingWeaponHit\")}`);"
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "applyToWeapon": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-war-blood",
@@ -480,16 +497,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/flask-corked-red.webp",
     "ingredients": [
       {
+        "key": "CinnabarDust",
+        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
+        "quantity": 1,
+        "costZK": 2.5
+      },
+      {
         "key": "BullRoot",
         "name": "GOLD_ALCHEMY.Ingredients.BullRoot",
         "quantity": 1,
         "costZK": 1
       },
       {
-        "key": "CinnabarDust",
-        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
+        "key": "ForgeEmberAsh",
+        "name": "GOLD_ALCHEMY.Ingredients.ForgeEmberAsh",
         "quantity": 1,
-        "costZK": 2.5
+        "costZK": 1
       },
       {
         "key": "PureAlcohol",
@@ -500,6 +523,10 @@ export const ALCHEMY_RECIPES = [
     ],
     "description": "GOLD_ALCHEMY.Recipes.AqshyWarBlood.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.AqshyWarBlood.Effect",
+    "volatility": "major",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.AqshyWarBlood.Name",
       "icon": "icons/consumables/potions/flask-corked-red.webp",
@@ -508,31 +535,17 @@ export const ALCHEMY_RECIPES = [
       },
       "changes": [
         {
+          "key": "system.characteristics.ws.modifier",
+          "mode": 2,
+          "value": "10"
+        },
+        {
           "key": "system.characteristics.i.modifier",
           "mode": 2,
           "value": "20"
-        },
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
         }
-      ],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 100;",
-            "options": {
-              "activateScript": "return !!args.extendedTest?.flags?.wfrp4e?.fear;",
-              "hideScript": "return !args.extendedTest?.flags?.wfrp4e?.fear;"
-            }
-          }
-        ]
-      }
-    },
-    "volatility": "major"
+      ]
+    }
   },
   {
     "id": "potion-azyr-starlight",
@@ -550,16 +563,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-bulb-corked-glowing-blue.webp",
     "ingredients": [
       {
-        "key": "MeteoricSilver",
-        "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
+        "key": "Fulgurite",
+        "name": "GOLD_ALCHEMY.Ingredients.Fulgurite",
         "quantity": 1,
-        "costZK": 6
+        "costZK": 2.5
       },
       {
-        "key": "PureWater",
-        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "key": "Stormwater",
+        "name": "GOLD_ALCHEMY.Ingredients.Stormwater",
         "quantity": 1,
-        "costZK": 0.25
+        "costZK": 1
+      },
+      {
+        "key": "Eyebright",
+        "name": "GOLD_ALCHEMY.Ingredients.Eyebright",
+        "quantity": 1,
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrStarlight.Desc",
@@ -581,7 +600,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-astromancer-sight",
@@ -599,8 +619,8 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/flask-corked-blue-glow.webp",
     "ingredients": [
       {
-        "key": "FourLeafClover",
-        "name": "GOLD_ALCHEMY.Ingredients.FourLeafClover",
+        "key": "Fulgurite",
+        "name": "GOLD_ALCHEMY.Ingredients.Fulgurite",
         "quantity": 1,
         "costZK": 2.5
       },
@@ -641,7 +661,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-lightning-reflex",
@@ -659,16 +681,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-corked-lightning-blue.webp",
     "ingredients": [
       {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
+        "key": "MeteoricSilver",
+        "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 4.5
       },
       {
-        "key": "Mercury",
-        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
+        "key": "Stormwater",
+        "name": "GOLD_ALCHEMY.Ingredients.Stormwater",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 1
+      },
+      {
+        "key": "AmmoniaSalts",
+        "name": "GOLD_ALCHEMY.Ingredients.AmmoniaSalts",
+        "quantity": 1,
+        "costZK": 0.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrLightningReflex.Desc",
@@ -692,7 +720,9 @@ export const ALCHEMY_RECIPES = [
         }
       ]
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-storm-tonic",
@@ -710,16 +740,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-round-corked-blue.webp",
     "ingredients": [
       {
+        "key": "Stormwater",
+        "name": "GOLD_ALCHEMY.Ingredients.Stormwater",
+        "quantity": 1,
+        "costZK": 1
+      },
+      {
         "key": "AmmoniaSalts",
         "name": "GOLD_ALCHEMY.Ingredients.AmmoniaSalts",
         "quantity": 1,
         "costZK": 0.5
       },
       {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
+        "key": "MintOil",
+        "name": "GOLD_ALCHEMY.Ingredients.MintOil",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 0.6
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrStormTonic.Desc",
@@ -728,17 +764,36 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.AzyrStormTonic.Name",
       "icon": "icons/consumables/potions/bottle-round-corked-blue.webp",
       "duration": {
-        "seconds": 7200
+        "seconds": 3600
       },
       "changes": [
         {
-          "key": "system.characteristics.t.modifier",
+          "key": "system.characteristics.i.modifier",
           "mode": 2,
           "value": "10"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"surprised\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 20;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          }
+        ]
+      }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-iron-skin",
@@ -762,6 +817,12 @@ export const ALCHEMY_RECIPES = [
         "costZK": 2
       },
       {
+        "key": "LeadSediment",
+        "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
+        "quantity": 1,
+        "costZK": 1
+      },
+      {
         "key": "Sulfur",
         "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
         "quantity": 1,
@@ -772,12 +833,6 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
         "quantity": 1,
         "costZK": 1.25
-      },
-      {
-        "key": "LeadSediment",
-        "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
-        "quantity": 1,
-        "costZK": 1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.IronSkin.Desc",
@@ -805,7 +860,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-liquid-gold",
@@ -814,7 +871,7 @@ export const ALCHEMY_RECIPES = [
     "name": "GOLD_ALCHEMY.Recipes.LiquidGold.Name",
     "category": "college-chamon",
     "college": "chamon",
-    "attunementCost": 3,
+    "attunementCost": 4,
     "testSkill": "Splatanie Magii (Chamon)",
     "fallbackSkill": "Rzemiosło (Alchemik)",
     "difficulty": -10,
@@ -837,21 +894,18 @@ export const ALCHEMY_RECIPES = [
     ],
     "description": "GOLD_ALCHEMY.Recipes.LiquidGold.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.LiquidGold.Effect",
+    "volatility": "major",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.LiquidGold.Name",
       "icon": "icons/consumables/potions/flask-corked-yellow-glow.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "20"
-        }
-      ]
-    },
-    "volatility": "major"
+      "changes": []
+    }
   },
   {
     "id": "potion-quicksilver-speed",
@@ -897,7 +951,7 @@ export const ALCHEMY_RECIPES = [
       },
       "changes": [
         {
-          "key": "system.characteristics.i.modifier",
+          "key": "system.characteristics.dex.modifier",
           "mode": 2,
           "value": "20"
         },
@@ -905,15 +959,13 @@ export const ALCHEMY_RECIPES = [
           "key": "system.characteristics.ag.modifier",
           "mode": 2,
           "value": "10"
-        },
-        {
-          "key": "system.details.move.value",
-          "mode": 2,
-          "value": "1"
         }
       ]
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-lead-fortitude",
@@ -949,14 +1001,9 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.LeadFortitude.Name",
       "icon": "icons/consumables/potions/bottle-conical-corked-grey.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
       "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        },
         {
           "key": "system.characteristics.i.modifier",
           "mode": 2,
@@ -967,17 +1014,24 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"prone\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          },
+          {
+            "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 100;",
+            "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "return !!(args.context?.terror || args.extendedTest?.flags?.wfrp4e?.fear);",
-              "hideScript": "return !(args.context?.terror || args.extendedTest?.flags?.wfrp4e?.fear);"
+              "activateScript": "return Boolean(args.context?.terror);",
+              "hideScript": "return !(args.context?.terror);"
             }
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true,
+    "manualUse": true
   },
   {
     "id": "potion-alkahest",
@@ -997,8 +1051,14 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "AquaRegia",
         "name": "GOLD_ALCHEMY.Ingredients.DragonAcid",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 4
+      },
+      {
+        "key": "Mercury",
+        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
+        "quantity": 1,
+        "costZK": 3
       },
       {
         "key": "Sulfur",
@@ -1011,77 +1071,9 @@ export const ALCHEMY_RECIPES = [
     "effectDescription": "GOLD_ALCHEMY.Recipes.Alkahest.Effect",
     "instantEffect": "alkahestAcid",
     "volatility": "major",
-    "blast": 2
-  },
-  {
-    "id": "potion-meteoric-compass",
-    "key": "MeteoricCompass",
-    "name": "GOLD_ALCHEMY.Recipes.MeteoricCompass.Name",
-    "category": "college-chamon",
-    "college": "chamon",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 2,
-    "testSkill": "Splatanie Magii (Chamon)",
-    "fallbackSkill": "Rzemiosło (Alchemik)",
-    "difficulty": -10,
-    "shelfLifeDays": 365,
-    "bonusDaysPerSL": 30,
-    "img": "icons/tools/navigation/compass-brass.webp",
-    "ingredients": [
-      {
-        "key": "MeteoricSilver",
-        "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
-        "quantity": 1,
-        "costZK": 6
-      },
-      {
-        "key": "MagneticNeedle",
-        "name": "GOLD_ALCHEMY.Ingredients.MagneticNeedle",
-        "quantity": 1,
-        "costZK": 2
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.MeteoricCompass.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.MeteoricCompass.Effect",
-    "volatility": "moderate"
-  },
-  {
-    "id": "potion-power-prism",
-    "key": "PowerPrism",
-    "name": "GOLD_ALCHEMY.Recipes.PowerPrism.Name",
-    "category": "college-chamon",
-    "college": "chamon",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 4,
-    "testSkill": "Splatanie Magii (Chamon)",
-    "fallbackSkill": "Rzemiosło (Alchemik)",
-    "difficulty": -20,
-    "shelfLifeDays": 365,
-    "bonusDaysPerSL": 30,
-    "img": "icons/commodities/gems/gem-faceted-diamond-faceted.webp",
-    "ingredients": [
-      {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
-      },
-      {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
-        "quantity": 1,
-        "costZK": 4
-      },
-      {
-        "key": "GoldDust",
-        "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
-        "quantity": 1,
-        "costZK": 5
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.PowerPrism.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.PowerPrism.Effect",
-    "volatility": "extreme"
+    "blast": 2,
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-ghyran-spring-dew",
@@ -1099,12 +1091,6 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-bulb-corked-green-glow.webp",
     "ingredients": [
       {
-        "key": "Comfrey",
-        "name": "GOLD_ALCHEMY.Ingredients.Comfrey",
-        "quantity": 1,
-        "costZK": 1
-      },
-      {
         "key": "AethyrCrystal",
         "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
         "quantity": 1,
@@ -1115,12 +1101,21 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.SpringDew",
         "quantity": 1,
         "costZK": 3
+      },
+      {
+        "key": "Comfrey",
+        "name": "GOLD_ALCHEMY.Ingredients.Comfrey",
+        "quantity": 1,
+        "costZK": 0.75
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhyranSpringDew.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.GhyranSpringDew.Effect",
     "instantEffect": "ghyranSpringHeal",
-    "volatility": "major"
+    "volatility": "major",
+    "applyToAlly": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1
   },
   {
     "id": "potion-ghyran-vital-sap",
@@ -1144,14 +1139,14 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1.5
       },
       {
-        "key": "AntidoteHerb",
-        "name": "GOLD_ALCHEMY.Ingredients.AntidoteHerb",
+        "key": "Comfrey",
+        "name": "GOLD_ALCHEMY.Ingredients.Comfrey",
         "quantity": 1,
         "costZK": 0.75
       },
       {
-        "key": "Comfrey",
-        "name": "GOLD_ALCHEMY.Ingredients.Comfrey",
+        "key": "AntidoteHerb",
+        "name": "GOLD_ALCHEMY.Ingredients.AntidoteHerb",
         "quantity": 1,
         "costZK": 0.75
       }
@@ -1162,65 +1157,22 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.GhyranVitalSap.Name",
       "icon": "icons/consumables/potions/bottle-round-corked-green.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.t.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ],
+      "changes": [],
       "system": {
         "scriptData": [
           {
             "label": "@effect.name",
             "trigger": "startRound",
-            "script": "const wounds = this.actor.system.status.wounds;\nif (wounds.value > 0 && wounds.value < wounds.max) await this.actor.modifyWounds(1);"
+            "script": "const healed = Number(this.effect.getFlag(\"wfrp4e-alchemy\", \"vitalSapHealed\")) || 0;\nconst wounds = this.actor.system.status.wounds;\nif (healed < 10 && wounds.value > 0 && wounds.value < wounds.max) {\n  await this.effect.setFlag(\"wfrp4e-alchemy\", \"vitalSapHealed\", healed + 1);\n  await this.actor.modifyWounds(1);\n}"
           }
         ]
       }
     },
-    "volatility": "moderate"
-  },
-  {
-    "id": "potion-ghyran-blood-purifier",
-    "sourceModule": "wfrp4e-alchemy",
-    "key": "GhyranBloodPurifier",
-    "name": "GOLD_ALCHEMY.Recipes.GhyranBloodPurifier.Name",
-    "category": "college-ghyran",
-    "college": "ghyran",
-    "attunementCost": 1,
-    "testSkill": "Splatanie Magii (Ghyran)",
-    "fallbackSkill": "Splatanie Magii",
-    "difficulty": 10,
-    "shelfLifeDays": 45,
-    "bonusDaysPerSL": 5,
-    "img": "icons/consumables/potions/vial-cork-empty-teal.webp",
-    "ingredients": [
-      {
-        "key": "SageLeaves",
-        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
-        "quantity": 1,
-        "costZK": 0.4
-      },
-      {
-        "key": "AntidoteHerb",
-        "name": "GOLD_ALCHEMY.Ingredients.AntidoteHerb",
-        "quantity": 1,
-        "costZK": 0.75
-      },
-      {
-        "key": "LemonBalm",
-        "name": "GOLD_ALCHEMY.Ingredients.LemonBalm",
-        "quantity": 1,
-        "costZK": 0.3
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.GhyranBloodPurifier.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.GhyranBloodPurifier.Effect",
-    "instantEffect": "ghyranPurify",
-    "volatility": "minor"
+    "volatility": "moderate",
+    "healingEffect": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-ghyran-ironbark-salve",
@@ -1244,16 +1196,16 @@ export const ALCHEMY_RECIPES = [
         "costZK": 2
       },
       {
-        "key": "Beeswax",
-        "name": "GOLD_ALCHEMY.Ingredients.Beeswax",
-        "quantity": 1,
-        "costZK": 0.25
-      },
-      {
         "key": "OakSap",
         "name": "GOLD_ALCHEMY.Ingredients.OakSap",
         "quantity": 1,
         "costZK": 1.5
+      },
+      {
+        "key": "Beeswax",
+        "name": "GOLD_ALCHEMY.Ingredients.Beeswax",
+        "quantity": 1,
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhyranIronbarkSalve.Desc",
@@ -1262,7 +1214,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.GhyranIronbarkSalve.Name",
       "icon": "icons/consumables/potions/bottle-bulb-corked-brown.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 1800
       },
       "changes": [],
       "system": {
@@ -1275,7 +1227,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-ghur-predator-sight",
@@ -1296,13 +1250,13 @@ export const ALCHEMY_RECIPES = [
         "key": "WolfEye",
         "name": "GOLD_ALCHEMY.Ingredients.WolfEye",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 1.75
       },
       {
         "key": "PureAlcohol",
         "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 1.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhurPredatorSight.Desc",
@@ -1324,7 +1278,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-ghur-ursine-vigor",
@@ -1373,15 +1328,13 @@ export const ALCHEMY_RECIPES = [
           "key": "system.characteristics.s.modifier",
           "mode": 2,
           "value": "20"
-        },
-        {
-          "key": "system.characteristics.t.modifier",
-          "mode": 2,
-          "value": "10"
         }
       ]
     },
-    "volatility": "major"
+    "volatility": "major",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1
   },
   {
     "id": "potion-ghur-primal-roar",
@@ -1442,7 +1395,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-ghur-savage-salve",
@@ -1463,13 +1417,19 @@ export const ALCHEMY_RECIPES = [
         "key": "BadgerFat",
         "name": "GOLD_ALCHEMY.Ingredients.BadgerFat",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.6
       },
       {
         "key": "AntidoteHerb",
         "name": "GOLD_ALCHEMY.Ingredients.AntidoteHerb",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.75
+      },
+      {
+        "key": "JuniperBerries",
+        "name": "GOLD_ALCHEMY.Ingredients.JuniperBerries",
+        "quantity": 1,
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhurSavageSalve.Desc",
@@ -1486,16 +1446,17 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
+            "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "return [\"Animal Care\", \"Opieka nad Zwierzętami\", \"Charm Animal\", \"Zastraszanie Zwierząt\", \"Animal Training\", \"Tresura\", \"Ride\", \"Jeździectwo\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); });",
-              "hideScript": "return ![\"Animal Care\", \"Opieka nad Zwierzętami\", \"Charm Animal\", \"Zastraszanie Zwierząt\", \"Animal Training\", \"Tresura\", \"Ride\", \"Jeździectwo\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); });"
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Animal Care\",\"Opieka nad Zwierzętami\",\"Charm Animal\",\"Oswajanie\",\"Zastraszanie Zwierząt\",\"Animal Training\",\"Tresura\",\"Ride\",\"Jeździectwo\",\"Jazda\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Animal Care\",\"Opieka nad Zwierzętami\",\"Charm Animal\",\"Oswajanie\",\"Zastraszanie Zwierząt\",\"Animal Training\",\"Tresura\",\"Ride\",\"Jeździectwo\",\"Jazda\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-hysh-radiant-purity",
@@ -1522,25 +1483,43 @@ export const ALCHEMY_RECIPES = [
         "key": "CrystalPrism",
         "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 3
       },
       {
-        "key": "PureWater",
-        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "key": "SunQuartz",
+        "name": "GOLD_ALCHEMY.Ingredients.SunQuartz",
         "quantity": 1,
-        "costZK": 0.25
-      },
-      {
-        "key": "SageLeaves",
-        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
-        "quantity": 1,
-        "costZK": 0.4
+        "costZK": 1.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshRadiantPurity.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.HyshRadiantPurity.Effect",
-    "instantEffect": "hyshPurity",
-    "volatility": "extreme"
+    "volatility": "extreme",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationTimeDays": 3,
+    "creationDifficultySL": -2,
+    "activeEffect": {
+      "name": "GOLD_ALCHEMY.Recipes.HyshRadiantPurity.Name",
+      "icon": "icons/consumables/potions/flask-corked-white-glow.webp",
+      "duration": {
+        "seconds": 3600
+      },
+      "changes": [],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 30;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "return Boolean(args.spell);"
+            }
+          }
+        ]
+      }
+    }
   },
   {
     "id": "potion-hysh-suns-wrath",
@@ -1558,23 +1537,50 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-bulb-corked-white.webp",
     "ingredients": [
       {
+        "key": "SunQuartz",
+        "name": "GOLD_ALCHEMY.Ingredients.SunQuartz",
+        "quantity": 1,
+        "costZK": 1.5
+      },
+      {
         "key": "WhitePhosphorus",
         "name": "GOLD_ALCHEMY.Ingredients.WhitePhosphorus",
         "quantity": 1,
         "costZK": 2
       },
       {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
+        "key": "Sulfur",
+        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 0.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshSunsWrath.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.HyshSunsWrath.Effect",
-    "instantEffect": "hyshSunFlash",
+    "instantEffect": "recipeThrown",
     "volatility": "moderate",
-    "blast": 3
+    "blast": 3,
+    "thrownSteps": [
+      {
+        "add": "blinded",
+        "value": 1,
+        "perSL": true,
+        "resist": {
+          "test": "dodge",
+          "difficulty": "challenging"
+        }
+      },
+      {
+        "damage": 2,
+        "perSL": true,
+        "ignoreAP": true,
+        "against": [
+          "Undead",
+          "Daemonic"
+        ]
+      }
+    ],
+    "auditUpdated": true
   },
   {
     "id": "potion-hysh-lucidity-draught",
@@ -1592,35 +1598,51 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-round-corked-white.webp",
     "ingredients": [
       {
-        "key": "SageLeaves",
-        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
+        "key": "HyshIncense",
+        "name": "GOLD_ALCHEMY.Ingredients.HyshIncense",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 2.5
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "CrystalPrism",
+        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 3
+      },
+      {
+        "key": "Hypericum",
+        "name": "GOLD_ALCHEMY.Ingredients.Hypericum",
+        "quantity": 1,
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshLucidityDraught.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.HyshLucidityDraught.Effect",
+    "volatility": "major",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.HyshLucidityDraught.Name",
       "icon": "icons/consumables/potions/bottle-round-corked-white.webp",
       "duration": {
         "seconds": 3600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "20"
-        }
-      ]
-    },
-    "volatility": "moderate"
+      "changes": [],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 20;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "return Boolean(args.spell);"
+            }
+          }
+        ]
+      }
+    }
   },
   {
     "id": "potion-hysh-truth-drops",
@@ -1638,16 +1660,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/vial-cork-empty-white.webp",
     "ingredients": [
       {
-        "key": "VeracityRoot",
-        "name": "GOLD_ALCHEMY.Ingredients.VeracityRoot",
+        "key": "HyshIncense",
+        "name": "GOLD_ALCHEMY.Ingredients.HyshIncense",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 2.5
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AlchemicalInk",
+        "name": "GOLD_ALCHEMY.Ingredients.AlchemicalInk",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 0.4
+      },
+      {
+        "key": "RoseWater",
+        "name": "GOLD_ALCHEMY.Ingredients.RoseWater",
+        "quantity": 1,
+        "costZK": 0.6
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshTruthDrops.Desc",
@@ -1673,7 +1701,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-shyish-pale-mask",
@@ -1694,13 +1724,19 @@ export const ALCHEMY_RECIPES = [
         "key": "GraveDust",
         "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 1.25
       },
       {
-        "key": "BlackLotusPetals",
-        "name": "GOLD_ALCHEMY.Ingredients.BlackLotusPetals",
+        "key": "Nightshade",
+        "name": "GOLD_ALCHEMY.Ingredients.Nightshade",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 1.5
+      },
+      {
+        "key": "MorrBloom",
+        "name": "GOLD_ALCHEMY.Ingredients.MorrBloom",
+        "quantity": 1,
+        "costZK": 0.8
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ShyishPaleMask.Desc",
@@ -1723,13 +1759,25 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
+            "trigger": "immediate",
+            "script": "await this.actor.addCondition(\"unconscious\", 1);"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "deleteEffect",
+            "script": "if (this.actor.hasCondition(\"unconscious\")) await this.actor.removeCondition(\"unconscious\", 1);"
+          },
+          {
+            "label": "@effect.name",
             "trigger": "update",
             "script": "const condition = this.actor.hasCondition(\"poisoned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-shyish-spirit-bane",
@@ -1750,13 +1798,19 @@ export const ALCHEMY_RECIPES = [
         "key": "GraveDust",
         "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 1.25
       },
       {
         "key": "RockOil",
         "name": "GOLD_ALCHEMY.Ingredients.RockOil",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.9
+      },
+      {
+        "key": "MorrBloom",
+        "name": "GOLD_ALCHEMY.Ingredients.MorrBloom",
+        "quantity": 1,
+        "costZK": 0.8
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ShyishSpiritBane.Desc",
@@ -1764,9 +1818,6 @@ export const ALCHEMY_RECIPES = [
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.ShyishSpiritBane.Name",
       "icon": "icons/consumables/potions/bottle-conical-corked-purple.webp",
-      "duration": {
-        "seconds": 3600
-      },
       "changes": [
         {
           "key": "flags.wfrp4e-alchemy.ghostBaneOil",
@@ -1779,17 +1830,19 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "prePrepareItem",
-            "script": "if (args.item.type == \"weapon\" && args.item.system.isMelee && !args.item.system.qualities.value.some(q => q.name == \"magical\")) args.item.system.qualities.value.push({ name: \"magical\" });"
+            "script": "if (args.item.id !== this.effect.getFlag(\"wfrp4e-alchemy\", \"weaponId\")) return;\nif (args.item.type == \"weapon\" && args.item.system.isMelee && !args.item.system.qualities.value.some(q => q.name == \"magical\")) args.item.system.qualities.value.push({ name: \"magical\" });"
           },
           {
             "label": "@effect.name",
             "trigger": "preApplyDamage",
-            "script": "if (args.sourceItem?.type != \"weapon\" || !args.sourceItem.system.isMelee) return;\nif (!args.actor.has(game.i18n.localize(\"NAME.Undead\"))) return;\nargs.damage += 3;\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.GraveOilHit\")}`);"
+            "script": "if (args.sourceItem?.id !== this.effect.getFlag(\"wfrp4e-alchemy\", \"weaponId\")) return;\nif (!args.actor.has(game.i18n.localize(\"NAME.Undead\"))) return;\nargs.damage += 2;\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.GraveOilHit\")}`);"
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "applyToWeapon": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-shyish-hourglass",
@@ -1807,16 +1860,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-bulb-corked-purple.webp",
     "ingredients": [
       {
+        "key": "AethyrCrystal",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "quantity": 1,
+        "costZK": 5
+      },
+      {
         "key": "HourglassSand",
         "name": "GOLD_ALCHEMY.Ingredients.HourglassSand",
         "quantity": 1,
         "costZK": 2.5
-      },
-      {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
-        "quantity": 1,
-        "costZK": 1.25
       },
       {
         "key": "GraveDust",
@@ -1849,7 +1902,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-shyish-shroud",
@@ -1870,13 +1925,19 @@ export const ALCHEMY_RECIPES = [
         "key": "GraveDust",
         "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 1.25
       },
       {
         "key": "LeadSediment",
         "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
         "quantity": 1,
         "costZK": 1
+      },
+      {
+        "key": "MorrBloom",
+        "name": "GOLD_ALCHEMY.Ingredients.MorrBloom",
+        "quantity": 1,
+        "costZK": 0.8
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ShyishShroud.Desc",
@@ -1885,15 +1946,9 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.ShyishShroud.Name",
       "icon": "icons/consumables/potions/flask-corked-purple.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ],
+      "changes": [],
       "system": {
         "scriptData": [
           {
@@ -1904,7 +1959,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-shadow-mist",
@@ -1922,16 +1979,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-bulb-corked-smoke-grey.webp",
     "ingredients": [
       {
-        "key": "WillowCharcoal",
-        "name": "GOLD_ALCHEMY.Ingredients.WillowCharcoal",
+        "key": "ShadowResin",
+        "name": "GOLD_ALCHEMY.Ingredients.ShadowResin",
+        "quantity": 1,
+        "costZK": 2
+      },
+      {
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
         "quantity": 1,
         "costZK": 1
       },
       {
-        "key": "Mercury",
-        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
+        "key": "WoodTar",
+        "name": "GOLD_ALCHEMY.Ingredients.WoodTar",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.UlguShadowMist.Desc",
@@ -1942,7 +2005,8 @@ export const ALCHEMY_RECIPES = [
       "radius": 6,
       "color": "#3b2d4f",
       "sight": true
-    }
+    },
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-phantasmagoria",
@@ -1960,16 +2024,28 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/flask-corked-smoke-grey.webp",
     "ingredients": [
       {
-        "key": "DaturaOil",
-        "name": "GOLD_ALCHEMY.Ingredients.DaturaOil",
+        "key": "ShadowResin",
+        "name": "GOLD_ALCHEMY.Ingredients.ShadowResin",
         "quantity": 1,
         "costZK": 2
       },
       {
-        "key": "Mercury",
-        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
+        "key": "DaturaOil",
+        "name": "GOLD_ALCHEMY.Ingredients.DaturaOil",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 1.5
+      },
+      {
+        "key": "Mugwort",
+        "name": "GOLD_ALCHEMY.Ingredients.Mugwort",
+        "quantity": 1,
+        "costZK": 0.3
+      },
+      {
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
+        "quantity": 1,
+        "costZK": 1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.UlguPhantasmagoria.Desc",
@@ -2001,7 +2077,8 @@ export const ALCHEMY_RECIPES = [
         }
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-stalker-oil",
@@ -2019,10 +2096,10 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/vial-cork-empty-grey.webp",
     "ingredients": [
       {
-        "key": "LavenderOil",
-        "name": "GOLD_ALCHEMY.Ingredients.LavenderOil",
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
         "quantity": 1,
-        "costZK": 0.75
+        "costZK": 1
       },
       {
         "key": "WillowCharcoal",
@@ -2051,16 +2128,18 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
+            "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "return [\"Stealth\", \"Skradanie\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); });",
-              "hideScript": "return ![\"Stealth\", \"Skradanie\"].some(n => { const s = args.skill?.name || \"\"; return s === n || s.startsWith(n + \" (\"); });"
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-wraithstep",
@@ -2078,20 +2157,20 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-corked-smoke-grey.webp",
     "ingredients": [
       {
-        "key": "Mercury",
-        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
-        "quantity": 1,
-        "costZK": 3
-      },
-      {
         "key": "AethyrCrystal",
         "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
         "quantity": 1,
         "costZK": 5
       },
       {
-        "key": "WillowCharcoal",
-        "name": "GOLD_ALCHEMY.Ingredients.WillowCharcoal",
+        "key": "ShadowResin",
+        "name": "GOLD_ALCHEMY.Ingredients.ShadowResin",
+        "quantity": 1,
+        "costZK": 2
+      },
+      {
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
         "quantity": 1,
         "costZK": 1
       }
@@ -2118,7 +2197,11 @@ export const ALCHEMY_RECIPES = [
         }
       }
     },
-    "volatility": "extreme"
+    "volatility": "extreme",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationTimeDays": 3,
+    "creationDifficultySL": -1
   },
   {
     "id": "potion-leonardo-powder",
@@ -2282,19 +2365,19 @@ export const ALCHEMY_RECIPES = [
         "key": "Sulfur",
         "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.5
       },
       {
         "key": "WillowCharcoal",
         "name": "GOLD_ALCHEMY.Ingredients.WillowCharcoal",
-        "quantity": 1,
-        "costZK": 1
+        "quantity": 2,
+        "costZK": 0.2
       },
       {
-        "key": "Saltpeter",
-        "name": "GOLD_ALCHEMY.Ingredients.Saltpeter",
+        "key": "WoodTar",
+        "name": "GOLD_ALCHEMY.Ingredients.WoodTar",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SmokePellet.Desc",
@@ -2303,10 +2386,14 @@ export const ALCHEMY_RECIPES = [
     "volatility": "minor",
     "creationTimeDays": 2,
     "cloud": {
-      "radius": 4,
+      "radius": 3,
       "color": "#8a8a8a",
-      "sight": true
-    }
+      "sight": true,
+      "terrainDuration": true
+    },
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-smelling-salts",
@@ -2325,13 +2412,13 @@ export const ALCHEMY_RECIPES = [
         "key": "AmmoniaSalts",
         "name": "GOLD_ALCHEMY.Ingredients.AmmoniaSalts",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.5
       },
       {
-        "key": "LavenderOil",
-        "name": "GOLD_ALCHEMY.Ingredients.LavenderOil",
+        "key": "WineVinegar",
+        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.15
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SmellingSalts.Desc",
@@ -2339,8 +2426,10 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "smellingSaltsRevive",
     "volatility": "minor",
     "creationTimeDays": 2,
-    "listPriceSS": 12,
-    "availability": "common"
+    "availability": "common",
+    "applyToAlly": true,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-quick-glue",
@@ -2360,19 +2449,21 @@ export const ALCHEMY_RECIPES = [
         "key": "PineResin",
         "name": "GOLD_ALCHEMY.Ingredients.PineResin",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 0.2
       },
       {
         "key": "PureAlcohol",
         "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
         "quantity": 1,
-        "costZK": 1
+        "costZK": 1.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.QuickGlue.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.QuickGlue.Effect",
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-potency-draught",
@@ -3839,7 +3930,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.QuicksilverMind.Name",
       "icon": "icons/consumables/potions/bottle-round-corked-yellow.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 7200
       },
       "changes": [],
       "system": {
@@ -3849,13 +3940,14 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.slBonus += 1;",
             "options": {
-              "activateScript": "return [\"int\"].includes(args.characteristic);",
-              "hideScript": "return ![\"int\"].includes(args.characteristic);"
+              "activateScript": "const n = args.skill?.name || \"\"; return !args.spell && /^(Trade|Rzemiosło|Evaluate|Wycena)( \\(|$)/i.test(n);",
+              "hideScript": "const n = args.skill?.name || \"\"; return !(!args.spell && /^(Trade|Rzemiosło|Evaluate|Wycena)( \\(|$)/i.test(n));"
             }
           }
         ]
       }
-    }
+    },
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-hearthfire",
@@ -3871,16 +3963,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-round-corked-orange.webp",
     "ingredients": [
       {
-        "key": "CinnabarDust",
-        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
+        "key": "ForgeEmberAsh",
+        "name": "GOLD_ALCHEMY.Ingredients.ForgeEmberAsh",
         "quantity": 1,
-        "costZK": 2.5
+        "costZK": 1
       },
       {
-        "key": "PineResin",
-        "name": "GOLD_ALCHEMY.Ingredients.PineResin",
+        "key": "MustardSeed",
+        "name": "GOLD_ALCHEMY.Ingredients.MustardSeed",
         "quantity": 1,
-        "costZK": 0.3
+        "costZK": 0.15
       },
       {
         "key": "PureAlcohol",
@@ -3907,7 +3999,7 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -3921,7 +4013,8 @@ export const ALCHEMY_RECIPES = [
         "value": 1
       }
     ],
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-flame-of-courage",
@@ -3937,16 +4030,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-tube-corked-glowing-red.webp",
     "ingredients": [
       {
-        "key": "SalamanderEssence",
-        "name": "GOLD_ALCHEMY.Ingredients.SalamanderEssence",
-        "quantity": 1,
-        "costZK": 4
-      },
-      {
         "key": "CinnabarDust",
         "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
         "quantity": 1,
         "costZK": 2.5
+      },
+      {
+        "key": "ForgeEmberAsh",
+        "name": "GOLD_ALCHEMY.Ingredients.ForgeEmberAsh",
+        "quantity": 1,
+        "costZK": 1
       },
       {
         "key": "PureAlcohol",
@@ -3976,6 +4069,11 @@ export const ALCHEMY_RECIPES = [
               "activateScript": "const n = args.skill?.name || \"\"; return [\"Cool\",\"Opanowanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Cool\",\"Opanowanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "update",
+            "script": "const start = Number(this.effect.start?.time);\nif (Number.isFinite(start) && (game.time.worldTime - start) > 600) return;\nconst condition = this.actor.hasCondition(\"broken\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
           }
         ]
       }
@@ -3987,7 +4085,8 @@ export const ALCHEMY_RECIPES = [
         "value": "all"
       }
     ],
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-aqshy-furnace-blood",
@@ -3995,7 +4094,7 @@ export const ALCHEMY_RECIPES = [
     "name": "GOLD_ALCHEMY.Recipes.AqshyFurnaceBlood.Name",
     "category": "college-aqshy",
     "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 3,
+    "attunementCost": 4,
     "testSkill": "Splatanie Magii (Aqshy)",
     "difficulty": -20,
     "shelfLifeDays": 60,
@@ -4005,18 +4104,18 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "SalamanderEssence",
         "name": "GOLD_ALCHEMY.Ingredients.SalamanderEssence",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 4
       },
       {
-        "key": "Sulfur",
-        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
+        "key": "CinnabarDust",
+        "name": "GOLD_ALCHEMY.Ingredients.CinnabarDust",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 2.5
       },
       {
         "key": "IronFilings",
-        "name": "GOLD_ALCHEMY.Ingredients.IronFilings",
+        "name": "GOLD_ALCHEMY.Ingredients.GoldIronFilings",
         "quantity": 1,
         "costZK": 2
       }
@@ -4049,11 +4148,18 @@ export const ALCHEMY_RECIPES = [
             "label": "@effect.name",
             "trigger": "update",
             "script": "const condition = this.actor.hasCondition(\"ablaze\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "takeDamage",
+            "script": "if (!args.attacker || args.sourceItem?.type !== \"weapon\" || !args.sourceItem?.system?.isMelee) return;\nawait args.attacker.addCondition(\"ablaze\", 1);\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.FurnaceRetaliate\")}`);"
           }
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-skyward-eye",
@@ -4069,22 +4175,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-flask-corked-cyan.webp",
     "ingredients": [
       {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
+        "key": "Fulgurite",
+        "name": "GOLD_ALCHEMY.Ingredients.Fulgurite",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 2.5
       },
       {
-        "key": "MeteoricSilver",
-        "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
+        "key": "Eyebright",
+        "name": "GOLD_ALCHEMY.Ingredients.Eyebright",
         "quantity": 1,
-        "costZK": 6
+        "costZK": 0.3
       },
       {
-        "key": "PureWater",
-        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "key": "PureAlcohol",
+        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
         "quantity": 1,
-        "costZK": 0.25
+        "costZK": 1.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrSkywardEye.Desc",
@@ -4108,7 +4214,7 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -4124,7 +4230,9 @@ export const ALCHEMY_RECIPES = [
         }
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-augury",
@@ -4132,7 +4240,7 @@ export const ALCHEMY_RECIPES = [
     "name": "GOLD_ALCHEMY.Recipes.AzyrAugury.Name",
     "category": "college-azyr",
     "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 3,
+    "attunementCost": 4,
     "testSkill": "Splatanie Magii (Azyr)",
     "difficulty": -20,
     "shelfLifeDays": 60,
@@ -4140,22 +4248,28 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-faceted-corked-blue.webp",
     "ingredients": [
       {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
+        "key": "MeteoricSilver",
+        "name": "GOLD_ALCHEMY.Ingredients.MeteoricSilver",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 4.5
       },
       {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
+        "key": "Fulgurite",
+        "name": "GOLD_ALCHEMY.Ingredients.Fulgurite",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 2.5
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AlchemicalInk",
+        "name": "GOLD_ALCHEMY.Ingredients.AlchemicalInk",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 0.4
+      },
+      {
+        "key": "Stormwater",
+        "name": "GOLD_ALCHEMY.Ingredients.Stormwater",
+        "quantity": 1,
+        "costZK": 1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrAugury.Desc",
@@ -4183,7 +4297,10 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-azyr-star-compass",
@@ -4199,16 +4316,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-corked-tied-blue.webp",
     "ingredients": [
       {
+        "key": "Stormwater",
+        "name": "GOLD_ALCHEMY.Ingredients.Stormwater",
+        "quantity": 1,
+        "costZK": 1
+      },
+      {
         "key": "MagneticNeedle",
         "name": "GOLD_ALCHEMY.Ingredients.MagneticNeedle",
         "quantity": 1,
         "costZK": 2
-      },
-      {
-        "key": "WindStone",
-        "name": "GOLD_ALCHEMY.Ingredients.WindStone",
-        "quantity": 1,
-        "costZK": 3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AzyrStarCompass.Desc",
@@ -4236,7 +4353,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-chamon-assayers-eye",
@@ -4252,16 +4370,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-bottle-corked-stopper-ornate-yellow.webp",
     "ingredients": [
       {
-        "key": "GoldDust",
-        "name": "GOLD_ALCHEMY.Ingredients.GoldDust",
+        "key": "LeadSediment",
+        "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1
       },
       {
-        "key": "Mercury",
-        "name": "GOLD_ALCHEMY.Ingredients.Mercury",
+        "key": "AlchemicalInk",
+        "name": "GOLD_ALCHEMY.Ingredients.AlchemicalInk",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 0.4
+      },
+      {
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
+        "quantity": 1,
+        "costZK": 1.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ChamonAssayersEye.Desc",
@@ -4280,7 +4404,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 30;",
+            "script": "args.fields.modifier += 20;",
             "options": {
               "activateScript": "const n = args.skill?.name || \"\"; return [\"Evaluate\",\"Wycena\"].some(x => n === x || n.startsWith(x + \" (\"));",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Evaluate\",\"Wycena\"].some(x => n === x || n.startsWith(x + \" (\")));"
@@ -4289,7 +4413,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-chamon-leaden-ward",
@@ -4297,7 +4422,7 @@ export const ALCHEMY_RECIPES = [
     "name": "GOLD_ALCHEMY.Recipes.ChamonLeadenWard.Name",
     "category": "college-chamon",
     "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 3,
+    "attunementCost": 2,
     "testSkill": "Splatanie Magii (Chamon)",
     "difficulty": -20,
     "shelfLifeDays": 60,
@@ -4306,51 +4431,38 @@ export const ALCHEMY_RECIPES = [
     "ingredients": [
       {
         "key": "LeadSediment",
-        "name": "GOLD_ALCHEMY.Ingredients.LeadSediment",
-        "quantity": 2,
+        "name": "GOLD_ALCHEMY.Ingredients.LeadOxide",
+        "quantity": 1,
         "costZK": 1
       },
       {
-        "key": "IronFilings",
-        "name": "GOLD_ALCHEMY.Ingredients.IronFilings",
+        "key": "MagneticNeedle",
+        "name": "GOLD_ALCHEMY.Ingredients.MagneticNeedle",
         "quantity": 1,
         "costZK": 2
       },
       {
-        "key": "AquaRegia",
-        "name": "GOLD_ALCHEMY.Ingredients.AquaRegia",
+        "key": "Alum",
+        "name": "GOLD_ALCHEMY.Ingredients.Alum",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ChamonLeadenWard.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.ChamonLeadenWard.Effect",
     "college": "chamon",
     "fallbackSkill": "Splatanie Magii",
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.ChamonLeadenWard.Name",
       "icon": "icons/consumables/potions/bottle-metal-yellow-gray.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "APCalc",
-            "script": "for (const loc of [\"head\", \"body\", \"lArm\", \"rArm\", \"lLeg\", \"rLeg\"]) {\n  if (!args.AP[loc]) continue;\n  args.AP[loc].value += 1;\n  args.AP[loc].layers.push({ value: 1, source: { name: this.effect.name }, magical: true, metal: false, impenetrable: false, partial: false, weakpoints: false });\n}"
-          }
-        ]
-      }
-    },
-    "volatility": "major"
+      "changes": []
+    }
   },
   {
     "id": "potion-ghyran-bloom-balm",
@@ -4372,16 +4484,16 @@ export const ALCHEMY_RECIPES = [
         "costZK": 3
       },
       {
-        "key": "OakSap",
-        "name": "GOLD_ALCHEMY.Ingredients.OakSap",
-        "quantity": 1,
-        "costZK": 1.5
-      },
-      {
         "key": "Comfrey",
         "name": "GOLD_ALCHEMY.Ingredients.Comfrey",
         "quantity": 1,
         "costZK": 0.75
+      },
+      {
+        "key": "Yarrow",
+        "name": "GOLD_ALCHEMY.Ingredients.Yarrow",
+        "quantity": 1,
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhyranBloomBalm.Desc",
@@ -4391,14 +4503,17 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipe",
     "instantSteps": [
       {
-        "heal": "2tb"
+        "heal": "2tb",
+        "requireWounds": true
       },
       {
         "remove": "bleeding",
         "value": 1
       }
     ],
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-ghyran-greenward",
@@ -4414,10 +4529,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-round-label-cork-green.webp",
     "ingredients": [
       {
-        "key": "SpringDew",
-        "name": "GOLD_ALCHEMY.Ingredients.SpringDew",
+        "key": "OakSap",
+        "name": "GOLD_ALCHEMY.Ingredients.OakSap",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 1.5
+      },
+      {
+        "key": "MilkThistle",
+        "name": "GOLD_ALCHEMY.Ingredients.MilkThistle",
+        "quantity": 1,
+        "costZK": 0.3
+      },
+      {
+        "key": "Wormwood",
+        "name": "GOLD_ALCHEMY.Ingredients.Wormwood",
+        "quantity": 1,
+        "costZK": 0.3
       },
       {
         "key": "SageLeaves",
@@ -4434,7 +4561,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.GhyranGreenward.Name",
       "icon": "icons/consumables/potions/bottle-round-label-cork-green.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 14400
       },
       "changes": [],
       "system": {
@@ -4443,11 +4570,28 @@ export const ALCHEMY_RECIPES = [
             "label": "@effect.name",
             "trigger": "update",
             "script": "const condition = this.actor.hasCondition(\"poisoned\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 20;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
           }
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "instantEffect": "recipe",
+    "instantSteps": [
+      {
+        "remove": "poisoned",
+        "value": "all"
+      }
+    ],
+    "auditUpdated": true
   },
   {
     "id": "potion-ghyran-oaks-patience",
@@ -4475,10 +4619,10 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1.5
       },
       {
-        "key": "SpringDew",
-        "name": "GOLD_ALCHEMY.Ingredients.SpringDew",
+        "key": "PineResin",
+        "name": "GOLD_ALCHEMY.Ingredients.PineResin",
         "quantity": 1,
-        "costZK": 3
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhyranOaksPatience.Desc",
@@ -4489,22 +4633,34 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.GhyranOaksPatience.Name",
       "icon": "icons/consumables/potions/potion-flask-corked-capped-green.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
       "changes": [
-        {
-          "key": "system.characteristics.t.modifier",
-          "mode": 2,
-          "value": "20"
-        },
         {
           "key": "system.characteristics.ag.modifier",
           "mode": 2,
           "value": "-10"
+        },
+        {
+          "key": "system.characteristics.t.modifier",
+          "mode": 2,
+          "value": "10"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"prone\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
+          }
+        ]
+      }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "auditUpdated": true,
+    "creationDifficultySL": -1,
+    "manualUse": true
   },
   {
     "id": "potion-ghur-stag-leap",
@@ -4548,7 +4704,13 @@ export const ALCHEMY_RECIPES = [
       "duration": {
         "seconds": 3600
       },
-      "changes": [],
+      "changes": [
+        {
+          "key": "system.details.move.value",
+          "mode": 2,
+          "value": "1"
+        }
+      ],
       "system": {
         "scriptData": [
           {
@@ -4556,14 +4718,16 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Athletics\",\"Atletyka\",\"Climb\",\"Wspinaczka\",\"Swim\",\"Pływanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Athletics\",\"Atletyka\",\"Climb\",\"Wspinaczka\",\"Swim\",\"Pływanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Athletics\",\"Atletyka\",\"Climb\",\"Wspinaczka\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Athletics\",\"Atletyka\",\"Climb\",\"Wspinaczka\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true,
+    "manualUse": true
   },
   {
     "id": "potion-ghur-boarhide",
@@ -4579,12 +4743,6 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-jug-corked-skull-poison-brown-green.webp",
     "ingredients": [
       {
-        "key": "BadgerFat",
-        "name": "GOLD_ALCHEMY.Ingredients.BadgerFat",
-        "quantity": 1,
-        "costZK": 0.6
-      },
-      {
         "key": "BearClaw",
         "name": "GOLD_ALCHEMY.Ingredients.BearClaw",
         "quantity": 1,
@@ -4595,6 +4753,12 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.BeastFangs",
         "quantity": 1,
         "costZK": 1.5
+      },
+      {
+        "key": "BadgerFat",
+        "name": "GOLD_ALCHEMY.Ingredients.BadgerFat",
+        "quantity": 1,
+        "costZK": 0.6
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GhurBoarhide.Desc",
@@ -4612,6 +4776,16 @@ export const ALCHEMY_RECIPES = [
           "key": "system.characteristics.t.modifier",
           "mode": 2,
           "value": "10"
+        },
+        {
+          "key": "system.characteristics.fel.modifier",
+          "mode": 2,
+          "value": "-10"
+        },
+        {
+          "key": "system.characteristics.int.modifier",
+          "mode": 2,
+          "value": "-10"
         }
       ],
       "system": {
@@ -4624,60 +4798,9 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "major"
-  },
-  {
-    "id": "potion-ghur-pack-howl",
-    "key": "GhurPackHowl",
-    "name": "GOLD_ALCHEMY.Recipes.GhurPackHowl.Name",
-    "category": "college-ghur",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 1,
-    "testSkill": "Splatanie Magii (Ghur)",
-    "difficulty": 0,
-    "shelfLifeDays": 30,
-    "bonusDaysPerSL": 5,
-    "img": "icons/consumables/potions/bottle-round-label-cork-red.webp",
-    "ingredients": [
-      {
-        "key": "WolfEye",
-        "name": "GOLD_ALCHEMY.Ingredients.WolfEye",
-        "quantity": 1,
-        "costZK": 1.75
-      },
-      {
-        "key": "BadgerFat",
-        "name": "GOLD_ALCHEMY.Ingredients.BadgerFat",
-        "quantity": 1,
-        "costZK": 0.6
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.GhurPackHowl.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.GhurPackHowl.Effect",
-    "college": "ghur",
-    "fallbackSkill": "Splatanie Magii",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.GhurPackHowl.Name",
-      "icon": "icons/consumables/potions/bottle-round-label-cork-red.webp",
-      "duration": {
-        "seconds": 7200
-      },
-      "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Intimidate\",\"Zastraszanie\",\"Charm Animal\",\"Oswajanie\",\"Zastraszanie Zwierząt\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Intimidate\",\"Zastraszanie\",\"Charm Animal\",\"Oswajanie\",\"Zastraszanie Zwierząt\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
-          }
-        ]
-      }
-    },
-    "volatility": "minor"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-hysh-dawnlight",
@@ -4693,10 +4816,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-bottle-corked-white.webp",
     "ingredients": [
       {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
+        "key": "SunQuartz",
+        "name": "GOLD_ALCHEMY.Ingredients.SunQuartz",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 1.5
+      },
+      {
+        "key": "Hypericum",
+        "name": "GOLD_ALCHEMY.Ingredients.Hypericum",
+        "quantity": 1,
+        "costZK": 0.3
       },
       {
         "key": "PureWater",
@@ -4733,7 +4862,8 @@ export const ALCHEMY_RECIPES = [
         "value": "all"
       }
     ],
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-hysh-lantern-eyes",
@@ -4749,22 +4879,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-flask-corked-yellow.webp",
     "ingredients": [
       {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
+        "key": "SunQuartz",
+        "name": "GOLD_ALCHEMY.Ingredients.SunQuartz",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 1.5
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "HyshIncense",
+        "name": "GOLD_ALCHEMY.Ingredients.HyshIncense",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 2.5
       },
       {
-        "key": "RoseWater",
-        "name": "GOLD_ALCHEMY.Ingredients.RoseWater",
+        "key": "Eyebright",
+        "name": "GOLD_ALCHEMY.Ingredients.Eyebright",
         "quantity": 1,
-        "costZK": 0.6
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshLanternEyes.Desc",
@@ -4785,14 +4915,21 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "immediate",
+            "script": "const specs = [[\"Compendium.wfrp4e-core.items.x0WMGwuQzReXcQrs\",\"Night Vision\",\"talent\",null,\"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
           }
         ]
       }
     },
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-hysh-banishing-phial",
@@ -4811,19 +4948,19 @@ export const ALCHEMY_RECIPES = [
         "key": "CrystalPrism",
         "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
         "quantity": 1,
-        "costZK": 4
-      },
-      {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
+        "costZK": 3
       },
       {
         "key": "WhitePhosphorus",
         "name": "GOLD_ALCHEMY.Ingredients.WhitePhosphorus",
         "quantity": 1,
         "costZK": 2
+      },
+      {
+        "key": "SunQuartz",
+        "name": "GOLD_ALCHEMY.Ingredients.SunQuartz",
+        "quantity": 1,
+        "costZK": 1.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.HyshBanishingPhial.Desc",
@@ -4833,20 +4970,27 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipeThrown",
     "thrownSteps": [
       {
-        "damage": 4,
+        "damage": 8,
         "perSL": true,
-        "ignoreAP": true
+        "ignoreAP": true,
+        "against": [
+          "Undead",
+          "Daemonic"
+        ]
       },
       {
         "add": "blinded",
         "value": 1,
+        "perSL": true,
         "resist": {
           "test": "dodge",
           "difficulty": "challenging"
         }
       }
     ],
-    "volatility": "major"
+    "volatility": "major",
+    "auditUpdated": true,
+    "creationDifficultySL": -1
   },
   {
     "id": "potion-shyish-morrs-quiet",
@@ -4908,7 +5052,9 @@ export const ALCHEMY_RECIPES = [
         "value": "all"
       }
     ],
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-shyish-memento-mori",
@@ -4932,44 +5078,32 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "HourglassSand",
         "name": "GOLD_ALCHEMY.Ingredients.HourglassSand",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 2.5
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ShyishMementoMori.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.ShyishMementoMori.Effect",
     "college": "shyish",
     "fallbackSkill": "Splatanie Magii",
+    "volatility": "major",
+    "manualUse": true,
+    "auditUpdated": true,
+    "creationDifficultySL": -1,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.ShyishMementoMori.Name",
       "icon": "icons/consumables/potions/bottle-ornate-bat-teal.webp",
       "duration": {
         "seconds": 3600
       },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "update",
-            "script": "const condition = this.actor.hasCondition(\"broken\");\nconst busy = (this.effect._alchemyBlocking ??= new Set());\nif (!condition || busy.has(condition.id)) return;\nbusy.add(condition.id);\ncondition.delete().catch(() => {}).finally(() => busy.delete(condition.id));"
-          }
-        ]
-      }
-    },
-    "volatility": "major"
+      "changes": []
+    }
   },
   {
     "id": "potion-shyish-soul-lantern",
@@ -4977,7 +5111,7 @@ export const ALCHEMY_RECIPES = [
     "name": "GOLD_ALCHEMY.Recipes.ShyishSoulLantern.Name",
     "category": "college-shyish",
     "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 2,
+    "attunementCost": 1,
     "testSkill": "Splatanie Magii (Shyish)",
     "difficulty": -10,
     "shelfLifeDays": 45,
@@ -4985,22 +5119,31 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-tube-corked-labeled-cyan.webp",
     "ingredients": [
       {
+        "key": "MorrBloom",
+        "name": "GOLD_ALCHEMY.Ingredients.MorrBloom",
+        "quantity": 1,
+        "costZK": 0.8
+      },
+      {
         "key": "GraveDust",
         "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
         "quantity": 1,
         "costZK": 1.25
       },
       {
-        "key": "CrystalPrism",
-        "name": "GOLD_ALCHEMY.Ingredients.CrystalPrism",
+        "key": "Mugwort",
+        "name": "GOLD_ALCHEMY.Ingredients.Mugwort",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ShyishSoulLantern.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.ShyishSoulLantern.Effect",
     "college": "shyish",
     "fallbackSkill": "Splatanie Magii",
+    "volatility": "minor",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.ShyishSoulLantern.Name",
       "icon": "icons/consumables/potions/potion-tube-corked-labeled-cyan.webp",
@@ -5015,14 +5158,13 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "return [\"wp\"].includes(args.characteristic);",
-              "hideScript": "return ![\"wp\"].includes(args.characteristic);"
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
         ]
       }
-    },
-    "volatility": "moderate"
+    }
   },
   {
     "id": "potion-ulgu-thiefs-fingers",
@@ -5038,16 +5180,22 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-corked-purple.webp",
     "ingredients": [
       {
-        "key": "GraveDust",
-        "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 1
       },
       {
         "key": "LavenderOil",
         "name": "GOLD_ALCHEMY.Ingredients.LavenderOil",
         "quantity": 1,
         "costZK": 0.75
+      },
+      {
+        "key": "Lampblack",
+        "name": "GOLD_ALCHEMY.Ingredients.Lampblack",
+        "quantity": 1,
+        "costZK": 0.1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.UlguThiefsFingers.Desc",
@@ -5075,7 +5223,8 @@ export const ALCHEMY_RECIPES = [
         ]
       }
     },
-    "volatility": "minor"
+    "volatility": "minor",
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-shadowcloak",
@@ -5091,22 +5240,28 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/flask-corked-purple-glow.webp",
     "ingredients": [
       {
-        "key": "GraveDust",
-        "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
+        "key": "ShadowResin",
+        "name": "GOLD_ALCHEMY.Ingredients.ShadowResin",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 2
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "Mercury",
+        "name": "GOLD_ALCHEMY.Ingredients.PurifiedQuicksilver",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 3
       },
       {
         "key": "Lampblack",
         "name": "GOLD_ALCHEMY.Ingredients.Lampblack",
         "quantity": 1,
-        "costZK": 0.15
+        "costZK": 0.1
+      },
+      {
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
+        "quantity": 1,
+        "costZK": 1
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.UlguShadowcloak.Desc",
@@ -5128,7 +5283,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 30;",
+            "script": "args.fields.modifier += 20;",
             "options": {
               "activateScript": "const n = args.skill?.name || \"\"; return [\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
@@ -5146,7 +5301,9 @@ export const ALCHEMY_RECIPES = [
         }
       }
     },
-    "volatility": "major"
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "auditUpdated": true
   },
   {
     "id": "potion-ulgu-bewildering-dust",
@@ -5162,16 +5319,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/weapons/thrown/bomb-gas-grey-purple.webp",
     "ingredients": [
       {
-        "key": "GraveDust",
-        "name": "GOLD_ALCHEMY.Ingredients.GraveDust",
+        "key": "ShadowResin",
+        "name": "GOLD_ALCHEMY.Ingredients.ShadowResin",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 2
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "MistMoss",
+        "name": "GOLD_ALCHEMY.Ingredients.MistMoss",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1
       },
       {
         "key": "Saltpeter",
@@ -5189,14 +5346,16 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "stunned",
         "value": 1,
+        "extraAtSL": 3,
         "resist": {
-          "test": "endurance",
-          "difficulty": "challenging"
+          "test": "cool",
+          "difficulty": "difficult"
         }
       }
     ],
     "volatility": "moderate",
-    "blast": 2
+    "blast": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-aethyric-salts",
@@ -5212,10 +5371,10 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-bubbling-blue.webp",
     "ingredients": [
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1.5
       },
       {
         "key": "AmmoniaSalts",
@@ -5226,11 +5385,14 @@ export const ALCHEMY_RECIPES = [
     ],
     "description": "GOLD_ALCHEMY.Recipes.AethyricSalts.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.AethyricSalts.Effect",
+    "volatility": "minor",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.AethyricSalts.Name",
       "icon": "icons/consumables/potions/bottle-conical-bubbling-blue.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
       "changes": [],
       "system": {
@@ -5240,14 +5402,18 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 10;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Channelling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Channelling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\")));"
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Channelling\",\"Channeling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Channelling\",\"Channeling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "deleteEffect",
+            "script": "await this.actor.addCondition(\"fatigued\", 1);"
           }
         ]
       }
-    },
-    "volatility": "minor"
+    }
   },
   {
     "id": "potion-warding-draught",
@@ -5263,16 +5429,16 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-bottle-corked-fancy-blue.webp",
     "ingredients": [
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
+        "quantity": 2,
+        "costZK": 1.5
       },
       {
-        "key": "FourLeafClover",
-        "name": "GOLD_ALCHEMY.Ingredients.FourLeafClover",
+        "key": "SageLeaves",
+        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
         "quantity": 1,
-        "costZK": 2.5
+        "costZK": 0.4
       },
       {
         "key": "PureWater",
@@ -5283,60 +5449,12 @@ export const ALCHEMY_RECIPES = [
     ],
     "description": "GOLD_ALCHEMY.Recipes.WardingDraught.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.WardingDraught.Effect",
+    "volatility": "moderate",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.WardingDraught.Name",
       "icon": "icons/consumables/potions/potion-bottle-corked-fancy-blue.webp",
-      "duration": {
-        "seconds": 600
-      },
-      "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
-            "options": {
-              "activateScript": "return [\"wp\"].includes(args.characteristic);",
-              "hideScript": "return ![\"wp\"].includes(args.characteristic);"
-            }
-          }
-        ]
-      }
-    },
-    "volatility": "moderate"
-  },
-  {
-    "id": "potion-quietmind-elixir",
-    "key": "QuietmindElixir",
-    "name": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Name",
-    "category": "magical",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 1,
-    "testSkill": "Splatanie Magii",
-    "difficulty": 0,
-    "shelfLifeDays": 30,
-    "bonusDaysPerSL": 5,
-    "img": "icons/consumables/potions/bottle-pear-corked-blue.webp",
-    "ingredients": [
-      {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
-      },
-      {
-        "key": "LavenderOil",
-        "name": "GOLD_ALCHEMY.Ingredients.LavenderOil",
-        "quantity": 1,
-        "costZK": 0.75
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Effect",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Name",
-      "icon": "icons/consumables/potions/bottle-pear-corked-blue.webp",
       "duration": {
         "seconds": 3600
       },
@@ -5346,16 +5464,99 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
+            "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Language (Magick)\",\"Język (Magiczny)\",\"Język (Magii)\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Language (Magick)\",\"Język (Magiczny)\",\"Język (Magii)\"].some(x => n === x || n.startsWith(x + \" (\")));"
+              "activateScript": "return false;",
+              "hideScript": "return Boolean(args.spell);"
             }
           }
         ]
       }
-    },
-    "volatility": "minor"
+    }
+  },
+  {
+    "id": "potion-quietmind-elixir",
+    "key": "QuietmindElixir",
+    "name": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Name",
+    "category": "magical",
+    "sourceModule": "wfrp4e-alchemy",
+    "attunementCost": 2,
+    "testSkill": "Splatanie Magii",
+    "difficulty": 0,
+    "shelfLifeDays": 30,
+    "bonusDaysPerSL": 5,
+    "img": "icons/consumables/potions/bottle-pear-corked-blue.webp",
+    "ingredients": [
+      {
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
+        "quantity": 1,
+        "costZK": 1.5
+      },
+      {
+        "key": "LavenderOil",
+        "name": "GOLD_ALCHEMY.Ingredients.LavenderOil",
+        "quantity": 1,
+        "costZK": 0.75
+      },
+      {
+        "key": "AlchemicalInk",
+        "name": "GOLD_ALCHEMY.Ingredients.AlchemicalInk",
+        "quantity": 1,
+        "costZK": 0.4
+      },
+      {
+        "key": "SageLeaves",
+        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
+        "quantity": 1,
+        "costZK": 0.4
+      }
+    ],
+    "description": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Desc",
+    "effectDescription": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Effect",
+    "volatility": "moderate",
+    "auditUpdated": true,
+    "activeEffect": {
+      "name": "GOLD_ALCHEMY.Recipes.QuietmindElixir.Name",
+      "icon": "icons/consumables/potions/bottle-pear-corked-blue.webp",
+      "duration": {
+        "seconds": 600
+      },
+      "changes": [
+        {
+          "key": "system.characteristics.i.modifier",
+          "mode": 2,
+          "value": "-10"
+        }
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 10;",
+            "options": {
+              "activateScript": "const n = args.skill?.name || \"\"; return Boolean(args.spell) || /^(Language \\(Magick\\)|Język \\(Magiczny\\))$/i.test(n);",
+              "hideScript": "const n = args.skill?.name || \"\"; return !(Boolean(args.spell) || /^(Language \\(Magick\\)|Język \\(Magiczny\\))$/i.test(n));"
+            }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += -20;",
+            "options": {
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Dodge\",\"Unik\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Dodge\",\"Unik\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "deleteEffect",
+            "script": "await this.actor.addCondition(\"fatigued\", 1);"
+          }
+        ]
+      }
+    }
   },
   {
     "id": "potion-aethyric-steadiness",
@@ -5371,12 +5572,6 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-jar-corked-glowing-blue.webp",
     "ingredients": [
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
-      },
-      {
         "key": "WindStone",
         "name": "GOLD_ALCHEMY.Ingredients.WindStone",
         "quantity": 1,
@@ -5387,6 +5582,12 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
         "quantity": 1,
         "costZK": 0.4
+      },
+      {
+        "key": "LemonBalm",
+        "name": "GOLD_ALCHEMY.Ingredients.LemonBalm",
+        "quantity": 1,
+        "costZK": 0.3
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.AethyricSteadiness.Desc",
@@ -5395,7 +5596,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.AethyricSteadiness.Name",
       "icon": "icons/consumables/potions/potion-jar-corked-glowing-blue.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 14400
       },
       "changes": [],
       "system": {
@@ -5415,7 +5616,8 @@ export const ALCHEMY_RECIPES = [
         "value": "all"
       }
     ],
-    "volatility": "moderate"
+    "volatility": "moderate",
+    "auditUpdated": true
   },
   {
     "id": "potion-wisp-phial",
@@ -5431,42 +5633,37 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-round-corked-glowing-green.webp",
     "ingredients": [
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1.5
       },
       {
-        "key": "WhitePhosphorus",
-        "name": "GOLD_ALCHEMY.Ingredients.WhitePhosphorus",
+        "key": "Sulfur",
+        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 0.5
+      },
+      {
+        "key": "PureWater",
+        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "quantity": 1,
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WispPhial.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.WispPhial.Effect",
+    "volatility": "minor",
+    "manualUse": true,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.WispPhial.Name",
       "icon": "icons/consumables/potions/potion-round-corked-glowing-green.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 7200
       },
-      "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += -30;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
-          }
-        ]
-      }
-    },
-    "volatility": "minor"
+      "changes": []
+    }
   },
   {
     "id": "potion-thunder-jar",
@@ -5484,7 +5681,7 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "Saltpeter",
         "name": "GOLD_ALCHEMY.Ingredients.Saltpeter",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 0.75
       },
       {
@@ -5508,19 +5705,19 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "deafened",
         "value": 1,
-        "perSL": true,
+        "perSL": false,
         "resist": {
           "test": "endurance",
           "difficulty": "challenging"
         }
-      },
-      {
-        "damage": 2
       }
     ],
     "volatility": "major",
     "creationTimeDays": 2,
-    "blast": 3
+    "blast": 3,
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-tar-bomb",
@@ -5539,13 +5736,13 @@ export const ALCHEMY_RECIPES = [
         "key": "WoodTar",
         "name": "GOLD_ALCHEMY.Ingredients.WoodTar",
         "quantity": 2,
-        "costZK": 0.4
+        "costZK": 0.25
       },
       {
         "key": "PineResin",
         "name": "GOLD_ALCHEMY.Ingredients.PineResin",
         "quantity": 1,
-        "costZK": 0.3
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.TarBomb.Desc",
@@ -5556,11 +5753,18 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "entangled",
         "value": 1,
-        "perSL": true
+        "onlyIfAbsent": true,
+        "resist": {
+          "test": "dodge",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-quicklime-pouch",
@@ -5579,7 +5783,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Quicklime",
         "name": "GOLD_ALCHEMY.Ingredients.Quicklime",
         "quantity": 2,
-        "costZK": 0.3
+        "costZK": 0.2
       },
       {
         "key": "WillowCharcoal",
@@ -5596,7 +5800,7 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "blinded",
         "value": 1,
-        "perSL": true,
+        "perSL": false,
         "resist": {
           "test": "dodge",
           "difficulty": "challenging"
@@ -5605,7 +5809,9 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "minor",
     "creationTimeDays": 2,
-    "blast": 2
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-stinkpot",
@@ -5623,7 +5829,7 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "Sulfur",
         "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 0.5
       },
       {
@@ -5636,7 +5842,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WineVinegar",
         "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
         "quantity": 1,
-        "costZK": 0.2
+        "costZK": 0.15
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Stinkpot.Desc",
@@ -5646,8 +5852,10 @@ export const ALCHEMY_RECIPES = [
     "volatility": "moderate",
     "creationTimeDays": 2,
     "cloud": {
-      "radius": 6,
+      "radius": 3,
       "color": "#8a9a3a",
+      "roundsFormula": "1d5",
+      "oncePerActor": true,
       "roundSteps": [
         {
           "test": "endurance",
@@ -5660,7 +5868,10 @@ export const ALCHEMY_RECIPES = [
           ]
         }
       ]
-    }
+    },
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-nightblack",
@@ -5679,13 +5890,13 @@ export const ALCHEMY_RECIPES = [
         "key": "Lampblack",
         "name": "GOLD_ALCHEMY.Ingredients.Lampblack",
         "quantity": 2,
-        "costZK": 0.15
+        "costZK": 0.1
       },
       {
-        "key": "BadgerFat",
-        "name": "GOLD_ALCHEMY.Ingredients.BadgerFat",
+        "key": "WoodTar",
+        "name": "GOLD_ALCHEMY.Ingredients.WoodTar",
         "quantity": 1,
-        "costZK": 0.6
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Nightblack.Desc",
@@ -5697,15 +5908,21 @@ export const ALCHEMY_RECIPES = [
       "duration": {
         "seconds": 14400
       },
-      "changes": [],
+      "changes": [
+        {
+          "key": "system.characteristics.fel.modifier",
+          "mode": 2,
+          "value": "-10"
+        }
+      ],
       "system": {
         "scriptData": [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
+            "script": "args.fields.modifier += 10;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Stealth\",\"Skradanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -5713,7 +5930,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "auditUpdated": true
   },
   {
     "id": "potion-keen-edge-oil",
@@ -5755,18 +5973,16 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Melee\",\"Broń Biała\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Melee\",\"Broń Biała\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
+            "trigger": "preApplyDamage",
+            "script": "if (args.sourceItem?.id !== this.effect.getFlag(\"wfrp4e-alchemy\", \"weaponId\")) return;\nconst hits = Number(this.effect.getFlag(\"wfrp4e-alchemy\", \"keenHits\")) || 0;\nif (hits >= 3) return;\nawait this.effect.setFlag(\"wfrp4e-alchemy\", \"keenHits\", hits + 1);\nargs.damage += 1;\nargs.extraMessages.push(`<strong>${this.effect.name}</strong>: ${game.i18n.localize(\"GOLD_ALCHEMY.Effects.KeenEdgeHit\")}`);"
           }
         ]
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "applyToWeapon": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-steadyhand-drops",
@@ -5811,19 +6027,28 @@ export const ALCHEMY_RECIPES = [
       },
       "changes": [
         {
-          "key": "system.characteristics.bs.modifier",
-          "mode": 2,
-          "value": "10"
-        },
-        {
           "key": "system.characteristics.fel.modifier",
           "mode": 2,
           "value": "-5"
         }
-      ]
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 10;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !(args.characteristic === \"bs\" || /^(Ranged|Broń Zasięgowa)( \\(|$)/i.test(n));"
+            }
+          }
+        ]
+      }
     },
     "volatility": "moderate",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "auditUpdated": true
   },
   {
     "id": "potion-fireproof-salve",
@@ -5842,7 +6067,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Alum",
         "name": "GOLD_ALCHEMY.Ingredients.Alum",
         "quantity": 2,
-        "costZK": 0.3
+        "costZK": 0.2
       },
       {
         "key": "Beeswax",
@@ -5871,14 +6096,16 @@ export const ALCHEMY_RECIPES = [
         "scriptData": [
           {
             "label": "@effect.name",
-            "trigger": "startRound",
-            "script": "if (this.actor.hasCondition(\"ablaze\")) await this.actor.removeCondition(\"ablaze\", 1);"
+            "trigger": "update",
+            "script": "const condition = this.actor.hasCondition(\"ablaze\");\nconst levels = Number(condition?.conditionValue) || 0;\nif (levels <= Number(this.effect.getFlag(\"wfrp4e-alchemy\", \"initialAblaze\") || 0) || this.effect._salveSpent) return;\nthis.effect._salveSpent = true;\nawait this.effect.delete();\nawait this.actor.removeCondition(\"ablaze\", 1);"
           }
         ]
       }
     },
     "volatility": "moderate",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "trackAblaze": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-miners-powder",
@@ -5896,20 +6123,20 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "Saltpeter",
         "name": "GOLD_ALCHEMY.Ingredients.Saltpeter",
-        "quantity": 2,
-        "costZK": 0.75
-      },
-      {
-        "key": "Sulfur",
-        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.75
       },
       {
         "key": "RockOil",
         "name": "GOLD_ALCHEMY.Ingredients.RockOil",
         "quantity": 1,
         "costZK": 0.9
+      },
+      {
+        "key": "PineResin",
+        "name": "GOLD_ALCHEMY.Ingredients.PineResin",
+        "quantity": 1,
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.MinersPowder.Desc",
@@ -5923,12 +6150,20 @@ export const ALCHEMY_RECIPES = [
       },
       {
         "add": "prone",
-        "value": 1
+        "value": 1,
+        "maxSize": "avg",
+        "resist": {
+          "test": "dodge",
+          "difficulty": "challenging"
+        }
       }
     ],
     "volatility": "extreme",
     "creationTimeDays": 2,
-    "blast": 5
+    "blast": 5,
+    "dosesFormula": "1",
+    "maxDoses": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-glowworm-phial",
@@ -5960,7 +6195,9 @@ export const ALCHEMY_RECIPES = [
     "effectDescription": "GOLD_ALCHEMY.Recipes.GlowwormPhial.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-etching-acid",
@@ -5976,16 +6213,28 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-conical-corked-labeled-skull-poison-green.webp",
     "ingredients": [
       {
-        "key": "WineVinegar",
-        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
+        "key": "Sulfur",
+        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
+        "quantity": 1,
+        "costZK": 0.5
+      },
+      {
+        "key": "Saltpeter",
+        "name": "GOLD_ALCHEMY.Ingredients.Saltpeter",
+        "quantity": 1,
+        "costZK": 0.75
+      },
+      {
+        "key": "Alum",
+        "name": "GOLD_ALCHEMY.Ingredients.Alum",
         "quantity": 1,
         "costZK": 0.2
       },
       {
-        "key": "AquaRegia",
-        "name": "GOLD_ALCHEMY.Ingredients.AquaRegia",
+        "key": "WineVinegar",
+        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
         "quantity": 1,
-        "costZK": 4
+        "costZK": 0.15
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.EtchingAcid.Desc",
@@ -6000,7 +6249,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "moderate",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "auditUpdated": true
   },
   {
     "id": "potion-climbers-resin",
@@ -6019,7 +6269,7 @@ export const ALCHEMY_RECIPES = [
         "key": "PineResin",
         "name": "GOLD_ALCHEMY.Ingredients.PineResin",
         "quantity": 2,
-        "costZK": 0.3
+        "costZK": 0.2
       },
       {
         "key": "Beeswax",
@@ -6043,9 +6293,9 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
+            "script": "args.fields.modifier += 10;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Climb\",\"Wspinaczka\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Climb\",\"Wspinaczka\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -6053,7 +6303,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 2
+    "creationTimeDays": 2,
+    "auditUpdated": true
   },
   {
     "id": "potion-sneezing-powder",
@@ -6071,14 +6322,14 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "MustardSeed",
         "name": "GOLD_ALCHEMY.Ingredients.MustardSeed",
-        "quantity": 1,
-        "costZK": 0.2
+        "quantity": 2,
+        "costZK": 0.15
       },
       {
         "key": "Quicklime",
         "name": "GOLD_ALCHEMY.Ingredients.Quicklime",
         "quantity": 1,
-        "costZK": 0.3
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SneezingPowder.Desc",
@@ -6087,17 +6338,24 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipeThrown",
     "thrownSteps": [
       {
-        "add": "stunned",
-        "value": 1,
+        "note": "GOLD_ALCHEMY.Steps.SneezingPenalty",
+        "resistLabel": "GOLD_ALCHEMY.Steps.SneezingLabel",
         "resist": {
           "test": "endurance",
-          "difficulty": "challenging"
-        }
+          "difficulty": "average"
+        },
+        "excludeTraits": [
+          "Undead",
+          "Daemonic",
+          "Construct"
+        ]
       }
     ],
     "volatility": "minor",
     "creationTimeDays": 2,
-    "blast": 2
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-sympathetic-ink",
@@ -6113,14 +6371,14 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-bottle-corked-white.webp",
     "ingredients": [
       {
-        "key": "WineVinegar",
-        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
+        "key": "AlchemicalInk",
+        "name": "GOLD_ALCHEMY.Ingredients.AlchemicalInk",
         "quantity": 1,
-        "costZK": 0.2
+        "costZK": 0.4
       },
       {
-        "key": "Lampblack",
-        "name": "GOLD_ALCHEMY.Ingredients.Lampblack",
+        "key": "WineVinegar",
+        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
         "quantity": 1,
         "costZK": 0.15
       },
@@ -6128,63 +6386,16 @@ export const ALCHEMY_RECIPES = [
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SympatheticInk.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.SympatheticInk.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
     "volatility": "minor",
-    "creationTimeDays": 2
-  },
-  {
-    "id": "potion-willowbark-powder",
-    "key": "WillowbarkPowder",
-    "name": "GOLD_ALCHEMY.Recipes.WillowbarkPowder.Name",
-    "category": "apothecary",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 0,
-    "testSkill": "Rzemiosło (Aptekarstwo)",
-    "difficulty": 0,
-    "shelfLifeDays": 14,
-    "bonusDaysPerSL": 2,
-    "img": "icons/consumables/potions/potion-bottle-labeled-medicine-capped-red-black.webp",
-    "ingredients": [
-      {
-        "key": "WillowBark",
-        "name": "GOLD_ALCHEMY.Ingredients.WillowBark",
-        "quantity": 2,
-        "costZK": 0.25
-      },
-      {
-        "key": "WildHoney",
-        "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
-        "quantity": 1,
-        "costZK": 0.5
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.WillowbarkPowder.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.WillowbarkPowder.Effect",
-    "fallbackSkill": "Rzemiosło (Zielarz)",
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "fatigued",
-        "value": 1
-      },
-      {
-        "test": "endurance",
-        "difficulty": "easy",
-        "fail": [
-          {
-            "add": "poisoned",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 2,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-yarrow-poultice",
@@ -6206,6 +6417,12 @@ export const ALCHEMY_RECIPES = [
         "costZK": 0.3
       },
       {
+        "key": "Alum",
+        "name": "GOLD_ALCHEMY.Ingredients.Alum",
+        "quantity": 1,
+        "costZK": 0.2
+      },
+      {
         "key": "Beeswax",
         "name": "GOLD_ALCHEMY.Ingredients.Beeswax",
         "quantity": 1,
@@ -6223,7 +6440,9 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-feverbreaker",
@@ -6251,10 +6470,16 @@ export const ALCHEMY_RECIPES = [
         "costZK": 0.25
       },
       {
+        "key": "Coltsfoot",
+        "name": "GOLD_ALCHEMY.Ingredients.Coltsfoot",
+        "quantity": 1,
+        "costZK": 0.15
+      },
+      {
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Feverbreaker.Desc",
@@ -6274,7 +6499,7 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -6282,7 +6507,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-wakeroot-tea",
@@ -6300,7 +6526,7 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "KavehBeans",
         "name": "GOLD_ALCHEMY.Ingredients.KavehBeans",
-        "quantity": 2,
+        "quantity": 1,
         "costZK": 1.25
       },
       {
@@ -6308,6 +6534,12 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.MintOil",
         "quantity": 1,
         "costZK": 0.6
+      },
+      {
+        "key": "PureWater",
+        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "quantity": 1,
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WakerootTea.Desc",
@@ -6335,7 +6567,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-chamomile-calmative",
@@ -6360,7 +6593,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ChamomileCalmative.Desc",
@@ -6388,7 +6621,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-steady-scalpel",
@@ -6437,7 +6671,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
+            "script": "args.fields.modifier += 10;",
             "options": {
               "activateScript": "const n = args.skill?.name || \"\"; return [\"Heal\",\"Leczenie\"].some(x => n === x || n.startsWith(x + \" (\"));",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Heal\",\"Leczenie\"].some(x => n === x || n.startsWith(x + \" (\")));"
@@ -6447,7 +6681,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "moderate",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-coltsfoot-syrup",
@@ -6466,27 +6701,22 @@ export const ALCHEMY_RECIPES = [
         "key": "Coltsfoot",
         "name": "GOLD_ALCHEMY.Ingredients.Coltsfoot",
         "quantity": 2,
-        "costZK": 0.25
+        "costZK": 0.15
       },
       {
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ColtsfootSyrup.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.ColtsfootSyrup.Effect",
     "fallbackSkill": "Rzemiosło (Zielarz)",
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "poisoned",
-        "value": 1
-      }
-    ],
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-slumber-drops",
@@ -6508,46 +6738,44 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1
       },
       {
-        "key": "Chamomile",
-        "name": "GOLD_ALCHEMY.Ingredients.Chamomile",
+        "key": "Mugwort",
+        "name": "GOLD_ALCHEMY.Ingredients.Mugwort",
         "quantity": 1,
-        "costZK": 0.2
+        "costZK": 0.3
       },
       {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SlumberDrops.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.SlumberDrops.Effect",
     "fallbackSkill": "Rzemiosło (Zielarz)",
+    "volatility": "moderate",
+    "creationTimeDays": 7,
+    "manualUse": true,
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true,
     "instantEffect": "recipe",
     "instantSteps": [
       {
         "test": "endurance",
-        "difficulty": "hard",
-        "pass": [
-          {
-            "add": "fatigued",
-            "value": 1
-          }
-        ],
+        "difficulty": "challenging",
+        "mandatory": true,
         "fail": [
           {
             "add": "unconscious",
-            "value": 1,
             "duration": {
-              "formula": "1d10",
+              "formula": "1",
               "units": "hours"
             }
           }
         ]
       }
-    ],
-    "volatility": "moderate",
-    "creationTimeDays": 7
+    ]
   },
   {
     "id": "potion-eyebright-wash",
@@ -6566,7 +6794,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Eyebright",
         "name": "GOLD_ALCHEMY.Ingredients.Eyebright",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.3
       },
       {
         "key": "RoseWater",
@@ -6578,36 +6806,17 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.EyebrightWash.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.EyebrightWash.Effect",
     "fallbackSkill": "Rzemiosło (Zielarz)",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.EyebrightWash.Name",
-      "icon": "icons/consumables/potions/potion-flask-corked-teal.webp",
-      "duration": {
-        "seconds": 3600
-      },
-      "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Perception\",\"Percepcja\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
-          }
-        ]
-      }
-    },
     "instantEffect": "recipe",
     "instantSteps": [
       {
         "remove": "blinded",
-        "value": "all"
+        "value": 1
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-boneknit-salve",
@@ -6644,24 +6853,11 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.BoneknitSalve.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.BoneknitSalve.Effect",
     "fallbackSkill": "Rzemiosło (Zielarz)",
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "heal": "1d10"
-      },
-      {
-        "test": "endurance",
-        "difficulty": "average",
-        "fail": [
-          {
-            "add": "fatigued",
-            "value": 1
-          }
-        ]
-      }
-    ],
     "volatility": "moderate",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "manualUse": true,
+    "auditUpdated": true,
+    "applyToAlly": true
   },
   {
     "id": "potion-garlic-tincture",
@@ -6683,10 +6879,10 @@ export const ALCHEMY_RECIPES = [
         "costZK": 0.1
       },
       {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.GarlicTincture.Desc",
@@ -6698,15 +6894,21 @@ export const ALCHEMY_RECIPES = [
       "duration": {
         "seconds": 28800
       },
-      "changes": [],
+      "changes": [
+        {
+          "key": "system.characteristics.fel.modifier",
+          "mode": 2,
+          "value": "-10"
+        }
+      ],
       "system": {
         "scriptData": [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.slBonus += 1;",
+            "script": "args.fields.modifier += 10;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -6714,7 +6916,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-poppy-tincture",
@@ -6745,7 +6948,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.PoppyTincture.Desc",
@@ -6770,64 +6973,13 @@ export const ALCHEMY_RECIPES = [
         }
       ]
     },
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "fatigued",
-        "value": 2
-      }
-    ],
     "volatility": "major",
     "creationTimeDays": 7,
     "addictive": {
       "difficulty": "challenging"
-    }
-  },
-  {
-    "id": "potion-mustard-plaster",
-    "key": "MustardPlaster",
-    "name": "GOLD_ALCHEMY.Recipes.MustardPlaster.Name",
-    "category": "apothecary",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 0,
-    "testSkill": "Rzemiosło (Aptekarstwo)",
-    "difficulty": 0,
-    "shelfLifeDays": 14,
-    "bonusDaysPerSL": 2,
-    "img": "icons/consumables/potions/potion-jar-corked-orange.webp",
-    "ingredients": [
-      {
-        "key": "MustardSeed",
-        "name": "GOLD_ALCHEMY.Ingredients.MustardSeed",
-        "quantity": 2,
-        "costZK": 0.2
-      },
-      {
-        "key": "WineVinegar",
-        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
-        "quantity": 1,
-        "costZK": 0.2
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.MustardPlaster.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.MustardPlaster.Effect",
-    "fallbackSkill": "Rzemiosło (Zielarz)",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.MustardPlaster.Name",
-      "icon": "icons/consumables/potions/potion-jar-corked-orange.webp",
-      "duration": {
-        "seconds": 14400
-      },
-      "changes": [
-        {
-          "key": "system.characteristics.t.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ]
     },
-    "volatility": "minor",
-    "creationTimeDays": 7
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-calming-oil",
@@ -6862,17 +7014,23 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.CalmingOil.Name",
       "icon": "icons/consumables/potions/potion-bottle-corked-fancy-orange.webp",
       "duration": {
-        "seconds": 7200
+        "seconds": 3600
       },
-      "changes": [],
+      "changes": [
+        {
+          "key": "system.characteristics.i.modifier",
+          "mode": 2,
+          "value": "-10"
+        }
+      ],
       "system": {
         "scriptData": [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
+            "script": "args.fields.modifier += 10;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Cool\",\"Opanowanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "activateScript": "return false;",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Cool\",\"Opanowanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
             }
           }
@@ -6880,7 +7038,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 7
+    "creationTimeDays": 7,
+    "auditUpdated": true
   },
   {
     "id": "potion-wayfarers-tea",
@@ -6929,7 +7088,7 @@ export const ALCHEMY_RECIPES = [
           {
             "label": "@effect.name",
             "trigger": "dialog",
-            "script": "args.fields.modifier += 20;",
+            "script": "args.fields.modifier += 10;",
             "options": {
               "activateScript": "const n = args.skill?.name || \"\"; return [\"Outdoor Survival\",\"Sztuka Przetrwania\",\"Track\",\"Tropienie\"].some(x => n === x || n.startsWith(x + \" (\"));",
               "hideScript": "const n = args.skill?.name || \"\"; return !([\"Outdoor Survival\",\"Sztuka Przetrwania\",\"Track\",\"Tropienie\"].some(x => n === x || n.startsWith(x + \" (\")));"
@@ -6939,56 +7098,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 1
-  },
-  {
-    "id": "potion-nettle-wrap",
-    "key": "NettleWrap",
-    "name": "GOLD_ALCHEMY.Recipes.NettleWrap.Name",
-    "category": "herbal",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 0,
-    "testSkill": "Rzemiosło (Zielarz)",
-    "difficulty": 0,
-    "shelfLifeDays": 3,
-    "bonusDaysPerSL": 1,
-    "img": "icons/consumables/potions/potion-jar-corked-green.webp",
-    "ingredients": [
-      {
-        "key": "NettleOil",
-        "name": "GOLD_ALCHEMY.Ingredients.NettleOil",
-        "quantity": 1,
-        "costZK": 0.4
-      },
-      {
-        "key": "Plantain",
-        "name": "GOLD_ALCHEMY.Ingredients.Plantain",
-        "quantity": 1,
-        "costZK": 0.15
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.NettleWrap.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.NettleWrap.Effect",
-    "fallbackSkill": "Rzemiosło (Aptekarstwo)",
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "bleeding",
-        "value": 1
-      },
-      {
-        "test": "endurance",
-        "difficulty": "easy",
-        "fail": [
-          {
-            "add": "poisoned",
-            "value": 1
-          }
-        ]
-      }
-    ],
-    "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-mint-breath",
@@ -7041,7 +7152,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-wormwood-bitters",
@@ -7059,14 +7171,14 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "Wormwood",
         "name": "GOLD_ALCHEMY.Ingredients.Wormwood",
-        "quantity": 2,
-        "costZK": 0.4
+        "quantity": 1,
+        "costZK": 0.3
       },
       {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WormwoodBitters.Desc",
@@ -7094,7 +7206,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-elderflower-syrup",
@@ -7119,7 +7232,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.ElderflowerSyrup.Desc",
@@ -7131,13 +7244,20 @@ export const ALCHEMY_RECIPES = [
       "duration": {
         "seconds": 86400
       },
-      "changes": [
-        {
-          "key": "system.characteristics.t.modifier",
-          "mode": 2,
-          "value": "5"
-        }
-      ]
+      "changes": [],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 10;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          }
+        ]
+      }
     },
     "instantEffect": "recipe",
     "instantSteps": [
@@ -7147,7 +7267,8 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-juniper-smudge",
@@ -7169,6 +7290,12 @@ export const ALCHEMY_RECIPES = [
         "costZK": 0.3
       },
       {
+        "key": "PineResin",
+        "name": "GOLD_ALCHEMY.Ingredients.PineResin",
+        "quantity": 1,
+        "costZK": 0.2
+      },
+      {
         "key": "SageLeaves",
         "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
         "quantity": 1,
@@ -7182,78 +7309,14 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.JuniperSmudge.Name",
       "icon": "icons/consumables/potions/bottle-round-flask-fumes-purple.webp",
       "duration": {
-        "seconds": 86400
+        "seconds": 28800
       },
-      "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 10;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
-          }
-        ]
-      }
+      "changes": []
     },
     "volatility": "minor",
-    "creationTimeDays": 1
-  },
-  {
-    "id": "potion-sunwort-draught",
-    "key": "SunwortDraught",
-    "name": "GOLD_ALCHEMY.Recipes.SunwortDraught.Name",
-    "category": "herbal",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 0,
-    "testSkill": "Rzemiosło (Zielarz)",
-    "difficulty": 0,
-    "shelfLifeDays": 3,
-    "bonusDaysPerSL": 1,
-    "img": "icons/consumables/potions/potion-flask-corked-orange.webp",
-    "ingredients": [
-      {
-        "key": "Hypericum",
-        "name": "GOLD_ALCHEMY.Ingredients.Hypericum",
-        "quantity": 2,
-        "costZK": 0.4
-      },
-      {
-        "key": "WildHoney",
-        "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
-        "quantity": 1,
-        "costZK": 0.5
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.SunwortDraught.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.SunwortDraught.Effect",
-    "fallbackSkill": "Rzemiosło (Aptekarstwo)",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.SunwortDraught.Name",
-      "icon": "icons/consumables/potions/potion-flask-corked-orange.webp",
-      "duration": {
-        "seconds": 14400
-      },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "10"
-        }
-      ]
-    },
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "broken",
-        "value": 1
-      }
-    ],
-    "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-mugwort-dream-tea",
@@ -7306,7 +7369,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-foxglove-drops",
@@ -7342,6 +7406,7 @@ export const ALCHEMY_RECIPES = [
       {
         "test": "endurance",
         "difficulty": "hard",
+        "mandatory": true,
         "pass": [
           {
             "remove": "unconscious",
@@ -7361,7 +7426,10 @@ export const ALCHEMY_RECIPES = [
       }
     ],
     "volatility": "major",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "applyToAlly": true,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-honey-salve",
@@ -7380,7 +7448,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WildHoney",
         "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
         "quantity": 1,
-        "costZK": 0.5
+        "costZK": 0.25
       },
       {
         "key": "Plantain",
@@ -7401,11 +7469,14 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipe",
     "instantSteps": [
       {
-        "heal": "1d5"
+        "heal": "1d3",
+        "requireWounds": true
       }
     ],
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-thistle-draught",
@@ -7458,7 +7529,8 @@ export const ALCHEMY_RECIPES = [
       }
     },
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-sleepwell-tea",
@@ -7476,34 +7548,29 @@ export const ALCHEMY_RECIPES = [
       {
         "key": "Chamomile",
         "name": "GOLD_ALCHEMY.Ingredients.Chamomile",
-        "quantity": 1,
+        "quantity": 2,
         "costZK": 0.2
-      },
-      {
-        "key": "Valerian",
-        "name": "GOLD_ALCHEMY.Ingredients.Valerian",
-        "quantity": 1,
-        "costZK": 1.25
       },
       {
         "key": "LemonBalm",
         "name": "GOLD_ALCHEMY.Ingredients.LemonBalm",
         "quantity": 1,
         "costZK": 0.3
+      },
+      {
+        "key": "WildHoney",
+        "name": "GOLD_ALCHEMY.Ingredients.WildHoney",
+        "quantity": 1,
+        "costZK": 0.25
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SleepwellTea.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.SleepwellTea.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "remove": "fatigued",
-        "value": 1
-      }
-    ],
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "manualUse": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-plantain-poultice",
@@ -7537,24 +7604,14 @@ export const ALCHEMY_RECIPES = [
     "instantEffect": "recipe",
     "instantSteps": [
       {
-        "test": "endurance",
-        "difficulty": "average",
-        "pass": [
-          {
-            "remove": "poisoned",
-            "value": "all"
-          }
-        ],
-        "fail": [
-          {
-            "remove": "poisoned",
-            "value": 1
-          }
-        ]
+        "remove": "poisoned",
+        "value": 1
       }
     ],
     "volatility": "moderate",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "applyToAlly": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-thornbark-rub",
@@ -7570,10 +7627,10 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/bottle-round-corked-orante-red.webp",
     "ingredients": [
       {
-        "key": "Ironbark",
-        "name": "GOLD_ALCHEMY.Ingredients.Ironbark",
-        "quantity": 1,
-        "costZK": 2
+        "key": "WillowBark",
+        "name": "GOLD_ALCHEMY.Ingredients.WillowBark",
+        "quantity": 2,
+        "costZK": 0.25
       },
       {
         "key": "NettleOil",
@@ -7595,7 +7652,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.ThornbarkRub.Name",
       "icon": "icons/consumables/potions/bottle-round-corked-orante-red.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 600
       },
       "changes": [
         {
@@ -7611,7 +7668,8 @@ export const ALCHEMY_RECIPES = [
       ]
     },
     "volatility": "minor",
-    "creationTimeDays": 1
+    "creationTimeDays": 1,
+    "auditUpdated": true
   },
   {
     "id": "potion-bloodrage-draught",
@@ -7639,10 +7697,10 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1.5
       },
       {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.BloodrageDraught.Desc",
@@ -7652,14 +7710,9 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.BloodrageDraught.Name",
       "icon": "icons/consumables/potions/potion-tube-corked-bat-gold-red.webp",
       "duration": {
-        "seconds": 600
+        "rounds": 10
       },
       "changes": [
-        {
-          "key": "system.characteristics.ws.modifier",
-          "mode": 2,
-          "value": "20"
-        },
         {
           "key": "system.characteristics.s.modifier",
           "mode": 2,
@@ -7672,29 +7725,24 @@ export const ALCHEMY_RECIPES = [
             "label": "@effect.name",
             "trigger": "immediate",
             "script": "const specs = [[\"Compendium.wfrp4e-core.items.yRhhOlt18COq4e1q\",\"Frenzy\",\"trait\",null,\"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "deleteEffect",
+            "script": "await this.actor.addCondition(\"fatigued\", 1); const test = await this.actor.setupSkill(game.i18n.localize(\"NAME.Endurance\"), { fields: { difficulty: \"difficult\" }, skipTargets: true }); if (!test) { await this.actor.addCondition(\"fatigued\", 1); } else { await test.roll(); if (!test.succeeded) await this.actor.addCondition(\"fatigued\", 1); }"
           }
         ]
       }
     },
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "test": "endurance",
-        "difficulty": "difficult",
-        "fail": [
-          {
-            "add": "fatigued",
-            "value": 2
-          }
-        ]
-      }
-    ],
     "volatility": "extreme",
     "creationTimeDays": 7,
     "availability": "rare",
     "addictive": {
       "difficulty": "difficult"
-    }
+    },
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-gravewine",
@@ -7722,10 +7770,16 @@ export const ALCHEMY_RECIPES = [
         "costZK": 0.75
       },
       {
-        "key": "PureAlcohol",
-        "name": "GOLD_ALCHEMY.Ingredients.PureAlcohol",
+        "key": "Wormwood",
+        "name": "GOLD_ALCHEMY.Ingredients.Wormwood",
         "quantity": 1,
-        "costZK": 1.25
+        "costZK": 0.3
+      },
+      {
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
+        "quantity": 1,
+        "costZK": 0.2
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.Gravewine.Desc",
@@ -7735,7 +7789,7 @@ export const ALCHEMY_RECIPES = [
       "name": "GOLD_ALCHEMY.Recipes.Gravewine.Name",
       "icon": "icons/consumables/potions/flask-ornate-skull-green.webp",
       "duration": {
-        "seconds": 3600
+        "seconds": 900
       },
       "changes": [
         {
@@ -7763,7 +7817,8 @@ export const ALCHEMY_RECIPES = [
     "instantSteps": [
       {
         "test": "endurance",
-        "difficulty": "challenging",
+        "difficulty": "difficult",
+        "mandatory": true,
         "fail": [
           {
             "add": "poisoned",
@@ -7777,7 +7832,11 @@ export const ALCHEMY_RECIPES = [
     "availability": "rare",
     "addictive": {
       "difficulty": "challenging"
-    }
+    },
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "instantBeforeEffect": true,
+    "auditUpdated": true
   },
   {
     "id": "potion-black-vial",
@@ -7796,7 +7855,7 @@ export const ALCHEMY_RECIPES = [
         "key": "Nightshade",
         "name": "GOLD_ALCHEMY.Ingredients.Nightshade",
         "quantity": 1,
-        "costZK": 2
+        "costZK": 1.5
       },
       {
         "key": "Henbane",
@@ -7808,7 +7867,7 @@ export const ALCHEMY_RECIPES = [
         "key": "WineVinegar",
         "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
         "quantity": 1,
-        "costZK": 0.2
+        "costZK": 0.15
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.BlackVial.Desc",
@@ -7819,16 +7878,20 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "poisoned",
         "value": 1,
-        "perSL": true,
+        "perSL": false,
+        "extraAtSL": 2,
         "resist": {
           "test": "endurance",
-          "difficulty": "challenging"
+          "difficulty": "difficult"
         }
       }
     ],
     "volatility": "major",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-willbreaker-draught",
@@ -7856,8 +7919,8 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1
       },
       {
-        "key": "DaturaOil",
-        "name": "GOLD_ALCHEMY.Ingredients.DaturaOil",
+        "key": "Nightshade",
+        "name": "GOLD_ALCHEMY.Ingredients.Nightshade",
         "quantity": 1,
         "costZK": 1.5
       }
@@ -7865,23 +7928,26 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.WillbreakerDraught.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.WillbreakerDraught.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
-    "activeEffect": {
-      "name": "GOLD_ALCHEMY.Recipes.WillbreakerDraught.Name",
-      "icon": "icons/consumables/potions/potion-jar-corked-labeled-poison-skull-green.webp",
-      "duration": {
-        "seconds": 3600
-      },
-      "changes": [
-        {
-          "key": "system.characteristics.wp.modifier",
-          "mode": 2,
-          "value": "-20"
-        }
-      ]
-    },
     "volatility": "major",
     "creationTimeDays": 7,
-    "availability": "rare"
+    "availability": "rare",
+    "manualUse": true,
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true,
+    "instantEffect": "recipe",
+    "instantSteps": [
+      {
+        "test": "endurance",
+        "difficulty": "challenging",
+        "mandatory": true,
+        "fail": [
+          {
+            "note": "GOLD_ALCHEMY.Steps.WillbreakerFailed"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "potion-witch-eye-drops",
@@ -7897,32 +7963,48 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-tube-corked-glowing-red.webp",
     "ingredients": [
       {
-        "key": "WarpstoneDust",
-        "name": "GOLD_ALCHEMY.Ingredients.WarpstoneDust",
+        "key": "WarpstonePinch",
+        "name": "GOLD_ALCHEMY.Ingredients.WarpstonePinch",
         "quantity": 1,
-        "costZK": 10
+        "costZK": 3.5
+      },
+      {
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
+        "quantity": 1,
+        "costZK": 1.5
       },
       {
         "key": "BatWing",
         "name": "GOLD_ALCHEMY.Ingredients.BatWing",
         "quantity": 1,
         "costZK": 0.9
-      },
-      {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
-        "quantity": 1,
-        "costZK": 5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.WitchEyeDrops.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.WitchEyeDrops.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
+    "instantEffect": "recipe",
+    "volatility": "extreme",
+    "creationTimeDays": 7,
+    "availability": "rare",
+    "addictive": {
+      "difficulty": "difficult"
+    },
+    "dosesFormula": "1",
+    "maxDoses": 1,
+    "auditUpdated": true,
+    "manualUse": true,
+    "instantSteps": [
+      {
+        "corruption": 1
+      }
+    ],
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.WitchEyeDrops.Name",
       "icon": "icons/consumables/potions/potion-tube-corked-glowing-red.webp",
       "duration": {
-        "seconds": 3600
+        "rounds": 3
       },
       "changes": [],
       "system": {
@@ -7932,30 +8014,21 @@ export const ALCHEMY_RECIPES = [
             "trigger": "dialog",
             "script": "args.fields.modifier += 20;",
             "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Channelling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Channelling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\")));"
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Channelling\",\"Channeling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Channelling\",\"Channeling\",\"Splatanie Magii\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.slBonus += 1;",
+            "options": {
+              "activateScript": "const n = args.skill?.name || \"\"; return Boolean(args.spell) || /^(Language \\(Magick\\)|Język \\(Magiczny\\))$/i.test(n);",
+              "hideScript": "const n = args.skill?.name || \"\"; return !(Boolean(args.spell) || /^(Language \\(Magick\\)|Język \\(Magiczny\\))$/i.test(n));"
             }
           }
         ]
       }
-    },
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "test": "endurance",
-        "difficulty": "hard",
-        "fail": [
-          {
-            "corruption": 1
-          }
-        ]
-      }
-    ],
-    "volatility": "extreme",
-    "creationTimeDays": 7,
-    "availability": "rare",
-    "addictive": {
-      "difficulty": "difficult"
     }
   },
   {
@@ -7998,17 +8071,26 @@ export const ALCHEMY_RECIPES = [
       {
         "add": "broken",
         "value": 1,
-        "perSL": true,
+        "perSL": false,
         "resist": {
           "test": "cool",
           "difficulty": "challenging"
-        }
+        },
+        "excludeTraits": [
+          "Undead",
+          "Daemonic",
+          "Fearless",
+          "Immune to Psychology"
+        ]
       }
     ],
     "volatility": "major",
     "creationTimeDays": 7,
     "availability": "rare",
-    "blast": 2
+    "blast": 2,
+    "dosesFormula": "1d3",
+    "maxDoses": 3,
+    "auditUpdated": true
   },
   {
     "id": "potion-turncoat-salve",
@@ -8024,10 +8106,10 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-flask-corled-pink-red.webp",
     "ingredients": [
       {
-        "key": "WarpstoneDust",
-        "name": "GOLD_ALCHEMY.Ingredients.WarpstoneDust",
+        "key": "WarpstonePinch",
+        "name": "GOLD_ALCHEMY.Ingredients.WarpstonePinch",
         "quantity": 1,
-        "costZK": 10
+        "costZK": 3.5
       },
       {
         "key": "Beeswax",
@@ -8045,23 +8127,23 @@ export const ALCHEMY_RECIPES = [
     "description": "GOLD_ALCHEMY.Recipes.TurncoatSalve.Desc",
     "effectDescription": "GOLD_ALCHEMY.Recipes.TurncoatSalve.Effect",
     "fallbackSkill": "Rzemiosło (Aptekarstwo)",
+    "volatility": "major",
+    "creationTimeDays": 7,
+    "availability": "rare",
+    "manualUse": true,
+    "instantEffect": "recipe",
+    "instantSteps": [
+      {
+        "corruption": 1
+      }
+    ],
+    "dosesFormula": "1",
+    "maxDoses": 1,
+    "auditUpdated": true,
     "activeEffect": {
       "name": "GOLD_ALCHEMY.Recipes.TurncoatSalve.Name",
       "icon": "icons/consumables/potions/potion-flask-corled-pink-red.webp",
       "changes": [],
-      "system": {
-        "scriptData": [
-          {
-            "label": "@effect.name",
-            "trigger": "dialog",
-            "script": "args.fields.modifier += 30;",
-            "options": {
-              "activateScript": "const n = args.skill?.name || \"\"; return [\"Entertain\",\"Występy\",\"Charm\",\"Charyzma\"].some(x => n === x || n.startsWith(x + \" (\"));",
-              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Entertain\",\"Występy\",\"Charm\",\"Charyzma\"].some(x => n === x || n.startsWith(x + \" (\")));"
-            }
-          }
-        ]
-      },
       "flags": {
         "wfrp4e-alchemy": {
           "durationRoll": {
@@ -8070,23 +8152,21 @@ export const ALCHEMY_RECIPES = [
             "multiplier": 3600
           }
         }
-      }
-    },
-    "instantEffect": "recipe",
-    "instantSteps": [
-      {
-        "test": "endurance",
-        "difficulty": "challenging",
-        "fail": [
+      },
+      "system": {
+        "scriptData": [
           {
-            "corruption": 1
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 30;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Entertain\",\"Występy\",\"Charm\",\"Charyzma\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
           }
         ]
       }
-    ],
-    "volatility": "major",
-    "creationTimeDays": 7,
-    "availability": "rare"
+    }
   },
   {
     "id": "potion-hollow-heart",
@@ -8106,6 +8186,12 @@ export const ALCHEMY_RECIPES = [
         "name": "GOLD_ALCHEMY.Ingredients.GraveMoss",
         "quantity": 1,
         "costZK": 1
+      },
+      {
+        "key": "BoneAsh",
+        "name": "GOLD_ALCHEMY.Ingredients.BoneAsh",
+        "quantity": 1,
+        "costZK": 0.75
       },
       {
         "key": "Foxglove",
@@ -8161,6 +8247,7 @@ export const ALCHEMY_RECIPES = [
       {
         "test": "endurance",
         "difficulty": "hard",
+        "mandatory": true,
         "fail": [
           {
             "add": "poisoned",
@@ -8171,62 +8258,14 @@ export const ALCHEMY_RECIPES = [
     ],
     "volatility": "extreme",
     "creationTimeDays": 7,
-    "availability": "rare"
-  },
-  {
-    "id": "potion-plague-vapour",
-    "key": "PlagueVapour",
-    "name": "GOLD_ALCHEMY.Recipes.PlagueVapour.Name",
-    "category": "forbidden",
-    "sourceModule": "wfrp4e-alchemy",
-    "attunementCost": 0,
-    "testSkill": "Rzemiosło (Alchemia)",
-    "difficulty": -30,
-    "shelfLifeDays": 30,
-    "bonusDaysPerSL": 5,
-    "img": "icons/weapons/thrown/grenade-chemical.webp",
-    "ingredients": [
-      {
-        "key": "GraveMoss",
-        "name": "GOLD_ALCHEMY.Ingredients.GraveMoss",
-        "quantity": 2,
-        "costZK": 1
-      },
-      {
-        "key": "Sulfur",
-        "name": "GOLD_ALCHEMY.Ingredients.Sulfur",
-        "quantity": 1,
-        "costZK": 0.5
-      },
-      {
-        "key": "BoneAsh",
-        "name": "GOLD_ALCHEMY.Ingredients.BoneAsh",
-        "quantity": 1,
-        "costZK": 0.75
-      }
-    ],
-    "description": "GOLD_ALCHEMY.Recipes.PlagueVapour.Desc",
-    "effectDescription": "GOLD_ALCHEMY.Recipes.PlagueVapour.Effect",
-    "fallbackSkill": "Rzemiosło (Aptekarstwo)",
-    "instantEffect": "recipeCloud",
-    "volatility": "extreme",
-    "creationTimeDays": 7,
     "availability": "rare",
-    "cloud": {
-      "radius": 6,
-      "color": "#5f7a2e",
-      "roundSteps": [
-        {
-          "test": "endurance",
-          "difficulty": "difficult",
-          "fail": [
-            {
-              "note": "GOLD_ALCHEMY.Cloud.Disease"
-            }
-          ]
-        }
-      ]
-    }
+    "dosesFormula": "1",
+    "maxDoses": 1,
+    "auditUpdated": true,
+    "addictive": {
+      "difficulty": "challenging"
+    },
+    "instantBeforeEffect": true
   },
   {
     "id": "potion-soulburn-tonic",
@@ -8242,10 +8281,10 @@ export const ALCHEMY_RECIPES = [
     "img": "icons/consumables/potions/potion-tube-corked-glowing-red.webp",
     "ingredients": [
       {
-        "key": "WarpstoneDust",
-        "name": "GOLD_ALCHEMY.Ingredients.WarpstoneDust",
+        "key": "WarpstonePinch",
+        "name": "GOLD_ALCHEMY.Ingredients.WarpstonePinch",
         "quantity": 1,
-        "costZK": 10
+        "costZK": 3.5
       },
       {
         "key": "Henbane",
@@ -8254,10 +8293,10 @@ export const ALCHEMY_RECIPES = [
         "costZK": 1.25
       },
       {
-        "key": "AethyrCrystal",
-        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "key": "AethyrDust",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrDust",
         "quantity": 1,
-        "costZK": 5
+        "costZK": 1.5
       }
     ],
     "description": "GOLD_ALCHEMY.Recipes.SoulburnTonic.Desc",
@@ -8277,6 +8316,225 @@ export const ALCHEMY_RECIPES = [
     "availability": "rare",
     "addictive": {
       "difficulty": "hard"
+    },
+    "dosesFormula": "1",
+    "maxDoses": 1,
+    "auditUpdated": true,
+    "manualUse": true
+  },
+  {
+    "id": "potion-ghyran-rivers-breath",
+    "key": "GhyranRiversBreath",
+    "name": "GOLD_ALCHEMY.Recipes.GhyranRiversBreath.Name",
+    "category": "college-ghyran",
+    "college": "ghyran",
+    "attunementCost": 1,
+    "testSkill": "Channelling (Ghyran)",
+    "volatility": "minor",
+    "shelfLifeDays": 60,
+    "bonusDaysPerSL": 7,
+    "sourceModule": "wfrp4e-alchemy",
+    "img": "icons/consumables/potions/bottle-conical-corked-cyan.webp",
+    "description": "GOLD_ALCHEMY.Recipes.GhyranRiversBreath.Desc",
+    "effectDescription": "GOLD_ALCHEMY.Recipes.GhyranRiversBreath.Effect",
+    "ingredients": [
+      {
+        "key": "OakSap",
+        "name": "GOLD_ALCHEMY.Ingredients.OakSap",
+        "quantity": 1,
+        "costZK": 1.5
+      },
+      {
+        "key": "PureWater",
+        "name": "GOLD_ALCHEMY.Ingredients.PureWater",
+        "quantity": 1,
+        "costZK": 0.25
+      },
+      {
+        "key": "Plantain",
+        "name": "GOLD_ALCHEMY.Ingredients.Plantain",
+        "quantity": 1,
+        "costZK": 0.15
+      }
+    ],
+    "manualUse": true,
+    "auditUpdated": true,
+    "activeEffect": {
+      "name": "GOLD_ALCHEMY.Recipes.GhyranRiversBreath.Name",
+      "icon": "icons/consumables/potions/bottle-conical-corked-cyan.webp",
+      "duration": {
+        "seconds": 3600
+      },
+      "changes": [],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 20;",
+            "options": {
+              "activateScript": "const n = args.skill?.name || \"\"; return [\"Swim\",\"Pływanie\"].some(x => n === x || n.startsWith(x + \" (\"));",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Swim\",\"Pływanie\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "potion-ghur-beast-heart",
+    "key": "GhurBeastHeart",
+    "name": "GOLD_ALCHEMY.Recipes.GhurBeastHeart.Name",
+    "category": "college-ghur",
+    "college": "ghur",
+    "attunementCost": 4,
+    "testSkill": "Channelling (Ghur)",
+    "volatility": "major",
+    "creationDifficultySL": -1,
+    "shelfLifeDays": 30,
+    "bonusDaysPerSL": 3,
+    "sourceModule": "wfrp4e-alchemy",
+    "img": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+    "description": "GOLD_ALCHEMY.Recipes.GhurBeastHeart.Desc",
+    "effectDescription": "GOLD_ALCHEMY.Recipes.GhurBeastHeart.Effect",
+    "ingredients": [
+      {
+        "key": "AethyrCrystal",
+        "name": "GOLD_ALCHEMY.Ingredients.AethyrCrystal",
+        "quantity": 1,
+        "costZK": 5
+      },
+      {
+        "key": "BearClaw",
+        "name": "GOLD_ALCHEMY.Ingredients.BearClaw",
+        "quantity": 1,
+        "costZK": 2.25
+      },
+      {
+        "key": "BeastFangs",
+        "name": "GOLD_ALCHEMY.Ingredients.BeastFangs",
+        "quantity": 1,
+        "costZK": 1.5
+      }
+    ],
+    "auditUpdated": true,
+    "activeEffect": {
+      "name": "GOLD_ALCHEMY.Recipes.GhurBeastHeart.Name",
+      "icon": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+      "duration": {
+        "seconds": 600
+      },
+      "changes": [
+        {
+          "key": "system.characteristics.s.modifier",
+          "mode": 2,
+          "value": "20"
+        },
+        {
+          "key": "system.characteristics.t.modifier",
+          "mode": 2,
+          "value": "10"
+        },
+        {
+          "key": "system.details.move.value",
+          "mode": 2,
+          "value": "1"
+        },
+        {
+          "key": "system.characteristics.fel.modifier",
+          "mode": 2,
+          "value": "-20"
+        },
+        {
+          "key": "system.characteristics.int.modifier",
+          "mode": 2,
+          "value": "-10"
+        }
+      ],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "immediate",
+            "script": "const specs = [[\"Compendium.wfrp4e-core.items.pTorrE0l3VybAbtn\",\"Fear\",\"trait\",1,\"\"]];\nconst items = [];\nfor (const [uuid, name, type, spec, suffix] of specs) {\n  const source = await fromUuid(uuid);\n  const data = source ? source.toObject() : { name, type, system: {} };\n  delete data._id;\n  if (spec !== null) foundry.utils.setProperty(data, \"system.specification.value\", spec);\n  if (suffix) data.name += ` (${suffix})`;\n  items.push(data);\n}\nawait this.actor.createEmbeddedDocuments(\"Item\", items, { fromEffect: this.effect.id });"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "potion-antiseptic-spirit",
+    "key": "AntisepticSpirit",
+    "name": "GOLD_ALCHEMY.Recipes.AntisepticSpirit.Name",
+    "category": "apothecary",
+    "attunementCost": 0,
+    "testSkill": "Trade (Apothecary)",
+    "fallbackSkill": "Trade (Herbalist)",
+    "volatility": "minor",
+    "shelfLifeDays": 90,
+    "bonusDaysPerSL": 7,
+    "sourceModule": "wfrp4e-alchemy",
+    "img": "icons/consumables/potions/vial-cork-blue.webp",
+    "description": "GOLD_ALCHEMY.Recipes.AntisepticSpirit.Desc",
+    "effectDescription": "GOLD_ALCHEMY.Recipes.AntisepticSpirit.Effect",
+    "ingredients": [
+      {
+        "key": "CheapSpirits",
+        "name": "GOLD_ALCHEMY.Ingredients.CheapSpirits",
+        "quantity": 1,
+        "costZK": 0.2
+      },
+      {
+        "key": "WineVinegar",
+        "name": "GOLD_ALCHEMY.Ingredients.WineVinegar",
+        "quantity": 1,
+        "costZK": 0.15
+      },
+      {
+        "key": "Alum",
+        "name": "GOLD_ALCHEMY.Ingredients.Alum",
+        "quantity": 1,
+        "costZK": 0.2
+      },
+      {
+        "key": "SageLeaves",
+        "name": "GOLD_ALCHEMY.Ingredients.SageLeaves",
+        "quantity": 1,
+        "costZK": 0.4
+      }
+    ],
+    "applyToAlly": true,
+    "manualUse": true,
+    "auditUpdated": true,
+    "activeEffect": {
+      "name": "GOLD_ALCHEMY.Recipes.AntisepticSpirit.Name",
+      "icon": "icons/consumables/potions/vial-cork-blue.webp",
+      "duration": {
+        "seconds": 3600
+      },
+      "changes": [],
+      "system": {
+        "scriptData": [
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 20;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Endurance\",\"Odporność\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          },
+          {
+            "label": "@effect.name",
+            "trigger": "dialog",
+            "script": "args.fields.modifier += 10;",
+            "options": {
+              "activateScript": "return false;",
+              "hideScript": "const n = args.skill?.name || \"\"; return !([\"Heal\",\"Leczenie\"].some(x => n === x || n.startsWith(x + \" (\")));"
+            }
+          }
+        ]
+      }
     }
   }
 ];

@@ -188,6 +188,11 @@ export function potionQuality(sl, { track = "magical", attunementCost = 0 } = {}
   return { tier, bonusDoses: 0, tetherCost: tier === "excellent" && cost > 1 ? cost - 1 : cost };
 }
 
+/** Limit receptury liczy gotowe sztuki, więc obowiązuje także po krytyku i jakości. */
+export function mundaneBatchQuantity(rolled, { critical = false, bonusDoses = 0, maxDoses = Infinity } = {}) {
+  return Math.min(Math.max(1, rolled) * (critical ? 2 : 1) + bonusDoses, maxDoses);
+}
+
 /**
  * A6: jak działa premia Chamonu w pamięci receptur.
  *   "both"        – +5 miejsc i receptury Chamonu za darmo (dawne zasady),
@@ -195,3 +200,55 @@ export function potionQuality(sl, { track = "magical", attunementCost = 0 } = {}
  *   "slots"       – tylko +5 miejsc.
  */
 export const CHAMON_MODES = ["freeRecipes", "both", "slots"];
+
+/**
+ * Skaluje cenę {gc, ss, bp} przez mnożnik cen świata (1 zk = 20 s = 240 p).
+ * Przy mnożniku 1 zwraca dokładne wartości bazowe; dla niezerowej bazy nigdy nie spada poniżej 1 p.
+ */
+export function scalePrice(price, multiplier = 1) {
+  const gc = Number(price?.gc) || 0;
+  const ss = Number(price?.ss) || 0;
+  const bp = Number(price?.bp) || 0;
+  const mult = Number(multiplier);
+  if (!Number.isFinite(mult) || mult <= 0 || mult === 1) return { gc, ss, bp };
+  const baseBP = gc * 240 + ss * 12 + bp;
+  if (baseBP <= 0) return { gc: 0, ss: 0, bp: 0 };
+  const scaledBP = Math.max(1, Math.round(baseBP * mult));
+  return {
+    gc: Math.floor(scaledBP / 240),
+    ss: Math.floor((scaledBP % 240) / 12),
+    bp: scaledBP % 12
+  };
+}
+
+/**
+ * Skaluje cenę dawki wyrażoną w szylingach przez mnożnik cen świata (min. 1 s).
+ */
+export function scalePriceSS(ss, multiplier = 1) {
+  const base = Math.max(1, Math.round(Number(ss) || 0));
+  const mult = Number(multiplier);
+  if (!Number.isFinite(mult) || mult <= 0 || mult === 1) return base;
+  return Math.max(1, Math.round(base * mult));
+}
+
+/** Konwertuje cenę dziesiętną w ZK (np. 0.9) na { gc, ss, bp } (1 zk = 20 s = 240 p). */
+export function priceFromGC(gc) {
+  const totalBP = Math.max(0, Math.round((Number(gc) || 0) * 240));
+  return {
+    gc: Math.floor(totalBP / 240),
+    ss: Math.floor((totalBP % 240) / 12),
+    bp: totalBP % 12
+  };
+}
+
+/** Formatuje cenę { gc, ss, bp } jako zwięzły zapis (np. „18 ss”, „1 gc 10 ss”, „6 bp”). */
+export function formatPrice(price, labels = { gc: "gc", ss: "ss", bp: "bp" }) {
+  const gc = Math.max(0, Math.trunc(Number(price?.gc) || 0));
+  const ss = Math.max(0, Math.trunc(Number(price?.ss) || 0));
+  const bp = Math.max(0, Math.trunc(Number(price?.bp) || 0));
+  const parts = [];
+  if (gc) parts.push(`${gc} ${labels.gc}`);
+  if (ss) parts.push(`${ss} ${labels.ss}`);
+  if (bp || !parts.length) parts.push(`${bp} ${labels.bp}`);
+  return parts.join(" ");
+}

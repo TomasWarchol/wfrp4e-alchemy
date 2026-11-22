@@ -5,10 +5,9 @@
 import { MODULE_ID } from '../config.js';
 import { SpoilageEngine } from './spoilage-engine.js';
 import { RecipeRegistry } from './recipe-registry.js';
-import { CalendarIntegration } from '../calendar-integration.js';
 import { AlchemyQueries } from '../queries.js';
 import { RECIPE_CLOUD, RECIPE_DRINK, RECIPE_THROWN, runDrinkSteps, runThrownSteps, stepsHeal, timedConditionEffect } from './potion-steps.js';
-import { applyHighestBonus } from './effect-data.js';
+import { applyHighestBonus, buildPotionEffectData } from './effect-data.js';
 import { blastTargets, throwRangeBand } from './throwing.js';
 import { AddictionEngine } from './addiction.js';
 
@@ -44,17 +43,50 @@ const HEALING_EFFECTS = new Set([
 
 /** Okno limitu leczenia (sekundy czasu świata) – jedno spotkanie. */
 const HEALING_WINDOW_SECONDS = 3600;
-/** Odstęp między oczyszczeniami duszy Eliksirem Iluminacji. */
-const PURITY_COOLDOWN_DAYS = 7;
-
 export class PotionConsumer {
   static THROWN_EFFECTS = THROWN_EFFECTS;
   static HEALING_EFFECTS = HEALING_EFFECTS;
 
   /** Czy przedmiot to mikstura bojowa (do rzucania). */
   static isThrowable(item) {
-    const effectId = item?.getFlag?.(MODULE_ID, 'alchemyData')?.instantEffect;
-    return THROWN_EFFECTS.has(effectId);
+    const flag = item?.getFlag?.(MODULE_ID, 'alchemyData');
+    const recipe = this._recipe(flag);
+    return !recipe?.referenceOnly && THROWN_EFFECTS.has(this._instantEffect(flag, recipe));
+  }
+
+  static _recipe(flag) {
+    return flag?.recipeId ? RecipeRegistry.getRecipeById(flag.recipeId, { includeUnavailable: true }) : null;
+  }
+
+  static _instantEffect(flag, recipe) {
+    return recipe?.auditUpdated ? recipe.instantEffect : flag?.instantEffect;
+  }
+
+  static canApplyToAlly(item) {
+    return Boolean(this._recipe(item?.getFlag?.(MODULE_ID, 'alchemyData'))?.applyToAlly);
+  }
+
+  static async _chooseItem(items, title) {
+    if (!items.length) {
+      ui.notifications.warn(title);
+      return null;
+    }
+    if (items.length === 1) return items[0];
+    const id = await foundry.applications.api.DialogV2.wait({
+      window: { title },
+      rejectClose: false,
+      buttons: items.map(item => ({ action: item.id, label: foundry.utils.escapeHTML(item.name) }))
+    });
+    return items.find(item => item.id === id) ?? null;
+  }
+
+  static async endCombat(combat) {
+    if (!game.users.activeGM?.isSelf) return;
+    const actors = new Set(combat.combatants.map(combatant => combatant.actor).filter(Boolean));
+    for (const actor of actors) {
+      const ids = actor.effects.filter(effect => effect.getFlag(MODULE_ID, 'oilCombatId') === combat.id).map(effect => effect.id);
+      if (ids.length) await actor.deleteEmbeddedDocuments('ActiveEffect', ids);
+    }
   }
 
   /** Mikstura magiczna (tor Więzi): naraz działa tylko jedna. */
@@ -68,7 +100,10 @@ export class PotionConsumer {
     if (!item || !drinker) return;
 
     const flag = item.getFlag(MODULE_ID, 'alchemyData') || {};
-    const qty = Number(item.system?.quantity?.value) || 1;
+    const recipe = this._recipe(flag);
+    if (recipe?.referenceOnly) return ui.notifications.warn(game.i18n.localize(recipe.effectDescription));
+    const instantEffect = this._instantEffect(flag, recipe);
+    const qty = Number(item.system?.quantity?.value ?? 1);
     if (qty <= 0) {
       ui.notifications.warn(game.i18n.localize('GOLD_ALCHEMY.Errors.NoDoses'));
       return;
@@ -78,57 +113,112 @@ export class PotionConsumer {
       return;
     }
 
-    const spoilageResult = await SpoilageEngine.evaluatePotion(item, drinker);
+    const localize = key => game.i18n.localize('GOLD_ALCHEMY.Balance.' + key);
+    const itemOwner = item.actor;
+    if (itemOwner && itemOwner !== drinker && (!recipe?.applyToAlly || !itemOwner.isOwner || !drinker.isOwner)) return;
+    let weapon, oilCombat, channel;
+    if (recipe?.applyToWeapon) {
+      oilCombat = game.combats.find(combat => combat.started && combat.combatants.some(c => c.actor === drinker));
+      if (!oilCombat) return ui.notifications.warn(localize('OilCombat'));
+      weapon = await this._chooseItem(drinker.items.filter(i => i.type === 'weapon' && i.system.isMelee), localize('ChooseWeapon'));
+      if (!weapon) return;
+    }
+    if (instantEffect === 'witchEyeChannel') {
+      const skills = drinker.items.filter(i => i.type === 'skill' && /^(Channelling|Channeling|Splatanie Magii)( |$)/i.test(i.name));
+      channel = await this._chooseItem(skills, localize('ChooseChannel'));
+      if (!channel) return;
+      if (itemOwner && !itemOwner.items.has(item.id)) return;
+      const remaining = Number(item.system?.quantity?.value ?? 1);
+      if (remaining <= 0) return;
+      await this._useDose(item, remaining);
+    }
     const effectLines = [];
+    if (channel) effectLines.push(...await runDrinkSteps([{ corruption: 1 }], drinker, this._stepContext()));
+    const spoilageResult = await SpoilageEngine.evaluatePotion(item, drinker);
 
     if (spoilageResult.stillWorks) {
-      const magical = this.isMagicalPotion(flag);
-      if (item.effects && item.effects.size > 0) {
-        // Wiatry się ścierają: nowa mikstura magiczna wypiera poprzednią
-        if (magical) {
-          const previous = drinker.effects.filter(e => e.getFlag?.(MODULE_ID, 'magicalPotion'));
-          if (previous.length) {
-            await drinker.deleteEmbeddedDocuments('ActiveEffect', previous.map(e => e.id));
-            effectLines.push(game.i18n.format('GOLD_ALCHEMY.Chat.MagicalReplaced', { names: [...new Set(previous.map(e => e.name))].join(', ') }));
-          }
+      let blockedByHealingLimit = false;
+      if (recipe?.healingEffect) {
+        if (this._healingLimitActive(drinker)) {
+          effectLines.push(game.i18n.localize('GOLD_ALCHEMY.Notifications.HealingLimit'));
+          blockedByHealingLimit = true;
+        } else {
+          await this._markHealing(drinker);
         }
-        const effectsToCreate = [];
-        for (const effect of item.effects) {
-          const ed = applyHighestBonus(effect.toObject());
-          // Id nadany z góry: skrypty "immediate" działają przed utworzeniem efektu, a cechy i talenty
-          // dodane przez miksturę wiążą się z efektem przez jego id (znikają razem z nim)
-          ed._id = foundry.utils.randomID();
-          ed.disabled = false;
-          ed.transfer = false;
-          // Foundry v14 ustawia start (czas świata, walka, runda) przy tworzeniu efektu na aktorze
-          delete ed.start;
-          if (magical) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.magicalPotion`, true);
-          if (flag.recipeId) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.recipeId`, flag.recipeId);
-          const rolled = await this._rollDuration(ed, drinker);
-          if (rolled) effectLines.push(rolled);
-          // Ta sama mikstura wypita ponownie odnawia czas działania zamiast dublować premie
-          const same = flag.recipeId && drinker.effects.find(e => e.getFlag?.(MODULE_ID, 'recipeId') === flag.recipeId && e.name === ed.name);
-          if (same) {
-            await this._refreshEffect(same, ed.duration);
-            effectLines.push(game.i18n.format('GOLD_ALCHEMY.Chat.EffectRefreshed', { effect: ed.name }));
-          }
-          else effectsToCreate.push(ed);
-        }
-        if (effectsToCreate.length) await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate, { keepId: true });
       }
 
-      if (flag.instantEffect) {
-        const line = await this.handleInstantEffect(flag.instantEffect, drinker, flag.recipeId);
-        if (line) effectLines.push(line);
-      }
+      if (!blockedByHealingLimit) {
+        // Testy negatywne (np. Wino Grobowe, Eliksir Pustego Serca) działają PRZED premiami efektu (np. +20 Wt)
+        if (!channel && instantEffect && recipe?.instantBeforeEffect) {
+          const line = await this.handleInstantEffect(instantEffect, drinker, flag.recipeId);
+          if (line) effectLines.push(line);
+        }
 
-      // Nałóg (zasada domowa): test po dawce mikstury uzależniającej, dawka zaspokaja głód
-      const recipe = flag.recipeId ? RecipeRegistry.getRecipeById(flag.recipeId, { includeUnavailable: true }) : null;
-      const addictionLine = await AddictionEngine.afterDose(drinker, recipe, item.name);
-      if (addictionLine) effectLines.push(addictionLine);
+        const magical = this.isMagicalPotion(flag);
+        const effects = recipe?.auditUpdated
+          ? (recipe.activeEffect ? [buildPotionEffectData(recipe.activeEffect, item.name)] : [])
+          : Array.from(item.effects ?? [], effect => applyHighestBonus(effect.toObject()));
+        if (effects.length) {
+          // Wiatry się ścierają: nowa mikstura magiczna wypiera poprzednią
+          if (magical) {
+            const previous = drinker.effects.filter(e => e.getFlag?.(MODULE_ID, 'magicalPotion'));
+            if (previous.length) {
+              await drinker.deleteEmbeddedDocuments('ActiveEffect', previous.map(e => e.id));
+              effectLines.push(game.i18n.format('GOLD_ALCHEMY.Chat.MagicalReplaced', { names: [...new Set(previous.map(e => e.name))].join(', ') }));
+            }
+          }
+          const effectsToCreate = [];
+          for (const ed of effects) {
+            // Id nadany z góry: skrypty "immediate" działają przed utworzeniem efektu, a cechy i talenty
+            // dodane przez miksturę wiążą się z efektem przez jego id (znikają razem z nim)
+            ed._id = foundry.utils.randomID();
+            ed.disabled = false;
+            ed.transfer = false;
+            // Foundry v14 ustawia start (czas świata, walka, runda) przy tworzeniu efektu na aktorze
+            delete ed.start;
+            if (magical) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.magicalPotion`, true);
+            if (flag.recipeId) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.recipeId`, flag.recipeId);
+            if (recipe?.auditUpdated) foundry.utils.setProperty(ed, `flags.${MODULE_ID}.auditUpdated`, true);
+            if (weapon) {
+              foundry.utils.setProperty(ed, `flags.${MODULE_ID}.weaponId`, weapon.id);
+              foundry.utils.setProperty(ed, `flags.${MODULE_ID}.oilCombatId`, oilCombat.id);
+            }
+            if (recipe?.trackAblaze) {
+              foundry.utils.setProperty(ed, `flags.${MODULE_ID}.initialAblaze`, Number(drinker.hasCondition?.('ablaze')?.conditionValue) || 0);
+            }
+            const rolled = await this._rollDuration(ed, drinker);
+            if (rolled) effectLines.push(rolled);
+            // Ta sama mikstura wypita ponownie odnawia czas działania zamiast dublować premie
+            const same = flag.recipeId && drinker.effects.find(e => e.getFlag?.(MODULE_ID, 'recipeId') === flag.recipeId && e.name === ed.name);
+            if (same && recipe?.auditUpdated && !same.getFlag(MODULE_ID, 'auditUpdated')) {
+              await same.delete();
+              effectsToCreate.push(ed);
+            } else if (same) {
+              await this._refreshEffect(same, ed.duration);
+              if (recipe?.trackAblaze) await same.setFlag(MODULE_ID, 'initialAblaze', Number(drinker.hasCondition?.('ablaze')?.conditionValue) || 0);
+              effectLines.push(game.i18n.format('GOLD_ALCHEMY.Chat.EffectRefreshed', { effect: ed.name }));
+            }
+            else effectsToCreate.push(ed);
+          }
+          if (effectsToCreate.length) await drinker.createEmbeddedDocuments('ActiveEffect', effectsToCreate, { keepId: true });
+        }
+
+        if (channel) {
+          const test = await drinker.setupSkill(channel, { fields: { modifier: 20 }, skipTargets: true, appendTitle: ` – ${item.name}` });
+          if (test) await test.roll();
+        } else if (instantEffect && !recipe?.instantBeforeEffect) {
+          const line = await this.handleInstantEffect(instantEffect, drinker, flag.recipeId);
+          if (line) effectLines.push(line);
+        }
+
+        // Nałóg (zasada domowa): test po dawce mikstury uzależniającej, dawka zaspokaja głód
+        if (recipe?.manualUse) effectLines.push(foundry.utils.escapeHTML(game.i18n.localize(recipe.effectDescription)));
+        const addictionLine = await AddictionEngine.afterDose(drinker, recipe, item.name);
+        if (addictionLine) effectLines.push(addictionLine);
+      }
     }
 
-    await this._useDose(item, qty);
+    if (!channel) await this._useDose(item, qty);
     const cost = await this._refundTether(flag, item.name, drinker.name);
 
     const chatHtml = `
@@ -193,7 +283,9 @@ export class PotionConsumer {
   static async throwPotion(item, thrower) {
     if (!item || !thrower) return;
     const flag = item.getFlag(MODULE_ID, 'alchemyData') || {};
-    const effectId = flag.instantEffect;
+    const recipe = this._recipe(flag);
+    if (recipe?.referenceOnly) return ui.notifications.warn(game.i18n.localize(recipe.effectDescription));
+    const effectId = this._instantEffect(flag, recipe);
     const qty = Number(item.system?.quantity?.value) || 1;
     if (!THROWN_EFFECTS.has(effectId)) return;
     if (qty <= 0) {
@@ -222,10 +314,19 @@ export class PotionConsumer {
       difficulty = band.difficulty;
     }
 
-    const recipe = flag.recipeId ? RecipeRegistry.getRecipeById(flag.recipeId, { includeUnavailable: true }) : null;
     const targets = isCloud ? [] : blastTargets(target, (canvas?.tokens?.placeables || []).filter(token => token.actor), recipe?.blast, (a, b) => this._distance(a, b));
 
-    const hit = isCloud ? { success: true, sl: 0 } : await this._rollThrow(thrower, item.name, difficulty);
+    let terrain;
+    if (recipe?.cloud?.terrainDuration) {
+      const localize = key => game.i18n.localize('GOLD_ALCHEMY.Balance.' + key);
+      terrain = await foundry.applications.api.DialogV2.wait({
+        window: { title: localize('SmokeTerrain') },
+        rejectClose: false,
+        buttons: ['indoors', 'still', 'wind'].map(action => ({ action, label: localize(action) }))
+      });
+      if (!terrain) return;
+    }
+    const hit = isCloud && (!terrain || !target) ? { success: true, sl: 0 } : await this._rollThrow(thrower, item.name, difficulty);
     if (!hit) return; // Anulowano okno testu
 
     const spoilage = await SpoilageEngine.evaluatePotion(item, null, { applySideEffect: false });
@@ -235,6 +336,10 @@ export class PotionConsumer {
     const lines = [];
     if (!spoilage.stillWorks) {
       lines.push(game.i18n.localize('GOLD_ALCHEMY.Chat.ThrowFizzled'));
+    } else if (!hit.success) {
+      lines.push(game.i18n.localize('GOLD_ALCHEMY.Chat.ThrowMissed'));
+    } else if (terrain === 'wind') {
+      lines.push(game.i18n.localize('GOLD_ALCHEMY.Balance.SmokeDispersed'));
     } else if (isCloud) {
       // Chmura jako region sceny w miejscu celu (albo pod rzucającym); bez żetonu na scenie – tylko opis
       const spot = target ?? throwerToken;
@@ -247,13 +352,12 @@ export class PotionConsumer {
           y: spot.center.y,
           level: spot.document.level ?? null,
           name: item.name,
-          throwerUuid: thrower.uuid
+          throwerUuid: thrower.uuid,
+          terrain
         });
       }
-      if (!rounds) rounds = (await (new Roll('1d10')).evaluate()).total;
+      if (!rounds) rounds = terrain ? (terrain === 'indoors' ? 2 : 1) : (await (new Roll(recipe?.cloud?.roundsFormula || '1d10')).evaluate()).total;
       lines.push(game.i18n.format('GOLD_ALCHEMY.Chat.CloudCreated', { rounds }));
-    } else if (!hit.success) {
-      lines.push(game.i18n.localize('GOLD_ALCHEMY.Chat.ThrowMissed'));
     } else {
       const results = await AlchemyQueries.applyThrownEffect({
         effectId,
@@ -489,9 +593,11 @@ export class PotionConsumer {
         await this.removeAllConditions(drinker, 'fatigued');
         return i18n('GOLD_ALCHEMY.Notifications.PanaceaUniversalisRestored', { wounds: tb * 3 });
       case 'ghyranSpringHeal':
-        await this._heal(drinker, tb * 3);
+        if (drinker.hasCondition?.('dead')) return '';
+        const restored = Number(drinker.system?.status?.wounds?.value) > 0 ? tb * 3 : 1;
+        await this._heal(drinker, restored);
         await this.removeAllConditions(drinker, 'bleeding');
-        return i18n('GOLD_ALCHEMY.Notifications.SpringDewHealed', { wounds: tb * 3 });
+        return i18n('GOLD_ALCHEMY.Notifications.SpringDewHealed', { wounds: restored });
       case 'ghyranPurify':
         await this.removeAllConditions(drinker, 'poisoned');
         return i18n('GOLD_ALCHEMY.Notifications.Purified');
@@ -533,10 +639,10 @@ export class PotionConsumer {
       }
       case 'smellingSalts':
       case 'smellingSaltsRevive':
-        // Jak Salwort: 1 Ogłuszenie; dodatkowo cuci nieprzytomnego
-        await this.removeAllConditions(drinker, 'unconscious');
-        await drinker.removeCondition?.('stunned', 1);
-        return i18n('GOLD_ALCHEMY.Notifications.SmellingSalts');
+        if (Number(drinker.system?.status?.wounds?.value) > 0 && !drinker.hasCondition?.('unconscious')) {
+          return (await runDrinkSteps([{ remove: 'stunned', value: 1 }], drinker, this._stepContext())).join(' ');
+        }
+        return '';
       case 'morrSalve':
       case 'morrSalveHeal':
         await this._heal(drinker, tb);
@@ -546,18 +652,6 @@ export class PotionConsumer {
       case 'antidoteCure':
         await this.removeAllConditions(drinker, 'poisoned');
         return i18n('GOLD_ALCHEMY.Notifications.Antitoxin');
-      case 'hyshPurity': {
-        const now = CalendarIntegration.getCurrentTimestamp();
-        const last = Number(drinker.getFlag?.(MODULE_ID, 'lastPurity')) || null;
-        if (last !== null && now - last < PURITY_COOLDOWN_DAYS * 86400) return i18n('GOLD_ALCHEMY.Notifications.PurityCooldown');
-        await drinker.setFlag?.(MODULE_ID, 'lastPurity', now);
-        const curCorruption = Number(drinker.system?.status?.corruption?.value) || 0;
-        if (curCorruption > 0) {
-          await drinker.update({ 'system.status.corruption.value': Math.max(0, curCorruption - 1) });
-          return i18n('GOLD_ALCHEMY.Notifications.CorruptionPurified');
-        }
-        return i18n('GOLD_ALCHEMY.Notifications.SoulPurified');
-      }
       case 'mandrakeSleep': {
         // Jak Nocny Cień: Wymagający (+0) Test Odporności, porażka – sen za 2–3 godziny na 1k10+4 godziny
         const result = await this._drinkerTest(drinker, 'NAME.Endurance', 'challenging', game.i18n.localize('GOLD_ALCHEMY.Chat.ResistMandrake'));

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cloudExpired, cloudExpiry, cloudRegionData, radiusPixels } from "../scripts/logic/clouds.js";
+import { cloudExpired, cloudExpiry, cloudRegionData, radiusPixels, shouldTriggerCloudForActor } from "../scripts/logic/clouds.js";
 import { runDrinkSteps } from "../scripts/logic/potion-steps.js";
 import { ALCHEMY_RECIPES } from "../scripts/data/recipes.js";
 
@@ -35,10 +35,19 @@ describe("Chmury z mikstur", () => {
 
   it("receptury chmur mają promień, a trujące – skutki na początku tury", () => {
     const byId = (id) => ALCHEMY_RECIPES.find((r) => r.id === id);
-    expect(byId("potion-smoke-pellet").cloud).toMatchObject({ radius: 4, sight: true });
+    expect(byId("potion-smoke-pellet").cloud).toMatchObject({ radius: 3, sight: true, terrainDuration: true });
     expect(byId("potion-ulgu-shadow-mist").cloud.sight).toBe(true);
+    expect(byId("potion-stinkpot").cloud).toMatchObject({ radius: 3, roundsFormula: "1d5", oncePerActor: true });
     expect(byId("potion-stinkpot").cloud.roundSteps[0]).toMatchObject({ test: "endurance", difficulty: "average" });
-    expect(byId("potion-plague-vapour").cloud.roundSteps[0].fail[0].note).toBe("GOLD_ALCHEMY.Cloud.Disease");
+    expect(byId("potion-plague-vapour")).toBeUndefined();
+  });
+
+  it("oncePerActor: chmura testuje każdego aktora najwyżej raz", () => {
+    const cloud = { oncePerActor: true };
+    expect(shouldTriggerCloudForActor(cloud, { testedActors: [] }, "Actor.1")).toBe(true);
+    expect(shouldTriggerCloudForActor(cloud, { testedActors: ["Actor.1"] }, "Actor.1")).toBe(false);
+    expect(shouldTriggerCloudForActor(cloud, { testedActors: ["Actor.1"] }, "Actor.2")).toBe(true);
+    expect(shouldTriggerCloudForActor({}, { testedActors: ["Actor.1"] }, "Actor.1")).toBe(true);
   });
 
   it("notka dla MG w krokach", async () => {

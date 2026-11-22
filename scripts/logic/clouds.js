@@ -51,6 +51,13 @@ export function cloudRegionData({ name, x, y, radiusPx, level, cloud, state }) {
   };
 }
 
+/** Czy chmura z flagą `oncePerActor` powinna zadziałać jeszcze raz dla danego aktora. */
+export function shouldTriggerCloudForActor(cloud, state, actorKey) {
+  if (!cloud?.oncePerActor || !actorKey) return true;
+  const tested = Array.isArray(state?.testedActors) ? state.testedActors : [];
+  return !tested.includes(actorKey);
+}
+
 export class CloudEngine {
   static init() {
     Hooks.on('updateCombat', (combat, changes) => this._onCombat(combat, changes));
@@ -70,10 +77,14 @@ export class CloudEngine {
    * Tworzy chmurę (u MG). Zwraca liczbę rund albo 0.
    * @param {{scene: Scene, recipe: object, name: string, x: number, y: number, level?: string}} options
    */
-  static async create({ scene, recipe, name, x, y, level }) {
+  static async create({ scene, recipe, name, x, y, level, terrain }) {
     const cloud = recipe?.cloud;
     if (!scene || !cloud) return 0;
-    const rounds = (await (new Roll('1d10')).evaluate()).total;
+    const formula = cloud.roundsFormula || '1d10';
+    const rounds = cloud.terrainDuration
+      ? (terrain === 'indoors' ? 2 : terrain === 'still' ? 1 : 0)
+      : (await (new Roll(formula)).evaluate()).total;
+    if (!rounds) return 0;
     const combat = game.combats.find(c => c.active && c.scene?.id === scene.id) ?? null;
     const state = { recipeId: recipe.id, rounds, ...cloudExpiry({ rounds, combat, worldTime: game.time.worldTime }) };
     const radiusPx = radiusPixels(cloud.radius, scene.grid.distance, scene.grid.size);
@@ -110,9 +121,16 @@ export class CloudEngine {
     const { PotionConsumer } = await import('./potion-consumer.js');
     for (const region of this._clouds(scene)) {
       if (!region.testPoint(point)) continue;
-      const recipe = RecipeRegistry.getRecipeById(region.getFlag(MODULE_ID, 'cloud')?.recipeId, { includeUnavailable: true });
+      const state = region.getFlag(MODULE_ID, 'cloud') || {};
+      const recipe = RecipeRegistry.getRecipeById(state.recipeId, { includeUnavailable: true });
       const steps = recipe?.cloud?.roundSteps;
       if (!steps?.length) continue;
+      const actorKey = token.actor.uuid || token.actor.id;
+      if (!shouldTriggerCloudForActor(recipe.cloud, state, actorKey)) continue;
+      if (recipe.cloud.oncePerActor && actorKey) {
+        const tested = Array.isArray(state.testedActors) ? state.testedActors : [];
+        await region.setFlag(MODULE_ID, 'cloud', { ...state, testedActors: [...tested, actorKey] });
+      }
       const ctx = { ...PotionConsumer._stepContext(), test: (actor, key, difficulty) => PotionConsumer._targetTest(actor, key, difficulty) };
       const lines = await runDrinkSteps(steps, token.actor, ctx);
       ChatMessage.create({

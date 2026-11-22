@@ -343,8 +343,28 @@ body.al-workbench-chat .gold-alchemy-card.al-card.is-tether .al-chat-mark { colo
 .gold-alchemy-editor.al-workbench button[type="submit"] { color: #fbeccd; background: linear-gradient(180deg, #b8460f, #7a240a); border-color: #4a1606; }
 .gold-alchemy-editor.al-workbench :is(input, select, textarea, button):focus-visible { outline: 2px solid #c9a24b; outline-offset: 1px; }
 
-/* Kotły laboratorium (warzenia w toku / liczba kotłów) */
+/* Kotły laboratorium i lista warzeń w toku */
 .gold-alchemy-app.al-workbench .al-cauldrons { display: inline-flex; align-items: center; gap: 4px; font-family: var(--al-display); color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-no-lab { display: inline-flex; align-items: center; gap: 6px; font-family: var(--al-body); font-weight: bold; color: #8a1f1f; }
+.gold-alchemy-app.al-workbench .al-brewing-wrap { flex: 1 1 100%; margin-top: 2px; padding-top: 6px; border-top: 1px dashed rgba(92, 69, 48, 0.35); }
+.gold-alchemy-app.al-workbench .al-brewing-wrap h5 { margin: 0 0 4px; font-family: var(--al-display); font-size: 0.9rem; letter-spacing: 0.04em; color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-brewing-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+.gold-alchemy-app.al-workbench .al-brew-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 3px 6px; background: rgba(255, 250, 235, 0.55); border: 1px solid rgba(92, 69, 48, 0.25); border-radius: 3px; font-size: 0.85rem; }
+.gold-alchemy-app.al-workbench .al-brew-row.is-ready { border-color: #2f5d1e; background: rgba(215, 238, 196, 0.45); }
+.gold-alchemy-app.al-workbench .al-brew-name { font-family: var(--al-title); font-weight: bold; color: var(--al-ink); cursor: pointer; text-decoration: underline; }
+.gold-alchemy-app.al-workbench .al-brew-lab { display: inline-flex; align-items: center; gap: 4px; color: var(--al-accent); font-family: var(--al-body); }
+.gold-alchemy-app.al-workbench .al-brew-date { margin-left: auto; font-style: italic; color: var(--al-ink-soft); }
+.gold-alchemy-app.al-workbench .al-brew-row.is-ready .al-brew-date { color: #2f5d1e; font-weight: bold; font-style: normal; }
+.gold-alchemy-app.al-workbench .al-brew-act { width: 24px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: rgba(255, 250, 235, 0.8); border: 1px solid var(--al-ink-soft); color: #2f5d1e; border-radius: 3px; }
+.gold-alchemy-app.al-workbench .al-brew-act.is-cancel { color: #7a0f0f; border-color: #7a0f0f; }
+
+/* Pola laboratorium na karcie przedmiotu */
+.al-lab-sheet-fields { float: none; display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1; align-self: stretch; flex: 0 0 auto; width: calc(100% - 8px); min-width: 0; max-width: 100%; box-sizing: border-box; margin: 8px 4px; padding: 8px 12px; border: 1px solid rgba(125, 94, 31, 0.55); border-radius: 4px; background: rgba(201, 162, 75, 0.08); }
+.al-lab-sheet-fields legend { width: auto; padding: 0 6px; font-weight: bold; white-space: nowrap; }
+.al-lab-sheet-fields .al-lab-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+.al-lab-sheet-fields .al-lab-label { flex: 1 1 auto; min-width: 0; text-align: left; white-space: normal; font-weight: normal; margin: 0; }
+.al-lab-sheet-fields .al-lab-input { flex: 0 0 64px; width: 64px; text-align: center; }
+.al-lab-sheet-fields .hint { margin: 2px 0 0; font-size: 0.8rem; line-height: 1.3; opacity: 0.85; white-space: normal; }
 
 /* ---------- Księga alchemiczna w oknie Grimoires (data-kind="alchemy") ---------- */
 /* Receptariusz: miedź i patyna zamiast złota, papier aptekarskiego rejestru, zielony atrament receptur */
